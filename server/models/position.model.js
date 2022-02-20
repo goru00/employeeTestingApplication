@@ -3,11 +3,14 @@ module.exports = (sequelize, Sequelize) => {
         id: {
             type: Sequelize.INTEGER,
             primaryKey: true,
+            autoIncrement: true
         },
         name: {
             type: Sequelize.STRING,
             allowNull: false
         }
+    }, {
+        timestamps: false
     });
     return Position;
 }

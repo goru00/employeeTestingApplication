@@ -17,3 +17,5 @@ router.post('/signup', [
 ], authController.signup);
 router.post('/signin', authController.signin);
 router.post('/refreshToken', authController.refreshToken);
+
+module.exports = router;

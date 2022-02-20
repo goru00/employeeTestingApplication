@@ -30,10 +30,10 @@ class AuthController {
                             Role.findAll({
                                 where: {
                                     name: {
-                                        [Or.or]: req.body.roles
+                                        [Op.or]: req.body.roles
                                     }
                                 }
-                            }).then(() => {
+                            }).then(roles => {
                                 user.setRoles(roles).then(() => {
                                     res.send({
                                         message: "Пользователь успешно зарегистрирован"
@@ -53,6 +53,28 @@ class AuthController {
                         });
                     });
                 });
+            } else {
+                if (req.body.roles) {
+                    Role.findAll({
+                        where: {
+                            name: {
+                                [Or.or]: req.body.roles
+                            }
+                        }
+                    }).then(() => {
+                        user.setRoles(roles).then(() => {
+                            res.send({
+                                message: "Пользователь успешно зарегистрирован"
+                            });
+                        });
+                    });
+                } else {
+                    user.setRoles([1]).then(() => {
+                        res.send({
+                            message: "Пользователь успешно зарегистрирован"
+                        });
+                    });
+                }
             }   
         });
     }
@@ -61,7 +83,7 @@ class AuthController {
             where: {
                 username: req.body.username
             }
-        }).then(user => {
+        }).then(async user => {
             if (!user) {
                 return res.status(404).send({
                     message: "Пользователь не был найден"
