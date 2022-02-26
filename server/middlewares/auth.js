@@ -1,11 +1,13 @@
 const db = require('../models');
 const ROLES = db.ROLES;
 const User = db.user;
+const Position = db.position;
+
 const jwt = require('jsonwebtoken');
 const config = require('../configs/auth.config');
 
 class Auth {
-    async checkDuplicateUsernameOrEmail(req, res, next) {
+    checkDuplicateUsernameOrEmail(req, res, next) {
         User.findOne({
             where: {
                 username: req.body.username
@@ -32,7 +34,16 @@ class Auth {
             });
         });
     }
-    async checkRolesExisted(req, res, next) {
+    async checkErrorUsersAndPositions(req, res, next) {
+        if (req.body.users && req.body.positions) {
+            res.status(403).send({
+                message: 'Ошибка! Нельзя выбрать одновременно пункты меню "Должность" и "Сотрудники"'
+            });
+            return;
+        }
+        next();
+    }
+    checkRolesExisted(req, res, next) {
         if (req.body.roles) {
             req.body.roles.forEach(role => {
                 if (!ROLES.includes(role)) {
@@ -46,7 +57,7 @@ class Auth {
         next();
     }
 
-    async catchError(err, res) {
+    catchError(err, res) {
         if (err instanceof jwt.TokenExpiredError) {
             return res.status(401).send({
                 message: "Не авторизован. Токен не был валидным"
@@ -57,7 +68,7 @@ class Auth {
         });
     }
 
-    async verifyToken(req, res, next) {
+    verifyToken(req, res, next) {
         let token = req.headers["x-access-token"];
         if (!token) {
             return res.status(403).send({
@@ -72,15 +83,32 @@ class Auth {
             next();
         });
     }
-    async isAdmin(req, res, next) {
+
+    async checkDuplicatePositionName(req, res, next) {
+        Position.findOne({
+            where: {
+                name: req.body.name
+            }
+        }).then(position => {
+            if (position) {
+                res.status(400).send({
+                    message: "Ошибка! Должность уже существует"
+                });
+                return;
+            }
+            next();
+        });
+    }
+
+    isAdmin(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
-                roles.forEach(role => {
-                    if (role.name === "admin") {
+                for (let index = 0; index < roles.length; index++) {
+                    if (roles[index].name === "admin") {
                         next();
                         return;
                     }
-                });
+                }
                 res.status(403).send({
                     message: "Нет права доступа 'admin'"
                 });
@@ -88,37 +116,55 @@ class Auth {
             });
         });
     }
-    async isModerator(req, res, next) {
+    isModerator(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
-                roles.forEach(role => {
-                    if (role.name === "moderator") {
+                for (let index = 0; index < roles.length; index++) {
+                    if (roles[index].name === "moderator") {
                         next();
                         return;
                     }
-                });
+                }
                 res.status(403).send({
                     message: "Нет прав доступа 'moderator'"
                 });
+                return;
             });
         });
     }
-    async isModeratorOrAdmin(req, res, next) {
+    isUser(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
-                roles.forEach(role => {
-                    if (role.name === "moderator") {
+                for (let index = 0; index < roles.length; index++) {
+                    if (roles[index].name === "moderator") {
                         next();
                         return;
                     }
-                    if (role.name === "admin") {
-                        next();
-                        return;
-                    }
+                }
+                res.status(403).send({
+                    message: "Нет прав доступа 'user'"
                 });
+                return;
+            });
+        });
+    }
+    isModeratorOrAdmin(req, res, next) {
+        User.findByPk(req.userId).then(user => {
+            user.getRoles().then(roles => {
+                for (let index = 0; index < roles.length; index++) {
+                    if (roles[index].name === "admin") {
+                        next();
+                        return;
+                    }
+                    if (roles[index].name === "moderator") {
+                        next();
+                        return;
+                    }
+                }
                 res.status(403).send({
                     message: "Нет прав доступа 'admin' или 'moderator'"
                 });
+                return;
             });
         });
     }

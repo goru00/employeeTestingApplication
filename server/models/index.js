@@ -60,6 +60,9 @@ db.position.belongsToMany(db.user, {
 db.section.hasOne(db.test, {
     foreignKey: 'sectionId'
 });
+db.test.belongsTo(db.section, {
+    foreignKey: 'sectionId'
+});
 //tests_employee
 db.user.belongsToMany(db.test, {
     through: 'tests_employee',
@@ -72,14 +75,8 @@ db.test.belongsToMany(db.user, {
     otherKey: 'userId'
 });
 //ref testId tests_data table
-db.test.hasOne(db.testsData, {
-    foreignKey: 'testId',
-    onDelete: 'RESTRICT'
-});
-//ref sectionId tests_data table
-db.test.hasOne(db.testsData, {
-    foreignKey: 'sectionId',
-    onDelete: 'RESTRICT'
+db.test.hasMany(db.testsData, {
+    as: "Datas"
 });
 //hasOne refreshToken
 db.refreshToken.belongsTo(db.user, {

@@ -1,23 +1,23 @@
 module.exports = (sequelize, Sequelize) => {
-    const TestData = sequelize.define("tests_employee", {
+    const TestsEmployee = sequelize.define("tests_employee", {
         score: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 0
         },
         state: {
             type: Sequelize.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: false
         },
         timeStart: {
-            type: Sequelize.DATE,
-            allowNull: false
+            type: Sequelize.DATE
         },
         timeFinish: {
-            type: Sequelize.DATE,
-            allowNull: false
+            type: Sequelize.DATE
         }
     }, {
         timestamps: false
     });
-    return TestData;
+    return TestsEmployee;
 }

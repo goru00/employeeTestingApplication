@@ -11,26 +11,27 @@ var bcrypt = require('bcryptjs');
 
 class AuthController {
     async signup(req, res) {
+        const { username, password, name, email, positions, roles } = req.body;
         User.create({
-            username: req.body.username,
-            password: req.body.password,
-            name: req.body.name,
-            email: req.body.email
+            username: username,
+            password: bcrypt.hashSync(password, 8),
+            name: name,
+            email: email
         }).then(user => {
-            if (req.body.positions) {
+            if (positions) {
                 Position.findAll({
                     where: {
                         name: {
-                            [Op.or]: req.body.positions
+                            [Op.or]: positions
                         }
                     }
                 }).then(positions => {
                     user.setPositions(positions).then(() => {
-                        if (req.body.roles) {
+                        if (roles) {
                             Role.findAll({
                                 where: {
                                     name: {
-                                        [Op.or]: req.body.roles
+                                        [Op.or]: roles
                                     }
                                 }
                             }).then(roles => {
@@ -54,11 +55,11 @@ class AuthController {
                     });
                 });
             } else {
-                if (req.body.roles) {
+                if (roles) {
                     Role.findAll({
                         where: {
                             name: {
-                                [Or.or]: req.body.roles
+                                [Or.or]: roles
                             }
                         }
                     }).then(() => {
@@ -100,19 +101,19 @@ class AuthController {
                 });
             }
             const token = jwt.sign({
-                id: user.id
+                id: user.username
             }, config.secret, {
-                expiresIn: 86400
+                expiresIn: config.jwtExpiration
             });
             let refreshToken = await RefreshToken.createToken(user);
             let rolesArr = [], positionsArr = [];
             user.getRoles().then(roles => {
                 roles.forEach(role => {
-                    rolesArr.push(role);
+                    rolesArr.push(role.name);
                 });
                 user.getPositions().then(positions => {
                     positions.forEach(position => {
-                        positionsArr.push(position);
+                        positionsArr.push(position.name);
                     });
                     res.send({
                         id: user.id,
