@@ -43,7 +43,7 @@ class AuthController {
                             });
                         } else {
                             user.setRoles([1]).then(() => {
-                                res.send({
+                                res.status(201).send({
                                     message: "Пользователь успешно зарегистрирован"
                                 });
                             });
@@ -71,7 +71,7 @@ class AuthController {
                     });
                 } else {
                     user.setRoles([1]).then(() => {
-                        res.send({
+                        res.status(201).send({
                             message: "Пользователь успешно зарегистрирован"
                         });
                     });
@@ -115,7 +115,7 @@ class AuthController {
                     positions.forEach(position => {
                         positionsArr.push(position.name);
                     });
-                    res.send({
+                    res.status(201).send({
                         id: user.id,
                         username: user.username,
                         email: user.email,
@@ -168,7 +168,7 @@ class AuthController {
             }, config.secret, {
                 expiresIn: config.jwtExpiration
             });
-            return res.status(200).json({
+            return res.status(201).json({
                 accessToken: newAccessToken,
                 refreshToken: refreshToken.token
             });

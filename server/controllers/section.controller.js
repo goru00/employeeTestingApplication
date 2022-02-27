@@ -8,7 +8,7 @@ class SectionController {
             name: req.body.name,
             description: req.body.description
         }).then(() => {
-            res.send({
+            res.status(201).send({
                 message: "Раздел успешно добавлен"
             });
         }).catch(err => {

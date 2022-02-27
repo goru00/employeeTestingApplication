@@ -7,7 +7,7 @@ class PositionController {
         const { id } = req.query;
         if (!id) {
             Position.findAll().then(positions => {
-                res.send(positions);
+                res.status(201).send(positions);
             }).catch(err => {
                 return res.status(500).send({
                     message: err.message
@@ -19,7 +19,7 @@ class PositionController {
         Position.create({
             name: req.body.name
         }).then(() => {
-            res.send({
+            res.status(201).send({
                 message: "Должность успешно добавлена"
             });
         }).catch(err => {

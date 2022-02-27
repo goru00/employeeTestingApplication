@@ -34,15 +34,6 @@ class Auth {
             });
         });
     }
-    async checkErrorUsersAndPositions(req, res, next) {
-        if (req.body.users && req.body.positions) {
-            res.status(403).send({
-                message: 'Ошибка! Нельзя выбрать одновременно пункты меню "Должность" и "Сотрудники"'
-            });
-            return;
-        }
-        next();
-    }
     checkRolesExisted(req, res, next) {
         if (req.body.roles) {
             req.body.roles.forEach(role => {

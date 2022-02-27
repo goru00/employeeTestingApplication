@@ -17,7 +17,6 @@ router.post('/', [
     Auth.isModeratorOrAdmin,
     Tests.checkDuplicateTestName,
     Tests.checkSectionIdExists,
-    Auth.checkErrorUsersAndPositions,
     Tests.checkEqLengthQuestionsAndAnswers
 ], testController.create);
 router.get('/', testController.get);

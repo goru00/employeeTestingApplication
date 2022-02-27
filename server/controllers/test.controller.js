@@ -1,6 +1,5 @@
 const db = require('../models');
 const Test = db.test;
-const User = db.user;
 const Position = db.position;
 const Employee = db.testsEmployee;
 const Op = db.Sequelize.Op;
@@ -9,6 +8,7 @@ const TestsData = db.testsData;
 class TestController {
     async get(req, res) {
         const { flag } = req.params;
+        const { id } = req.query;
         if (!!flag) {
             Employee.findAll({
                 where: {
@@ -21,7 +21,7 @@ class TestController {
                         message: "Тестов соответствующих запросу нет"
                     });
                 }
-                res.send(tests);
+                res.status(201).send(tests);
             });
         } else {
             Test.findAll().then(tests => {
@@ -30,19 +30,19 @@ class TestController {
                         message: "В данный момент тестов нет"
                     });
                 }
-                res.send(tests);
+                res.status(201).send(tests);
             })
         }
     }
     async create(req, res) {
-        const { positions, questions, answers, users } = req.body;
+        const { questions, answers } = req.body;
         Test.create({
             sectionId: req.body.sectionId,
             name: req.body.name,
             description: req.body.description,
             time: req.body.time,
             date: req.body.date
-        }).then(test => {
+        }).then(async test => {
             for (let index = 0; index < questions.length; index++) {
                 TestsData.create({
                     testId: test.id,
@@ -52,36 +52,53 @@ class TestController {
                     console.log(res);
                 });
             }
-            if (positions) {
-                let candidates = [];
-                Position.findAll({
-                    where: {
-                        name: {
-                            [Op.or]: positions
+            let candidates = [];
+            if (req.body.users) {
+                await req.body.users.forEach(user => {
+                    candidates.push(user);
+                });
+                if (req.body.positions) {
+                    Position.findAll({
+                        where: {
+                            name: {
+                                [Op.or]: req.body.positions
+                            }
                         }
-                    }
-                }).then(async positions => {
-                    for (let index = 0; index < positions.length; index++) {
-                        await positions[index].getUsers().then(users => {
-                            users.forEach(user => {
-                                if (!candidates.includes(user.username)) {
-                                    candidates.push(user.username);
-                                }
+                    }).then(async positions => {
+                        for (let index = 0; index < positions.length; index++) {
+                            await positions[index].getUsers().then(users => {
+                                users.forEach(user => {
+                                    if (!candidates.includes(user.username)) {
+                                        candidates.push(user.username);
+                                    }
+                                });
+                            });
+                        }
+                        test.setUsers(candidates).then(() => {
+                            res.status(201).send({
+                                message: "Тест успешно добавлен"
                             });
                         });
-                    }
+                    });
+                } else {
                     test.setUsers(candidates).then(() => {
-                        res.send({
+                        res.status(201).send({
                             message: "Тест успешно добавлен"
                         });
                     });
-                });
+                }
             }
         }).catch(err => {
             return res.status(500).send({
                 message: err.message
             });
         });
+    }
+    async delete(req, res) {
+        
+    }
+    async put(req, res) {
+
     }
 }
 
