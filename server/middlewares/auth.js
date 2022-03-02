@@ -127,7 +127,7 @@ class Auth {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
-                    if (roles[index].name === "moderator") {
+                    if (roles[index].name === "user") {
                         next();
                         return;
                     }

@@ -20,5 +20,9 @@ router.post('/', [
     Tests.checkEqLengthQuestionsAndAnswers
 ], testController.create);
 router.get('/', testController.get);
+router.get('/:id', [
+    Auth.verifyToken,
+    Auth.isUser
+], testController.get);
 
 module.exports = router;

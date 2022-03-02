@@ -7,31 +7,38 @@ const TestsData = db.testsData;
 
 class TestController {
     async get(req, res) {
-        const { flag } = req.params;
-        const { id } = req.query;
-        if (!!flag) {
+        if (!req.params.id) {
             Employee.findAll({
                 where: {
                     userId: req.userId,
-                    state: flag
+                    state: req.query.state
                 }
             }).then(tests => {
                 if (!tests) {
-                    return res.send({
-                        message: "Тестов соответствующих запросу нет"
+                    res.send({
+                        message: "Тестов для прохождения нет"
                     });
                 }
-                res.status(201).send(tests);
+                let testsArr = [];
+                for (let index = 0; index < tests.length; index++) {
+                    tests[index].getTests().then(test => {
+                        testsArr.push(test);
+                    });
+                }
+                res.status(200).send(testsArr);
             });
         } else {
-            Test.findAll().then(tests => {
-                if (!tests) {
-                    return res.send({
-                        message: "В данный момент тестов нет"
-                    });
+            /*Employee.findAll({
+                where: {
+                    testId: req.params.id,
+                    userId: req.userId
                 }
-                res.status(201).send(tests);
-            })
+            }).then(test => {
+                if (test) {
+                    console.log(test.testId);
+                    res.status(200).send(test.testId);
+                }
+            });*/
         }
     }
     async create(req, res) {
