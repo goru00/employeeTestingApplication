@@ -34,6 +34,21 @@ class Auth {
             });
         });
     }
+    checkUsersExisted(req, res, next) {
+        User.findOne({
+            where: {
+                name: req.body.name
+            }
+        }).then(user => {
+            if (!user) {
+                res.status(404).send({
+                    message: "Пользователь не найден"
+                });
+                return;
+            }
+            next();
+        });
+    }
     checkRolesExisted(req, res, next) {
         if (req.body.roles) {
             req.body.roles.forEach(role => {

@@ -50,16 +50,9 @@ db.user.belongsToMany(db.role, {
     otherKey: 'roleId'
 });
 
-//cathedra_directions
-db.cathedra.belongsToMany(db.direction, {
-    through: 'cathedra_directions',
-    foreignKey: 'cathedraId',
-    otherKey: 'directionId'
-});
-db.direction.belongsToMany(db.cathedra, {
-    through: 'cathedra_directions',
-    foreignKey: 'directionId',
-    otherKey: 'cathedraId'
+//ref cathedraId directions table
+db.direction.belongsTo(db.cathedra, {
+    foreignKey: 'cathedraId'
 });
 
 //discipline_sections
@@ -121,6 +114,14 @@ db.student.belongsTo(db.user, {
 });
 db.user.hasOne(db.student, {
     foreignKey: 'userId'
+});
+
+//ref group table -> direction table
+db.group.belongsTo(db.direction, {
+    foreignKey: 'directionId'
+});
+db.direction.hasOne(db.group, {
+    foreignKey: 'directionId'
 });
 
 //student_groups

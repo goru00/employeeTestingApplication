@@ -1,5 +1,3 @@
-const config 
-
 module.exports = (sequelize, Sequelize) => {
     const Group = sequelize.define("groups", {
         id: {

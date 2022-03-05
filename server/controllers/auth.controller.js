@@ -1,82 +1,49 @@
+const nodemailer = require('nodemailer');
 const db = require('../models');
 const config = require('../configs/auth.config');
 const { user: User, 
-        role: Role, 
-        position: Position, 
+        role: Role,
         refreshToken: RefreshToken 
 } = db; 
 const Op = db.Sequelize.Op;
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcryptjs');
 
+
 class AuthController {
     async signup(req, res) {
-        const { username, password, name, email, positions, roles } = req.body;
+        const { username, password, name, positions, roles } = req.body;
         User.create({
             username: username,
             password: bcrypt.hashSync(password, 8),
             name: name,
-            email: email
+            email: req.body.email
         }).then(user => {
-            if (positions) {
-                Position.findAll({
+            if (roles) {
+                Role.findAll({
                     where: {
                         name: {
-                            [Op.or]: positions
+                            [Op.or]: roles
                         }
                     }
-                }).then(positions => {
-                    user.setPositions(positions).then(() => {
-                        if (roles) {
-                            Role.findAll({
-                                where: {
-                                    name: {
-                                        [Op.or]: roles
-                                    }
-                                }
-                            }).then(roles => {
-                                user.setRoles(roles).then(() => {
-                                    res.send({
-                                        message: "Пользователь успешно зарегистрирован"
-                                    });
-                                });
-                            });
-                        } else {
-                            user.setRoles([1]).then(() => {
-                                res.status(201).send({
-                                    message: "Пользователь успешно зарегистрирован"
-                                });
-                            });
-                        }
-                    }).catch(err => {
-                        res.status(500).send({
-                            message: err.message
+                }).then(roles => {
+                    user.setRoles(roles).then(() => {
+                        res.send({
+                            message: "Пользователь успешно зарегистрирован"
                         });
                     });
                 });
             } else {
-                if (roles) {
-                    Role.findAll({
-                        where: {
-                            name: {
-                                [Or.or]: roles
-                            }
-                        }
-                    }).then(() => {
-                        user.setRoles(roles).then(() => {
-                            res.send({
-                                message: "Пользователь успешно зарегистрирован"
-                            });
-                        });
+                user.setRoles([1]).then(() => {
+                    res.status(201).send({
+                        message: "Пользователь успешно зарегистрирован"
                     });
-                } else {
-                    user.setRoles([1]).then(() => {
-                        res.status(201).send({
-                            message: "Пользователь успешно зарегистрирован"
-                        });
-                    });
-                }
-            }   
+                });
+            }
+        }).catch(err => {
+            res.status(500).send({
+                message: err.message
+            });
         });
     }
     async signin(req, res) {
@@ -106,24 +73,18 @@ class AuthController {
                 expiresIn: config.jwtExpiration
             });
             let refreshToken = await RefreshToken.createToken(user);
-            let rolesArr = [], positionsArr = [];
+            let rolesArr = [];
             user.getRoles().then(roles => {
                 roles.forEach(role => {
                     rolesArr.push(role.name);
                 });
-                user.getPositions().then(positions => {
-                    positions.forEach(position => {
-                        positionsArr.push(position.name);
-                    });
-                    res.status(201).send({
-                        id: user.id,
-                        username: user.username,
-                        email: user.email,
-                        roles: rolesArr,
-                        positions: positionsArr,
-                        accessToken: token,
-                        refreshToken: refreshToken
-                    });
+                res.status(201).send({
+                    id: user.id,
+                    username: user.username,
+                    email: user.email,
+                    roles: rolesArr,
+                    accessToken: token,
+                    refreshToken: refreshToken
                 });
             });
         }).catch(err => {
