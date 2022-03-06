@@ -3,7 +3,6 @@ const router = new Router();
 
 const authRouter = require('./auth.routes');
 const universityRouter = require('./university.router');
-const sectionRouter = require('./section.routes');
 const testRouter = require('./test.routes');
 
 router.use(function(req, res, next) {

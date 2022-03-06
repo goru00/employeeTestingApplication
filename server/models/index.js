@@ -27,11 +27,14 @@ const db = {
 
 db.user = require('../models/user.model')(sequelize, Sequelize);
 db.role = require('../models/role.model')(sequelize, Sequelize);
+db.testDatas = require('../models/testDatas.model')(sequelize, Sequelize);
 db.test = require('../models/test.model')(sequelize, Sequelize);
 db.direction = require('../models/direction.model')(sequelize, Sequelize);
 db.discipline = require('../models/discipline.model')(sequelize, Sequelize);
+db.disciplineSections = require('../models/disciplineSection.model')(sequelize, Sequelize);
 db.teacher = require('../models/teacher.model')(sequelize, Sequelize);
 db.student = require('../models/student.model')(sequelize, Sequelize);
+db.studentTest = require('../models/studentTest.model')(sequelize, Sequelize);
 db.group = require('../models/group.model')(sequelize, Sequelize);
 db.std = require('../models/sectionTestData.model')(sequelize, Sequelize);
 db.cathedra = require('../models/cathedra.model')(sequelize, Sequelize);
@@ -53,6 +56,14 @@ db.user.belongsToMany(db.role, {
 //ref cathedraId directions table
 db.direction.belongsTo(db.cathedra, {
     foreignKey: 'cathedraId'
+});
+
+//ref student table -> user table
+db.student.belongsTo(db.user, {
+    foreignKey: 'userId'
+});
+db.user.hasOne(db.student, {
+    foreignKey: 'userId'
 });
 
 //discipline_sections
@@ -81,11 +92,13 @@ db.discipline.belongsToMany(db.direction, {
 
 //student_tests
 db.student.belongsToMany(db.test, {
+    as: 'sts',
     through: 'student_tests',
     foreignKey: 'studentId',
     otherKey: 'testId'
 });
 db.test.belongsToMany(db.student, {
+    as: 'sts',
     through: 'student_tests',
     foreignKey: 'testId',
     otherKey: 'studentId'
@@ -93,19 +106,44 @@ db.test.belongsToMany(db.student, {
 
 //ref section_testDatas -> sections table
 db.std.belongsTo(db.section, {
-    as: 'stds',
     foreignKey: 'sectionId'
 });
 db.section.hasMany(db.std, {
     foreignKey: 'sectionId'
 });
 
-//ref sectionId test table
-db.section.hasOne(db.test, {
+//ref testId, sectionId, questionId -> test_datas table
+db.testDatas.belongsTo(db.test, {
+    foreignKey: 'testId'
+});
+db.test.hasMany(db.testDatas, {
+    foreignKey: 'testId'
+});
+db.testDatas.belongsTo(db.std, {
     foreignKey: 'sectionId'
 });
-db.test.belongsTo(db.section, {
+db.std.hasMany(db.testDatas, {
     foreignKey: 'sectionId'
+});
+db.testDatas.belongsTo(db.std, {
+    foreignKey: 'questionId'
+});
+db.std.hasMany(db.testDatas, {
+    foreignKey: 'questionId'
+});
+
+//ref sectionId, disciplineId -> test table
+db.test.belongsTo(db.disciplineSections, {
+    foreignKey: 'sectionId'
+});
+db.disciplineSections.hasMany(db.test, {
+    foreignKey: 'sectionId'
+});
+db.test.belongsTo(db.disciplineSections, {
+    foreignKey: 'disciplineId'
+});
+db.disciplineSections.hasMany(db.test, {
+    foreignKey: 'disciplineId'
 });
 
 //ref student table -> user table
@@ -138,10 +176,10 @@ db.group.belongsToMany(db.student, {
 
 //ref teacher table -> user table
 db.teacher.belongsTo(db.user, {
-    foreignKey: 'teacherId'
+    foreignKey: 'userId'
 });
 db.user.hasOne(db.teacher, {
-    foreignKey: 'teacherId'
+    foreignKey: 'userId'
 });
 
 //teacher_cathedras

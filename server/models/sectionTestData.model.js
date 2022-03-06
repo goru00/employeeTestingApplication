@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const STD = sequelize.define("section_testDatas", {
+    const STD = sequelize.define("stds", {
         questionId: {
             type: Sequelize.INTEGER,
             primaryKey: true,

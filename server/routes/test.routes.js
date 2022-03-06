@@ -1,6 +1,6 @@
 const Auth = require('../middlewares/auth');
 const Tests = require('../middlewares/tests');
-const testController = require('../controllers/test.controller');
+const TestController = require('../controllers/test.controller');
 const Router = require('express');
 const router = new Router();
 
@@ -12,17 +12,17 @@ router.use(function(req, res, next) {
     next();
 });
 
+router.post('/sections', [
+    Auth.verifyToken,
+    Auth.isModeratorOrAdmin
+], TestController.createSection);
+
+router.get('/', [
+    Auth.verifyToken,
+    Auth.isModeratorOrAdmin
+], TestController.getTests);
 router.post('/', [
     Auth.verifyToken,
-    Auth.isModeratorOrAdmin,
-    Tests.checkDuplicateTestName,
-    Tests.checkSectionIdExists,
-    Tests.checkEqLengthQuestionsAndAnswers
-], testController.create);
-router.get('/', testController.get);
-router.get('/:id', [
-    Auth.verifyToken,
-    Auth.isUser
-], testController.get);
-
+    Auth.isModeratorOrAdmin
+], TestController.createTest);
 module.exports = router;

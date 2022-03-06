@@ -1,111 +1,144 @@
 const db = require('../models');
 const Test = db.test;
-const Position = db.position;
-const Employee = db.testsEmployee;
+const TestData = db.testDatas;
+const Section = db.section;
+const Group = db.group;
+const Student = db.student;
+const StudentTest = db.studentTest;
+const Discipline = db.discipline;
+const Std = db.std;
 const Op = db.Sequelize.Op;
-const TestsData = db.testsData;
 
 class TestController {
-    async get(req, res) {
-        if (!req.params.id) {
-            Employee.findAll({
-                where: {
-                    userId: req.userId,
-                    state: req.query.state
-                }
-            }).then(tests => {
-                if (!tests) {
-                    res.send({
-                        message: "Тестов для прохождения нет"
-                    });
-                }
-                let testsArr = [];
-                for (let index = 0; index < tests.length; index++) {
-                    tests[index].getTests().then(test => {
-                        testsArr.push(test);
-                    });
-                }
-                res.status(200).send(testsArr);
+    async getSections(req, res) {
+        Section.findAll().then(sections => {
+            if (!sections) {
+                res.status(200).send({
+                    message: "По вашему запросу не было найдено ни одной записи"
+                });
+            }
+            res.status(200).send(sections);
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
             });
-        } else {
-            /*Employee.findAll({
+        });
+    } 
+    async createSection(req, res) {
+        Section.create({
+            name: req.body.sectionName,
+            description: req.body.description
+        }).then(section => {
+            Discipline.findOne({
                 where: {
-                    testId: req.params.id,
-                    userId: req.userId
+                    name: req.body.disciplineName
                 }
-            }).then(test => {
-                if (test) {
-                    console.log(test.testId);
-                    res.status(200).send(test.testId);
-                }
-            });*/
-        }
-    }
-    async create(req, res) {
-        const { questions, answers } = req.body;
-        Test.create({
-            sectionId: req.body.sectionId,
-            name: req.body.name,
-            description: req.body.description,
-            time: req.body.time,
-            date: req.body.date
-        }).then(async test => {
-            for (let index = 0; index < questions.length; index++) {
-                TestsData.create({
-                    testId: test.id,
-                    question: questions[index],
-                    answer: answers[index]
-                }).then(res => {
-                    console.log(res);
-                });
-            }
-            let candidates = [];
-            if (req.body.users) {
-                await req.body.users.forEach(user => {
-                    candidates.push(user);
-                });
-                if (req.body.positions) {
-                    Position.findAll({
-                        where: {
-                            name: {
-                                [Op.or]: req.body.positions
-                            }
-                        }
-                    }).then(async positions => {
-                        for (let index = 0; index < positions.length; index++) {
-                            await positions[index].getUsers().then(users => {
-                                users.forEach(user => {
-                                    if (!candidates.includes(user.username)) {
-                                        candidates.push(user.username);
-                                    }
-                                });
-                            });
-                        }
-                        test.setUsers(candidates).then(() => {
-                            res.status(201).send({
-                                message: "Тест успешно добавлен"
-                            });
-                        });
+            }).then(discipline => {
+                discipline.setSections(section).then(() => {
+                    res.status(201).send({
+                        message: "Раздел теста был успешно добавлен"
                     });
-                } else {
-                    test.setUsers(candidates).then(() => {
-                        res.status(201).send({
-                            message: "Тест успешно добавлен"
-                        });
-                    });
-                }
-            }
+                });
+            });
         }).catch(err => {
             return res.status(500).send({
                 message: err.message
             });
         });
     }
-    async delete(req, res) {
-        
+    async getTests(req, res) {
+        Test.findAll().then(tests => {
+            if (!tests) {
+                res.status(200).send({
+                    message: "По Вашему запросу не было найдено ни одного теста"
+                });
+            }
+            res.status(200).send(tests);
+        })
     }
-    async put(req, res) {
-
+    async createTest(req, res) {
+        Discipline.findOne({
+            where: {
+                name: req.body.disciplineName
+            }
+        }).then(discipline => {
+            Section.findOne({
+                where: {
+                    name: req.body.sectionName
+                }
+            }).then(section => {
+                Test.create({
+                    sectionId: section.id,
+                    disciplineId: discipline.id,
+                    time: req.body.time,
+                    date: req.body.date,
+                    name: req.body.name,
+                    description: req.body.description
+                }).then(test => {
+                    if (req.body.questions) {
+                        for (let index = 0; index < questions.length; index++) {
+                            Std.create({
+                                sectionId: section.id,
+                                question: req.body.questions[index],
+                                answers: req.body.answers[index],
+                                tAnswers: req.body.tAnswers[index]
+                            }).then(std => {
+                                TestData.create({
+                                    testId: test.id,
+                                    sectionId: std.sectionId,
+                                    questionId: std.questionId
+                                });
+                            });
+                        }
+                    }
+                    let candidates = [];
+                    if (req.body.groups || req.body.students) {
+                        Group.findAll({
+                            where: {
+                                name: {
+                                    [Op.or]: req.body.groups
+                                }
+                            }
+                        }).then(async groups => {
+                            for (let index = 0; index < groups.length; index++) {
+                                await Student.findAll({
+                                    where: {
+                                        groupId: {
+                                            [Op.or]: groups[index].id
+                                        }
+                                    }
+                                }).then(async students => {
+                                    await students.forEach(student => {
+                                        candidates.push(student);
+                                    })
+                                })
+                            }
+                            if (req.body.students) {
+                                Student.findAll({
+                                    where: {
+                                        name: {
+                                            [Op.or]: req.body.students
+                                        }
+                                    }
+                                }).then(async students => {
+                                    await students.forEach(student => {
+                                        candidates.push(student);
+                                    });
+                                    if (candidates) {
+                                        candidates.forEach(candidate => {
+                                            test.setSts(candidate);
+                                        });
+                                    }
+                                    res.status(201).send({
+                                        message: "Тест был успешно добавлен"
+                                    });
+                                });
+                            }
+                        });
+                    }
+                });
+            });
+        });
     }
 }
 

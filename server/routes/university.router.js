@@ -35,6 +35,14 @@ router.post('/groups', [
     Auth.isModeratorOrAdmin,
     University.checkExistsDirection
 ], UniversityController.createGroup);
+router.get('/groups', [
+    Auth.verifyToken
+], UniversityController.getGroups);
+
+router.get('/students', [
+    Auth.verifyToken,
+    Auth.isModeratorOrAdmin
+], UniversityController.getStudents);
 router.post('/students', [
     Auth.verifyToken,
     Auth.isModeratorOrAdmin
