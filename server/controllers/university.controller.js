@@ -1,11 +1,12 @@
-const { student } = require('../models');
 const db = require('../models');
 const Cathedra = db.cathedra;
 const Direction = db.direction;
 const Discipline = db.discipline;
 const Student = db.student;
+const Teacher = db.teacher;
 const User = db.user;
 const Group = db.group;
+const Op = db.Sequelize.Op;
 
 class UniversityController
 {
@@ -33,18 +34,54 @@ class UniversityController
                 userId: user.username,
                 tabNum: req.body.tabNum
             }).then(student => {
-                Group.findOne({
+                Group.findAll({
                     where: {
-                        name: req.body.groupName
+                        name: {
+                            [Op.or]: req.body.groupsName
+                        }
                     }
-                }).then(group => {
-                    group.setStudents(student).then(() => {
-                        res.status(201).send({
-                            message: "Студент был успешно создан"
-                        });
+                }).then(async groups => {
+                    await groups.forEach(group => {
+                        group.setStudents(student);
+                    })
+                    res.status(201).send({
+                        message: "Студент был успешно создан"
                     });
                 });
             })
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
+            });
+        });
+    }
+    async createTeacher(req, res) {
+        User.findOne({
+            where: {
+                name: req.body.name
+            }
+        }).then(user => {
+            Teacher.create({
+                userId: user.username,
+                tabNum: req.body.tabNum,
+                position: req.body.position,
+                academic: req.body.academic
+            }).then(teacher => {
+                Cathedra.findAll({
+                    where: {
+                        name: {
+                            [Op.or]: req.body.cathedrasName
+                        }
+                    }
+                }).then(async cathedras => {
+                    await cathedras.forEach(cathedra => {
+                        cathedra.setTeachers(teacher);
+                    });
+                    res.status(201).send({
+                        message: "Преподаватель был успешно создан"
+                    });
+                });
+            });  
         }).catch(err => {
             return res.status(500).send({
                 message: err.message
@@ -67,7 +104,7 @@ class UniversityController
     }
     async createCathedra(req, res) {
         Cathedra.create({
-            name: req.body.name
+            name: req.body.cathedraName
         }).then(() => {
             res.status(201).send({
                 message: "Кафедра была успешно создана"
@@ -104,7 +141,7 @@ class UniversityController
                 cathedraId: cathedra.id
             }).then(() => {
                 res.status(201).send({
-                    message: "Дисциплина была успешно создана"
+                    message: "Направление было успешно создано"
                 });
             }).catch(err => {
                 return res.status(500).send({
@@ -168,7 +205,7 @@ class UniversityController
             }).then(direction => {
                 discipline.setDirections(direction).then(() => {
                     res.status(201).send({
-                        message: "Дисциплина была успешно добавлена"
+                        message: "Дисциплина была успешно создана"
                     });
                 });
             });

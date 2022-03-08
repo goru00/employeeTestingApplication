@@ -57,6 +57,7 @@ class TestController {
         })
     }
     async createTest(req, res) {
+        console.log(req.body.nameTest + "\n" + req.body.time);
         Discipline.findOne({
             where: {
                 name: req.body.disciplineName
@@ -70,18 +71,19 @@ class TestController {
                 Test.create({
                     sectionId: section.id,
                     disciplineId: discipline.id,
+                    teacherId: req.userId,
                     time: req.body.time,
                     date: req.body.date,
-                    name: req.body.name,
+                    name: req.body.nameTest,
                     description: req.body.description
                 }).then(test => {
                     if (req.body.questions) {
-                        for (let index = 0; index < questions.length; index++) {
+                        for (let index = 0; index < req.body.questions.length; index++) {
                             Std.create({
                                 sectionId: section.id,
                                 question: req.body.questions[index],
-                                answers: req.body.answers[index],
-                                tAnswers: req.body.tAnswers[index]
+                                answer: req.body.answers[index],
+                                tAnswer: req.body.tAnswers[index]
                             }).then(std => {
                                 TestData.create({
                                     testId: test.id,
@@ -91,8 +93,8 @@ class TestController {
                             });
                         }
                     }
-                    let candidates = [];
                     if (req.body.groups || req.body.students) {
+                        let candidates = [];
                         Group.findAll({
                             where: {
                                 name: {
@@ -100,19 +102,11 @@ class TestController {
                                 }
                             }
                         }).then(async groups => {
-                            for (let index = 0; index < groups.length; index++) {
-                                await Student.findAll({
-                                    where: {
-                                        groupId: {
-                                            [Op.or]: groups[index].id
-                                        }
-                                    }
-                                }).then(async students => {
-                                    await students.forEach(student => {
-                                        candidates.push(student);
-                                    })
-                                })
-                            }
+                            await groups.forEach(group => {
+                                group.getStudents().then(student => {
+                                    if (!candidates.includes(student)) candidates.push(student);
+                                });
+                            });
                             if (req.body.students) {
                                 Student.findAll({
                                     where: {
@@ -122,21 +116,29 @@ class TestController {
                                     }
                                 }).then(async students => {
                                     await students.forEach(student => {
-                                        candidates.push(student);
+                                        if (!candidates.includes(student)) candidates.push(student);
                                     });
                                     if (candidates) {
                                         candidates.forEach(candidate => {
-                                            test.setSts(candidate);
+                                            test.setStr(candidate);
                                         });
                                     }
                                     res.status(201).send({
                                         message: "Тест был успешно добавлен"
                                     });
                                 });
+                            } else {
+                                res.status(201).send({
+                                    message: "Тест был успешно добавлен"
+                                });
                             }
                         });
                     }
                 });
+            });
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
             });
         });
     }

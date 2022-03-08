@@ -1,20 +1,20 @@
 module.exports = (sequelize, Sequelize) => {
-    const studentTest = sequelize.define("student_tests", {
+    const studentTest = sequelize.define("student_results", {
         score: {
             type: Sequelize.INTEGER,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 0
         },
         state: {
             type: Sequelize.BOOLEAN,
-            allowNull: false
+            allowNull: false,
+            defaultValue: 0
         },
         timeStart: {
-            type: Sequelize.DATE,
-            allowNull: false
+            type: Sequelize.DATE
         },
         timeFinish: {
-            type: Sequelize.DATE,
-            allowNull: false
+            type: Sequelize.DATE
         }
     });
     return studentTest;

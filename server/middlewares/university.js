@@ -10,9 +10,9 @@ class University {
                 name: req.body.cathedraName
             }
         }).then(cathedra => {
-            if (!cathedra) {
-                res.status(404).send({
-                    message: "Кафедра не была найдена"
+            if (cathedra) {
+                res.status(403).send({
+                    message: "Ошибка! Данная кафедра уже существует"
                 });
                 return;
             }
@@ -36,10 +36,11 @@ class University {
                 name: req.body.directionName
             }
         }).then(direction => {
-            if (!direction) {
-                res.status(404).send({
-                    message: "Направление не было найдено"
+            if (direction) {
+                res.status(403).send({
+                    message: "Ошибка! Данное направление уже существует"
                 });
+                return;
             }
             next();
         });

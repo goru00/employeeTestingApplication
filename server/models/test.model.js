@@ -5,6 +5,18 @@ module.exports = (sequelize, Sequelize) => {
             primaryKey: true,
             autoIncrement: true
         },
+        teacherId: {
+            type: Sequelize.STRING,
+            primaryKey: true
+        },
+        sectionId: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
+        disciplineId: {
+            type: Sequelize.INTEGER,
+            allowNull: false
+        },
         name: {
             type: Sequelize.STRING,
             allowNull: false
