@@ -1,20 +1,22 @@
 module.exports = (sequelize, Sequelize) => {
     const StudentAnswer = sequelize.define("student_answers", {
-        testId: {
-            type: Sequelize.INTEGER,
-            primaryKey: true
+        answer: {
+            type: Sequelize.STRING
         },
-        sectionId: {
-            type: Sequelize.INTEGER,
+        studentId: {
+            type: Sequelize.STRING,
             primaryKey: true
         },
         questionId: {
             type: Sequelize.INTEGER,
             primaryKey: true
         },
-        answer: {
-            type: Sequelize.STRING
+        testId: {
+            type: Sequelize.INTEGER,
+            primaryKey: true
         }
+    }, {
+        timeStamps: false
     });
     return StudentAnswer;
 }

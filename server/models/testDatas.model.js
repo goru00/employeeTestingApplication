@@ -4,10 +4,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             primaryKey: true
         },
-        sectionId: {
-            type: Sequelize.INTEGER,
-            primaryKey: true
-        },
         questionId: {
             type: Sequelize.INTEGER,
             primaryKey: true

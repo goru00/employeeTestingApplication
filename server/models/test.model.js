@@ -7,7 +7,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         teacherId: {
             type: Sequelize.STRING,
-            primaryKey: true
+            allowNull: false
         },
         sectionId: {
             type: Sequelize.INTEGER,
@@ -33,6 +33,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATEONLY,
             allowNull: false
         }
+    }, {
+        timeStamps: false
     });
     return Test;
 }

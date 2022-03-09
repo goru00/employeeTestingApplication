@@ -130,12 +130,12 @@ db.disciplineSections = require('../models/disciplineSection.model')(sequelize, 
 
 //discipline_sections
 db.discipline.belongsToMany(db.section, {
-    through: 'discipline_sections',
+    through: db.disciplineSections,
     foreignKey: 'disciplineId',
     otherKey: 'sectionId'
 });
 db.section.belongsToMany(db.discipline, {
-    through: 'discipline_sections',
+    through: db.disciplineSections,
     foreignKey: 'sectionId',
     otherKey: 'disciplineId'
 });
@@ -143,61 +143,87 @@ db.section.belongsToMany(db.discipline, {
 db.test = require('../models/test.model')(sequelize, Sequelize);
 
 //ref sectionId, disciplineId -> test table
-
-db.test.hasMany(db.disciplineSections, {
-    foreignKey: 'sectionId'
+db.discipline.hasMany(db.test, {
+    foreignKey: 'disciplineId',
+    sourceKey: 'id'
 });
-db.disciplineSections.belongsTo(db.test, {
-    foreignKey: 'sectionId'
+db.test.belongsTo(db.discipline, {
+    foreignKey: 'disciplineId',
+    targetKey: 'id'
+});
+db.section.hasMany(db.test, {
+    foreignKey: 'sectionId',
+    sourceKey: 'id'
+});
+db.test.belongsTo(db.section, {
+    foreignKey: 'sectionId',
+    sourceKey: 'id'
+});
+db.teacher.hasMany(db.test, {
+    foreignKey: 'teacherId',
+    sourceKey: 'userId'
+});
+db.test.belongsTo(db.teacher, {
+    foreignKey: 'teacherId',
+    targetKey: 'userId'
 });
 
 db.std = require('../models/sectionTestData.model')(sequelize, Sequelize);
+
+db.section.hasMany(db.std, {
+    foreignKey: 'sectionId',
+    sourceKey: 'id'
+});
+db.std.belongsTo(db.section, {
+    foreignKey: 'sectionId',
+    targetKey: 'id'
+});
+
 db.testDatas = require('../models/testDatas.model')(sequelize, Sequelize);
+
+db.test.belongsToMany(db.std, {
+    through: 'test_datas',
+    foreignKey: 'testId',
+    otherKey: 'questionId'
+});
+db.std.belongsToMany(db.test, {
+    through: 'test_datas',
+    foreignKey: 'questionId',
+    otherKey: 'testId'
+});
+
 db.studentAnswer = require('./studentAnswer.model')(sequelize, Sequelize);
+
+db.studentAnswer.belongsTo(db.std, {
+    foreignKey: 'questionId'
+});
+db.std.hasMany(db.studentAnswer, {
+    foreignKey: 'questionId'
+});
+db.studentAnswer.belongsTo(db.test, {
+    foreignKey: 'testId'
+});
+db.test.hasMany(db.studentAnswer, {
+    foreignKey: 'testId'
+});
+db.studentAnswer.belongsTo(db.student, {
+    foreignKey: 'studentId'
+});
+db.student.hasMany(db.studentAnswer, {
+    foreignKey: 'studentId'
+});
+
 db.studentResult = require('./studentResult.model')(sequelize, Sequelize);
 
-//student_tests
 db.student.belongsToMany(db.test, {
-    as: 'str',
     through: 'student_results',
     foreignKey: 'studentId',
     otherKey: 'testId'
 });
 db.test.belongsToMany(db.student, {
-    as: 'str',
     through: 'student_results',
     foreignKey: 'testId',
     otherKey: 'studentId'
-});
-
-//ref section_testDatas -> sections table
-db.std.belongsTo(db.section, {
-    foreignKey: 'sectionId'
-});
-db.section.hasMany(db.std, {
-    foreignKey: 'sectionId'
-});
-
-//ref student_answers -> test_datas
-
-//ref testId, sectionId, questionId -> test_datas table
-db.testDatas.belongsTo(db.test, {
-    foreignKey: 'testId'
-});
-db.test.hasOne(db.testDatas, {
-    foreignKey: 'testId'
-});
-db.testDatas.belongsTo(db.std, {
-    foreignKey: 'sectionId'
-});
-db.std.hasOne(db.testDatas, {
-    foreignKey: 'sectionId'
-});
-db.testDatas.belongsTo(db.std, {
-    foreignKey: 'questionId'
-});
-db.std.hasOne(db.testDatas, {
-    foreignKey: 'questionId'
 });
 
 db.ROLES = ["user", "admin", "moderator"];

@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const studentTest = sequelize.define("student_results", {
+    const StudentResult = sequelize.define("student_results", {
         score: {
             type: Sequelize.INTEGER,
             allowNull: false,
@@ -16,6 +16,8 @@ module.exports = (sequelize, Sequelize) => {
         timeFinish: {
             type: Sequelize.DATE
         }
+    }, {
+        timeStamps: false
     });
-    return studentTest;
+    return StudentResult;
 }

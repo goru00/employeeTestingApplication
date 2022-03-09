@@ -4,7 +4,8 @@ const TestData = db.testDatas;
 const Section = db.section;
 const Group = db.group;
 const Student = db.student;
-const StudentTest = db.studentTest;
+const StudentResult = db.studentResult;
+const StudentAnswer = db.studentAnswer;
 const Discipline = db.discipline;
 const Std = db.std;
 const Op = db.Sequelize.Op;
@@ -77,22 +78,6 @@ class TestController {
                     name: req.body.nameTest,
                     description: req.body.description
                 }).then(test => {
-                    if (req.body.questions) {
-                        for (let index = 0; index < req.body.questions.length; index++) {
-                            Std.create({
-                                sectionId: section.id,
-                                question: req.body.questions[index],
-                                answer: req.body.answers[index],
-                                tAnswer: req.body.tAnswers[index]
-                            }).then(std => {
-                                TestData.create({
-                                    testId: test.id,
-                                    sectionId: std.sectionId,
-                                    questionId: std.questionId
-                                });
-                            });
-                        }
-                    }
                     if (req.body.groups || req.body.students) {
                         let candidates = [];
                         Group.findAll({
@@ -103,8 +88,10 @@ class TestController {
                             }
                         }).then(async groups => {
                             await groups.forEach(group => {
-                                group.getStudents().then(student => {
-                                    if (!candidates.includes(student)) candidates.push(student);
+                                group.getStudents().then(students => {
+                                    students.forEach(student => {
+                                        if (!candidates.includes(student)) candidates.push(student);
+                                    })
                                 });
                             });
                             if (req.body.students) {
@@ -115,21 +102,29 @@ class TestController {
                                         }
                                     }
                                 }).then(async students => {
-                                    await students.forEach(student => {
-                                        if (!candidates.includes(student)) candidates.push(student);
-                                    });
-                                    if (candidates) {
+                                    for (let index = 0; index < req.body.questions.length; index++) {
+                                        const std = await Std.create({
+                                            sectionId: section.id,
+                                            question: req.body.questions[index],
+                                            answer: req.body.answers[index],
+                                            tAnswer: req.body.tAnswers[index]
+                                        });
+                                        TestData.create({
+                                            testId: test.id,
+                                            sectionId: std.sectionId,
+                                            questionId: std.questionId
+                                        });
                                         candidates.forEach(candidate => {
-                                            test.setStr(candidate);
+                                            StudentAnswer.create({
+                                                testId: test.id,
+                                                questionId: std.questionId,
+                                                studentId: candidate.userId
+                                            });
                                         });
                                     }
                                     res.status(201).send({
-                                        message: "Тест был успешно добавлен"
+                                        message: "Тест успешно добавлен"
                                     });
-                                });
-                            } else {
-                                res.status(201).send({
-                                    message: "Тест был успешно добавлен"
                                 });
                             }
                         });
