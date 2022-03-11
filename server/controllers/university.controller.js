@@ -3,6 +3,7 @@ const Cathedra = db.cathedra;
 const Direction = db.direction;
 const Discipline = db.discipline;
 const Student = db.student;
+const TeacherEmployment = db.teacherEmployment;
 const Teacher = db.teacher;
 const User = db.user;
 const Group = db.group;
@@ -173,11 +174,20 @@ class UniversityController
             Group.create({
                 name: req.body.groupName,
                 directionId: direction.id
-            }).then(() => {
-                res.status(201).send({
-                    message: "Группа была успешно создана"
-                });
-            })
+            }).then(async group => {
+                if (req.body.disciplines) {
+                    await req.body.disciplines.forEach(discipline => {
+                        group.setDisciplines(discipline);
+                    });
+                    res.status(201).send({
+                        message: "Группа была успешно создана"
+                    });
+                } else {
+                    res.status(201).send({
+                        message: "Группа была успешно создана"
+                    });
+                }
+            });
         }).catch(err => {
             return res.status(500).send({
                 message: err.message

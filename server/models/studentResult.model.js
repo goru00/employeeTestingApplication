@@ -6,9 +6,9 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 0
         },
         state: {
-            type: Sequelize.BOOLEAN,
+            type: Sequelize.STRING,
             allowNull: false,
-            defaultValue: 0
+            defaultValue: 'Не пройден'
         },
         timeStart: {
             type: Sequelize.DATE

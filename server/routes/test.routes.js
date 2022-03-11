@@ -25,4 +25,15 @@ router.post('/', [
     Auth.verifyToken,
     Auth.isModeratorOrAdmin
 ], TestController.createTest);
+router.post('/:testId/start', [
+    Auth.verifyToken,
+    Auth.isUser
+], TestController.startTest);
+router.post('/:testId/finish', [
+    Auth.verifyToken,
+    Auth.isUser
+], TestController.finishTest);
+router.get('/:testId/result', [
+    Auth.verifyToken
+], TestController.getResult);
 module.exports = router;

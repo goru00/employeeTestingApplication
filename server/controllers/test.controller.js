@@ -1,6 +1,5 @@
 const db = require('../models');
 const Test = db.test;
-const TestData = db.testDatas;
 const Section = db.section;
 const Group = db.group;
 const Student = db.student;
@@ -101,18 +100,13 @@ class TestController {
                                             [Op.or]: req.body.students
                                         }
                                     }
-                                }).then(async students => {
+                                }).then(async () => {
                                     for (let index = 0; index < req.body.questions.length; index++) {
                                         const std = await Std.create({
                                             sectionId: section.id,
                                             question: req.body.questions[index],
                                             answer: req.body.answers[index],
                                             tAnswer: req.body.tAnswers[index]
-                                        });
-                                        TestData.create({
-                                            testId: test.id,
-                                            sectionId: std.sectionId,
-                                            questionId: std.questionId
                                         });
                                         candidates.forEach(candidate => {
                                             StudentAnswer.create({
@@ -122,6 +116,12 @@ class TestController {
                                             });
                                         });
                                     }
+                                    candidates.forEach(candidate => {
+                                        StudentResult.create({
+                                            testId: test.id,
+                                            studentId: candidate.userId
+                                        });
+                                    });
                                     res.status(201).send({
                                         message: "Тест успешно добавлен"
                                     });
@@ -130,6 +130,109 @@ class TestController {
                         });
                     }
                 });
+            });
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
+            });
+        });
+    }
+    async getResult(req, res) {
+        StudentResult.findOne({
+            where: {
+                studentId: req.userId,
+                testId: req.params.testId
+            }
+        }).then(result => {
+            Test.findByPk(result.testId).then(test => {
+                res.status(200).send({
+                    name: test.name,
+                    description: test.description,
+                    time: test.time,
+                    date: test.date,
+                    timeStart: result.timeStart,
+                    finishTest: result.finishTest,
+                    score: result.score
+                });
+            });
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
+            });
+        });
+    }
+    async startTest(req, res) {
+        StudentResult.update({
+            state: 'В процессе',
+            timeStart: new Date()
+        }, {
+            where: {
+                studentId: req.userId,
+                testId: req.params.testId
+            }
+        }).then(result => {
+            if (result) {
+                StudentAnswer.findAll({
+                    where: {
+                        testId: req.params.testId,
+                        studentId: req.userId
+                    }
+                }).then(async studentQuestions => {
+                    Std.findAll({
+                        where: {
+                            questionId: {
+                                [Op.or]: studentQuestions.questionId
+                            }
+                        }
+                    }).then(data => {
+                        let qData = [];
+                        for (let index = 0; index < data.length; index++) {
+                            qData.push({
+                                id: data[index].questionId,
+                                question: data[index].question,
+                                answers: data[index].answer
+                            });
+                        }
+                        res.status(201).send(qData);
+                    });
+                });
+            } else {
+                res.status(404).send({
+                    message: "Ошибка! Тест не был найден"
+                });
+            }
+        }).catch(err => {
+            return res.status(500).send({
+                message: err.message
+            });
+        });
+    }
+    async finishTest(req, res) {
+        let score = 0;
+        await req.body.questionsId.forEach((questionId, index) => {
+            StudentAnswer.update({
+                answer: req.body.answers[index]
+            }, {
+                where: {
+                    studentId: req.userId,
+                    testId: req.params.testId,
+                    questionId: questionId
+                }
+            }).then(() => score++);
+        });
+        StudentResult.update({
+            score: Math.ceil(score / req.body.questionsId.length),
+            state: 'Пройдено',
+            timeFinish: new Date()
+        }, {
+            where: {
+                studentId: req.userId,
+                testId: req.params.testId
+            }
+        }).then(result => {
+            res.status(201).send({
+                message: "Тест был пройден",
+                score: result.score
             });
         }).catch(err => {
             return res.status(500).send({
