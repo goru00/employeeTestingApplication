@@ -218,10 +218,25 @@ class TestController {
                     testId: req.params.testId,
                     questionId: questionId
                 }
-            }).then(() => score++);
+            }).then(async () => {
+                await Std.findOne({
+                    where: {
+                        questionId: questionId
+                    }
+                }).then(std => {
+                    if (std.tAnswer === req.body.answers[index]) {
+                        console.log('ok');
+                        score++;
+                    }
+                }).catch(err => {
+                    return res.status(500).send({
+                        message: err.message
+                    });
+                });
+            });
         });
         StudentResult.update({
-            score: Math.ceil(score / req.body.questionsId.length),
+            score: Integer(Math.ceil(score / req.body.questionsId.length * 100)),
             state: 'Пройдено',
             timeFinish: new Date()
         }, {
