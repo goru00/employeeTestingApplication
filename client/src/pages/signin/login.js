@@ -3,16 +3,15 @@ import { Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
 
-import Form from "react-validation/build/form";
-import Input from "react-validation/build/input";
-import CheckButton from "react-validation/build/button";
-
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
+
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 
 const required = (value) => {
     if (!value) {
@@ -32,20 +31,39 @@ function Login(props) {
 
     const { message } = props;
 
-    function handleSubmit(e) {
-        e.preventDefault();
-
-        setLoading(true);
-        const { dispatch, history } = props;
-        dispatch(login(username, password))
-        .then(() => {
-            history.push("/profile");
-            window.location.reload();
-        })
-        .catch(() => {
-            setLoading(false);
-        });
-    }
+    const validation = useFormik({
+        initialValues: {
+            login: username,
+            password: password
+        },
+        validationSchema: Yup.object({
+            login: Yup
+                .string()
+                .email('Введите корректный логин')
+                .max(32)
+                .required('Логин обязателен для ввода'),
+            password: Yup
+                .string()
+                .max(16)
+                .required('Пароль обязателен для ввода')
+        }),
+        onSubmit: (e) => {
+            setLoading(true);
+            const { dispatch, history } = props;
+            dispatch(login(username, password))
+            .then(() => {
+                history.push("/profile");
+                window.location.reload();
+            })
+            .catch(() => {
+                setLoading(false);
+            });
+        },
+        onChange: (e) => {
+            if (e.target.name === "login") setUsername(e.target.data);
+            else setPassword(e.target.data);
+        }
+    });  
 
     if (isLoggedIn) {
         return <Navigate to='/profile' />
@@ -81,23 +99,41 @@ function Login(props) {
                     )
             }
             </Box>
-            <Form
-                onSubmit={handleSubmit}
+            <form
+                onSubmit={validation.handleSubmit}
             >
             <TextField
+                error={Boolean(
+                    validation.touched.login && 
+                    validation.errors.login)}
                 fullWidth
+                helperText={
+                    validation.touched.login && 
+                    validation.errors.login}
+                onBlur={validation.handleBlur}
+                onChange={validation.handleChange}
                 label="Логин"
                 margin="normal"
                 name="login"
                 type="login"
+                value={validation.values.login}
                 variant="outlined"
                 />
             <TextField
+                error={Boolean(
+                    validation.touched.password && 
+                    validation.errors.password)}
                 fullWidth
+                helperText={
+                    validation.touched.password && 
+                    validation.errors.password}
+                onBlur={validation.handleBlur}
+                onChange={validation.handleChange}
                 label="Пароль"
                 margin="normal"
                 name="password"
                 type="password"
+                value={validation.values.password}
                 variant="outlined"
             />
                 <Box sx={{ py: 2 }}>
@@ -111,7 +147,7 @@ function Login(props) {
                         Войти
                     </Button>
                 </Box>
-            </Form>
+            </form>
             </Container>
       </Box>
         </>
