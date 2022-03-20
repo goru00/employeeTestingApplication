@@ -11,6 +11,10 @@ router.use(function(req, res, next) {
     next();
 });
 
+router.get('/users/:id', [
+    Auth.verifyToken
+], authController.getUsers);
+
 router.post('/signup', [
     Auth.checkDuplicateUsernameOrEmail,
     Auth.checkRolesExisted

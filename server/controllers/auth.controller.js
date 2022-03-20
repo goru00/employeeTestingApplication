@@ -11,6 +11,23 @@ var bcrypt = require('bcryptjs');
 
 
 class AuthController {
+
+    async getUsers(req, res) {
+        const { id } = req.params;
+        User.findByPk(id).then(user => {
+            if (!user) {
+                res.status(404).send({
+                    message: 'Пользователь не был найден'
+                });
+            }
+            res.status(200).send({
+                username: user.username,
+                name: user.name,
+                email: user.email
+            });
+        })
+    }
+
     async signup(req, res) {
         const { username, password, name, positions, roles } = req.body;
         User.create({
