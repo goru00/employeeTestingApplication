@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { Navigate } from "react-router-dom";
 
+import eventBus from "../../common/EventBus";
+import userService from "../../services/user.service";
+
 function Profile(props) {
     const { user: currentUser } = props;
+    const [info, setInfo] = useState(null);
 
     if (!currentUser) {
         return <Navigate to={"/signin"} />;
     }
-
     return (
         <>
             <div className="container mt-3">

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Navigate } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
@@ -13,60 +13,47 @@ import Alert from '@mui/material/Alert';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
-const required = (value) => {
-    if (!value) {
-      return (
-        <div className="alert alert-danger" role="alert">
-          Это поле является обязательным
-        </div>
-      );
-    }
-};
+import Logo from '../../components/logo/logo';
 
 function Login(props) {
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [loading, setLoading] = useState(false);
     const { isLoggedIn } = props;
 
     const { message } = props;
-
+    
     const validation = useFormik({
         initialValues: {
-            login: username,
-            password: password
+            username: '',
+            password: ''
         },
         validationSchema: Yup.object({
-            login: Yup
+            username: Yup
                 .string()
-                .email('Введите корректный логин')
+                .min(6, 'Длина логина не может быть меньше 8 символов. Проверьте введенные данные')
                 .max(32)
                 .required('Логин обязателен для ввода'),
             password: Yup
                 .string()
+                .min(8, 'Длина пароля не может быть меньше 8 символов. Проверьте введенные данные')
                 .max(16)
                 .required('Пароль обязателен для ввода')
         }),
-        onSubmit: (e) => {
-            setLoading(true);
+        onSubmit: (values) => {
+            const { username, password } = values;
             const { dispatch, history } = props;
             dispatch(login(username, password))
             .then(() => {
-                history.push("/profile");
+                history.push("/");
                 window.location.reload();
             })
             .catch(() => {
-                setLoading(false);
+            })
+            .finally(() => {
             });
-        },
-        onChange: (e) => {
-            if (e.target.name === "login") setUsername(e.target.data);
-            else setPassword(e.target.data);
         }
     });  
 
     if (isLoggedIn) {
-        return <Navigate to='/profile' />
+        return <Navigate to='/' />
     }
 
     return (
@@ -82,6 +69,7 @@ function Login(props) {
       >
         <Container maxWidth="sm">
             <Box sx={{ my: 3 }}>
+                <Logo />
                 <Typography
                     color="textPrimary"
                     variant="h4"
@@ -104,19 +92,19 @@ function Login(props) {
             >
             <TextField
                 error={Boolean(
-                    validation.touched.login && 
-                    validation.errors.login)}
+                    validation.touched.username && 
+                    validation.errors.username)}
                 fullWidth
                 helperText={
-                    validation.touched.login && 
-                    validation.errors.login}
+                    validation.touched.username && 
+                    validation.errors.username}
                 onBlur={validation.handleBlur}
                 onChange={validation.handleChange}
                 label="Логин"
                 margin="normal"
-                name="login"
+                name="username"
                 type="login"
-                value={validation.values.login}
+                value={validation.values.username}
                 variant="outlined"
                 />
             <TextField
