@@ -5,6 +5,7 @@ import { Navigate } from "react-router-dom";
 import CardResultGraphics from "./CardResultGraphics";
 
 import CardTaskProgress from "./CardTaskProgress";
+import CardTestsList from './CardTestsList';
 
 const Home = (props) => {
     const { user: currentUser } = props;
@@ -32,6 +33,15 @@ const Home = (props) => {
                     container
                     spacing={3}
                 >
+                    <Grid 
+                        item
+                        lg={8}
+                        md={12}
+                        xl={9}
+                        xs={12}
+                    >
+                        <CardTestsList />
+                    </Grid>
                     <Grid 
                         item
                         lg={3}
