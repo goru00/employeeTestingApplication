@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import SeverityPill from '../../components/severityPill/severityPill';
+import SeverityPill from '../severityPill/severityPill';
 
 const tests = [
     {
@@ -45,15 +45,16 @@ const tests = [
     }
 ];
 
-const CardTestsList = (props) => {
+const CardItemsList = (props) => {
     return (
         <Card 
             {...props}
         >
             <CardHeader 
                 title="Последние тесты"
-            >
-                    <Box sx={{
+            />
+            <PerfectScrollbar>
+            <Box sx={{
                         minWidth: 800
                     }} >
                         <Table>
@@ -93,9 +94,6 @@ const CardTestsList = (props) => {
                                             hover
                                             key={test.id}
                                         >
-                                            {
-                                                console.log(test)
-                                            }
                                             <TableCell>
                                                 {test.id}
                                             </TableCell>
@@ -111,8 +109,8 @@ const CardTestsList = (props) => {
                                             <TableCell>
                                                 <SeverityPill 
                                                     color={
-                                                        (test.status === "delivered" && "success")
-                                                        || (test.status === "refunded" && "error")
+                                                        (test.status === "Пройден" && "success")
+                                                        || (test.status === "Не начат" && "error")
                                                         || "warning"}
                                                 >
                                                 {test.status}
@@ -124,6 +122,7 @@ const CardTestsList = (props) => {
                             </TableBody>
                         </Table>
                     </Box>
+                    </PerfectScrollbar>
                 <Box 
                     sx={{
                         display: "flex",
@@ -140,9 +139,8 @@ const CardTestsList = (props) => {
                         Посмотреть все
                     </Button>
                 </Box>
-            </CardHeader>
         </Card>
-    )
+    );
 }
 
-export default CardTestsList;
+export default CardItemsList;

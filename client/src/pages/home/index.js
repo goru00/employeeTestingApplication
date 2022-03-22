@@ -2,10 +2,11 @@ import { Box, Container, Grid } from "@mui/material";
 import React, { useEffect } from "react";
 import { connect } from 'react-redux';
 import { Navigate } from "react-router-dom";
-import CardResultGraphics from "./CardResultGraphics";
+import CardResultGraphics from "../../components/cards/CardResultGraphics";
 
-import CardTaskProgress from "./CardTaskProgress";
-import CardTestsList from './CardTestsList';
+import CardTaskProgress from "../../components/cards/CardTaskProgress";
+import CardItemsList from '../../components/cards/CardItemsList';
+import CardDiagramProgress from "../../components/cards/CardDiagramProgress";
 
 const Home = (props) => {
     const { user: currentUser } = props;
@@ -40,7 +41,7 @@ const Home = (props) => {
                         xl={9}
                         xs={12}
                     >
-                        <CardTestsList />
+                        <CardItemsList />
                     </Grid>
                     <Grid 
                         item
@@ -50,6 +51,15 @@ const Home = (props) => {
                         xs={12}
                     >
                        <CardTaskProgress /> 
+                    </Grid>
+                    <Grid 
+                        item
+                        lg={4}
+                        md={6}
+                        xl={3}
+                        xs={12}
+                    >
+                        <CardDiagramProgress />
                     </Grid>
                     <Grid 
                         item

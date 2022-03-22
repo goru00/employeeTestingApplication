@@ -137,7 +137,7 @@ const CardResultGraphics = (props) => {
                 </Button>
             </Box>
         </Card>
-    )
+    );
 }
 
 export default CardResultGraphics;

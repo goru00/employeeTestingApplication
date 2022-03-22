@@ -70,10 +70,13 @@ const Sidebar = (props) => {
                             key={sidebarLink.title}
                             icon={sidebarLink.icon}
                             href={sidebarLink.href}
-                            title={SidebarLink.title}
+                            title={sidebarLink.title}
                         />
                     ))}
                 </Box>
+                <Divider sx={{
+                    borderColor: "#2D3748"
+                }} />
             </Box>
         </>
     )
@@ -114,7 +117,7 @@ const Sidebar = (props) => {
         >
             { contentSidebar }
         </Drawer>
-    )
+    );
 }
 
 export default Sidebar;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { AppBar, IconButton, Toolbar, Tooltip, Box, Avatar } from "@mui/material";
+import { AppBar, IconButton, Toolbar, Tooltip, Box, Avatar, Typography } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -61,16 +61,20 @@ function Navbar(props) {
               </IconButton>
             </Tooltip>
             <Box sx={{ flexGrow: 1 }} />
-            <Avatar
-              sx={{
-                heigth: 40,
-                width: 40,
-                ml: 1
-              }}
-              src=""
+            <Typography 
+              color="#000"
             >
-
-            </Avatar>
+              Третьяков Дмитрий Артемович
+            </Typography>
+              <Avatar
+                sx={{
+                  heigth: 40,
+                  width: 40,
+                  ml: 1
+                }}
+                src=""
+              >
+              </Avatar>
           </Toolbar>
         </NavbarRoot>
       </>

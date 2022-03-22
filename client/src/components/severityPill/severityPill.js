@@ -1,8 +1,8 @@
 import { styled } from '@mui/material/styles';
 
 const SeverityPillRoot = styled('span')(({theme, ownerState}) => {
-    const backgroundColor = theme.pallete[ownerState.color].main;
-    const color = theme.pallete[ownerState.color].contrastText;
+    const backgroundColor = theme.palette[ownerState.color].main;
+    const color = theme.palette[ownerState.color].contrastText;
 
     return {
         alignItems: "center",
@@ -37,7 +37,7 @@ const SeverityPill = (props) => {
         >
             {children}
         </SeverityPillRoot>
-    )
-} 
+    );
+}; 
 
 export default SeverityPill;

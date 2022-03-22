@@ -24,7 +24,7 @@ const NavigationBarRoot = styled('div')(({ theme }) => ({
 
 const NavigationBar = (props) => {
     const [currentUser, setCurrentUser] = useState(null);
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isSidebarOpen, setSidebarOpen] = useState(false);
 
     useEffect(() => {
         const user = props.user;
