@@ -2,6 +2,9 @@ import { Box, Divider, Drawer, useMediaQuery } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SchoolIcon from '@mui/icons-material/School';
 
 import { Link } from "react-router-dom";
 
@@ -23,6 +26,21 @@ const sidebarLinks = [
         href: "/results",
         icon: (<SafetyDividerIcon fontSize="small" />),
         title: "Рейтинг"
+    },
+    {
+        href: "/university",
+        icon: (<SchoolIcon fontSize="small" />),
+        title: "Университет"
+    },
+    {
+        href: "/settings",
+        icon: (<SettingsIcon fontSize="small" />),
+        title: "Настройки"
+    },
+    {
+        href: "/logout",
+        icon: (<LogoutIcon fontSize="small" />),
+        title: "Выход"
     }
 ]
 

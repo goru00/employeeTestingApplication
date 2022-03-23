@@ -18,6 +18,10 @@ const SidebarLink = (props) => {
         >
             <NavLink 
                 to={href}
+                style={{
+                    listStyle: "none",
+                    textDecoration: "none"
+                }}
             >
                 <Button 
                     startIcon={icon}
@@ -32,8 +36,8 @@ const SidebarLink = (props) => {
                         textAlign: "left",
                         textTransform: "none",
                         width: "100%",
-                        "& .MuiButtin-startIcon": {
-                            color: active ? "secondary.main" : "meutral.400",
+                        "& .MuiButton-startIcon": {
+                            color: active ? "secondary.main" : "neutral.400",
                         },
                         "&:hover": {
                             backgroundColor: "rgba(255,255,255,0.08)"

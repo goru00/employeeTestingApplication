@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { AppBar, IconButton, Toolbar, Tooltip, Box, Avatar, Typography } from "@mui/material";
+import { AppBar, IconButton, Toolbar, Tooltip, Box, Avatar, Typography, Button, Grid } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -61,20 +61,55 @@ function Navbar(props) {
               </IconButton>
             </Tooltip>
             <Box sx={{ flexGrow: 1 }} />
-            <Typography 
-              color="#000"
+            <Link 
+              to="/profile"
+              style={{
+                listStyle: "none",
+                textDecoration: "none"
+              }}
             >
-              Третьяков Дмитрий Артемович
-            </Typography>
-              <Avatar
-                sx={{
-                  heigth: 40,
-                  width: 40,
-                  ml: 1
-                }}
-                src=""
-              >
-              </Avatar>
+            <Tooltip 
+                  title="Профиль"
+                >
+                  <Button 
+                    sx={{
+                      ml: 5
+                    }}
+                  >
+                    <Grid 
+                      item 
+                      xs={4} 
+                      md={8} 
+                      direction="container" 
+                      justifyContent="flex-end" 
+                      alignItems="flex-end"
+                      columnSpacing={0}
+                    >
+                      <Typography 
+                        color="#000"
+                        variant="subtitle1"
+                      >
+                        Третьяков Дмитрий Артемович
+                      </Typography>
+                      <Typography 
+                        color="#000"
+                        variant="subtitle2"
+                      >
+                        студент группы ИВТ-41
+                      </Typography>
+                    </Grid>
+                    <Avatar
+                      sx={{
+                        heigth: 40,
+                        width: 40,
+                        ml: 1
+                      }}
+                      src=""
+                    >
+                    </Avatar>
+                  </Button>
+                </Tooltip>
+            </Link>
           </Toolbar>
         </NavbarRoot>
       </>
