@@ -77,23 +77,23 @@ function Navbar(props) {
                     }}
                   >
                     <Grid 
-                      item 
-                      xs={4} 
-                      md={8} 
-                      direction="container" 
+                      container 
+                      xs={8} 
+                      md={8}
+                      lg={8}
                       justifyContent="flex-end" 
                       alignItems="flex-end"
                       columnSpacing={0}
                     >
                       <Typography 
                         color="#000"
-                        variant="subtitle1"
+                        variant="body1"
                       >
                         Третьяков Дмитрий Артемович
                       </Typography>
                       <Typography 
-                        color="#000"
-                        variant="subtitle2"
+                        color="#a2a2a2"
+                        variant="caption"
                       >
                         студент группы ИВТ-41
                       </Typography>
@@ -102,7 +102,7 @@ function Navbar(props) {
                       sx={{
                         heigth: 40,
                         width: 40,
-                        ml: 1
+                        ml: 2
                       }}
                       src=""
                     >

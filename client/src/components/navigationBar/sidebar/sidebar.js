@@ -5,6 +5,7 @@ import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
 import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SchoolIcon from '@mui/icons-material/School';
+import PersonIcon from '@mui/icons-material/Person';
 
 import { Link } from "react-router-dom";
 
@@ -16,6 +17,11 @@ const sidebarLinks = [
         href: '/',
         icon: (<DashboardIcon fontSize="small" />),
         title: "Главная"
+    },
+    {
+        href: "/profile",
+        icon: (<PersonIcon fontSize="small" />),
+        title: "Профиль"
     },
     {
         href: "/tests",
@@ -68,7 +74,7 @@ const Sidebar = (props) => {
                                 src={Logo} 
                                 width={42}
                                 height={42}
-                                alt="Филиал Котельники Университета Дубна"
+                                alt="Филиал Котельники Университета Дубна Логотип"
                             />
                         </Link>
                     </Box>
