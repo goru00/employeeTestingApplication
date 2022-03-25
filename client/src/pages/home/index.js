@@ -45,7 +45,7 @@ const Home = (props) => {
                     </Grid>
                     <Grid 
                         item
-                        lg={3}
+                        lg={4}
                         sm={6}
                         xl={3}
                         xs={12}
@@ -54,7 +54,7 @@ const Home = (props) => {
                     </Grid>
                     <Grid 
                         item
-                        lg={4}
+                        lg={12}
                         md={6}
                         xl={3}
                         xs={12}
@@ -63,7 +63,7 @@ const Home = (props) => {
                     </Grid>
                     <Grid 
                         item
-                        lg={8}
+                        lg={12}
                         md={12}
                         xl={9}
                         xs={12}

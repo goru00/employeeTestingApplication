@@ -106,16 +106,20 @@ const CardItemsList = (props) => {
                                             <TableCell>
                                                 {test.time}
                                             </TableCell>
-                                            <TableCell>
-                                                <SeverityPill 
-                                                    color={
-                                                        (test.status === "Пройден" && "success")
-                                                        || (test.status === "Не начат" && "error")
-                                                        || "warning"}
-                                                >
-                                                {test.status}
-                                                </SeverityPill>
-                                            </TableCell>
+                                            {
+                                                test.status && (
+                                                    <TableCell>
+                                                        <SeverityPill 
+                                                            color={
+                                                                (test.status === "Пройден" && "success")
+                                                                || (test.status === "Не начат" && "error")
+                                                                || "warning"}
+                                                        >
+                                                        {test.status}
+                                                        </SeverityPill>
+                                                    </TableCell>
+                                                )
+                                            }
                                         </TableRow>
                                     ))
                                 }

@@ -12,7 +12,7 @@ import { clearMessage } from "../actions/message";
 import Home from '../pages/home/index';
 import Login from '../pages/signin/login';
 import Profile from '../pages/profile/profile';
-
+import Tests from '../pages/tests/tests';
 
 const AppRouter = (props) => {
     const currentUser = props.user;
@@ -29,6 +29,7 @@ const AppRouter = (props) => {
                         <Route index element={<Home />} />
                         <Route path="signin" element={<Login />} />
                         <Route path="profile" element={<Profile />} />
+                        <Route path="tests" element={<Tests />} />
                     </Route>
                 </Routes>
             </>
