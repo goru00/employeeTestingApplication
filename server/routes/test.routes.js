@@ -21,6 +21,12 @@ router.get('/', [
     Auth.verifyToken,
     Auth.isModeratorOrAdmin
 ], TestController.getTests);
+
+router.get('/:userId', [
+    Auth.verifyToken,
+    Auth.isUser
+], TestController.getTests);
+
 router.post('/', [
     Auth.verifyToken,
     Auth.isModeratorOrAdmin

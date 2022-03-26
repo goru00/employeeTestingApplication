@@ -47,14 +47,38 @@ class TestController {
         });
     }
     async getTests(req, res) {
-        Test.findAll().then(tests => {
-            if (!tests) {
-                res.status(200).send({
-                    message: "По Вашему запросу не было найдено ни одного теста"
+        const { username } = req.params;
+        if (username) {
+            StudentResult.findAll({
+                where: {
+                    studentId: username
+                }
+            }).then(tests => {
+                if (!tests) {
+                    res.status(200).send({
+                        message: "По Вашему запросу не было найдено ни одного теста"
+                    });
+                }
+                res.status(200).send(tests);
+            }).catch(err => {
+                return res.status(500).send({
+                    message: err.message
                 });
-            }
-            res.status(200).send(tests);
-        })
+            });
+        } else {
+            Test.findAll().then(tests => {
+                if (!tests) {
+                    res.status(200).send({
+                        message: "По Вашему запросу не было найдено ни одного теста"
+                    });
+                }
+                res.status(200).send(tests);
+            }).catch(err => {
+                return res.status(500).send({
+                    message: err.message
+                });
+            });
+        }
     }
     async createTest(req, res) {
         console.log(req.body.nameTest + "\n" + req.body.time);
