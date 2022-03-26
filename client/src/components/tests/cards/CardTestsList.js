@@ -1,3 +1,4 @@
+import { useState } from 'react'; 
 import {
     Box, 
     Button,
@@ -9,11 +10,11 @@ import {
     TableRow,
     TableCell,
     Tooltip,
-    TableSortLabel
+    TableSortLabel,
+    TablePagination
 } from '@mui/material';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import SeverityPill from '../severityPill/severityPill';
+import SeverityPill from '../../severityPill/severityPill';
 
 const tests = [
     {
@@ -42,17 +43,54 @@ const tests = [
         date: "21/03/2022",
         time: "01:00:00",
         status: "Пройден"
+    },
+    {
+        id: 4,
+        discipline: {
+            name: "Программирование на языке высокого уровня"
+        },
+        date: "21/03/2022",
+        time: "01:00:00",
+        status: "Пройден"
+    },
+    {
+        id: 5,
+        discipline: {
+            name: "Программирование на языке высокого уровня"
+        },
+        date: "21/03/2022",
+        time: "01:00:00",
+        status: "Пройден"
+    },
+    {
+        id: 6,
+        discipline: {
+            name: "Программирование на языке высокого уровня"
+        },
+        date: "21/03/2022",
+        time: "01:00:00",
+        status: "Пройден"
     }
 ];
 
 const CardItemsList = (props) => {
+    const [limit, setLimit] = useState(5);
+    const [page, setPage] = useState(1);
+
+    const handlePageChange = (event, newPage) => {
+        setPage(newPage);
+    }
+    const handleLimitChange = (event) => {
+        setLimit(event.target.value);
+    }
+
     return (
         <Card 
             {...props}
         >
-            <CardHeader 
-                title="Последние тесты"
-            />
+            {
+                console.log(page)
+            }
             <PerfectScrollbar>
             <Box sx={{
                         minWidth: 800
@@ -61,10 +99,30 @@ const CardItemsList = (props) => {
                             <TableHead>
                                 <TableRow>
                                     <TableCell>
-                                        № теста
+                                        <Tooltip 
+                                            enterDelay={300}
+                                            title="Отсортировать"
+                                        >
+                                            <TableSortLabel 
+                                                active
+                                                direction="desc"
+                                            >
+                                                № теста
+                                            </TableSortLabel>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell>
-                                        Дисциплина
+                                        <Tooltip 
+                                            enterDelay={300}
+                                            title="Отсортировать"
+                                        >
+                                            <TableSortLabel 
+                                                active
+                                                direction="desc"
+                                            >
+                                                Дисциплина
+                                            </TableSortLabel>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell>
                                         <Tooltip 
@@ -80,16 +138,36 @@ const CardItemsList = (props) => {
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell>
-                                        Время прохождения
+                                        <Tooltip 
+                                            enterDelay={300}
+                                            title="Отсортировать"
+                                        >
+                                            <TableSortLabel 
+                                                active
+                                                direction="desc"
+                                            >
+                                                Время прохождения
+                                            </TableSortLabel>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell>
-                                        Статус
+                                        <Tooltip 
+                                            enterDelay={300}
+                                            title="Отсортировать"
+                                        >
+                                            <TableSortLabel 
+                                                active
+                                                direction="desc"
+                                            >
+                                                Статус
+                                            </TableSortLabel>
+                                        </Tooltip>
                                     </TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>
                                 {
-                                    tests.map((test) => (
+                                    tests.slice(0, limit).map((test) => (
                                         <TableRow 
                                             hover
                                             key={test.id}
@@ -127,22 +205,16 @@ const CardItemsList = (props) => {
                         </Table>
                     </Box>
                     </PerfectScrollbar>
-                <Box 
-                    sx={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        p: 2
-                    }}
-                >
-                    <Button 
-                        color="primary"
-                        endIcon={<ArrowRightIcon fontSize="small" />}
-                        size="small"
-                        variant="text"
-                    >
-                        Посмотреть все
-                    </Button>
-                </Box>
+                    <TablePagination 
+                        labelRowsPerPage='Тестов на странице:'
+                        component="div"
+                        count={tests.length}
+                        onPageChange={handlePageChange}
+                        onRowsPerPageChange={handleLimitChange}
+                        page={page}
+                        rowsPerPage={limit}
+                        rowsPerPageOptions={[5, 10, 25]}
+                    />
         </Card>
     );
 }

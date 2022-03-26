@@ -1,6 +1,6 @@
 import "./App.css";
 
-import AppRouter from './components/AppRouter';
+import AppRouter from './routes/AppRouter';
 import { theme } from './components/theme/index';
 
 import { CssBaseline } from '@mui/material';

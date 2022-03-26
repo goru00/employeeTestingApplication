@@ -1,18 +1,32 @@
 import { Box, Container, Grid } from "@mui/material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
 import { Navigate } from "react-router-dom";
-import CardResultGraphics from "../../components/cards/CardResultGraphics";
+import CardResultGraphics from "../../components/dashboard/cards/CardResultGraphics";
 
-import CardTaskProgress from "../../components/cards/CardTaskProgress";
-import CardItemsList from '../../components/cards/CardItemsList';
-import CardDiagramProgress from "../../components/cards/CardDiagramProgress";
+import CardTaskProgress from "../../components/dashboard/cards/CardTaskProgress";
+import CardItemsList from '../../components/dashboard/cards/CardTestsList';
+import CardDiagramProgress from "../../components/dashboard/cards/CardDiagramProgress";
+import UserService from "../../services/user.service";
+import eventBus from "../../common/EventBus";
 
 const Home = (props) => {
     const { user: currentUser } = props;
+    const [tests, setTests] = useState(null);
 
     useEffect(() => {
-        return () => {};
+        UserService.getTests()
+            .then(res => {
+                let data = [];
+                res.forEach(item => {
+                    data.push(item);
+                });
+                setTests(data);
+            }, err => {
+                if (err.response && err.response.status === 403) {
+                    eventBus.dispatch("logout");
+                }
+            });
     }, []);
 
     if (!currentUser) {
@@ -27,6 +41,9 @@ const Home = (props) => {
                 py: 8
             }}
         >   
+        {
+            console.log(tests)
+        }
             <Container 
                 maxWidth={false}
             >

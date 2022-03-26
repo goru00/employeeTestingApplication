@@ -5,11 +5,11 @@ import { Box, Card, CardContent, CardHeader, Divider, Typography, useTheme } fro
 const CardDiagramProgress = (props) => {
     ChartJS.register(...registerables);
     const theme = useTheme();
-
+    console.log(props)
     const data = {
         datasets: [
             {
-                data: [63, 15, 22],
+                data: [100, 0, 0],
                 backgroundColor: ["#13b8a7", "#ffaf20", "#d04342"],
                 borderWidth: 8,
                 borderColor: "#fff",
@@ -50,17 +50,17 @@ const CardDiagramProgress = (props) => {
     const results = [
         {
             name: "Программирование на языке высокого уровня",
-            value: 56,
+            value: 100,
             color: "#13b8a7"
         },
         {
             name: "Базы данных",
-            value: 24,
+            value: 0,
             color: "#ffaf20"
         },
         {
             name: "Теория вероятности и математическая статистика",
-            value: 20,
+            value: 0,
             color: "#d04342"
         }
     ];

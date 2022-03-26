@@ -5,9 +5,17 @@ import {
   LOGIN_FAIL,
   LOGOUT,
   SET_MESSAGE,
+  REFRESH_TOKEN
 } from "./types";
 
 import AuthService from "../services/auth.services";
+
+export const refreshToken = (accessToken) => (dispatch) => {
+  dispatch({
+    type: REFRESH_TOKEN,
+    payload: accessToken
+  });
+}
 
 export const register = (username, password) => (dispatch) => {
   return AuthService.register(username, password).then(

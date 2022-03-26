@@ -1,8 +1,8 @@
 import {
     Box, Container
 } from '@mui/material';
-import CardItemsList from '../../components/cards/CardItemsList';
-import CardListToolbar from '../../components/cards/CardListToolbar';
+import CardItemsList from '../../components/tests/cards/CardTestsList';
+import CardTestsToolbar from '../../components/tests/cards/CardTestsToolbar';
 
 const Tests = (props) => {
     return (
@@ -16,7 +16,7 @@ const Tests = (props) => {
             <Container 
                 maxWidth={false}
             >
-                <CardListToolbar />
+                <CardTestsToolbar />
                 <Box 
                     sx={{
                         mt: 3

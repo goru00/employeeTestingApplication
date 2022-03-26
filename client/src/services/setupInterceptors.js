@@ -1,4 +1,4 @@
-import AxiosInstance from "./api";
+import AxiosInstance from "../api/api";
 import TokenService from './token.service';
 import { refreshToken } from "../actions/auth";
 
@@ -22,8 +22,8 @@ const setup = (store) => {
         },
         async (err) => {
             const originalConfig = err.config;
-            if (originalConfig.url !== '/auth/signin' && err.res) {
-                if (err.res.status === 401 && !originalConfig._retry) {
+            if (originalConfig.url !== '/auth/signin' && err.response) {
+                if (err.response.status === 401 && !originalConfig._retry) {
                     originalConfig._retry = true;
                     try {
                         const rs = await AxiosInstance.post('/auth/refreshToken', {

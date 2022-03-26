@@ -6,8 +6,7 @@ import {
     Grid, 
     TextField,
     Box,
-    Button,
-    Typography
+    Button
 } from '@mui/material';
 import { useState } from 'react';
 

@@ -1,23 +1,24 @@
-import axios from 'axios';
+import api from '../api/api';
+import TokenService from './token.service';
 
 class AuthService {
     login(username, password) {
-        return axios
-            .post('http://localhost:8080/v1/api/auth/signin', {
+        return api
+            .post('/auth/signin', {
                 username,
                 password
             }).then(res => {
                 if (res.data.accessToken) {
-                    localStorage.setItem("user", JSON.stringify(res.data));
+                    TokenService.setUser(res.data);
                 }
                 return res.data;
             });
     }
     logout() {
-        localStorage.removeItem("user");
+        TokenService.removeUser();
     }
     register(username, password) {
-        return axios.post("http://localhost:8080/v1/api/auth/signup", {
+        return api.post("/auth/signup", {
             username,
             password
         });

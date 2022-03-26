@@ -29,7 +29,7 @@ const CardTaskProgress = (props) => {
                             color="textPrimary"
                             variant="h4"
                         >
-                            56.5%
+                            33%
                         </Typography>
                     </Grid>
                     <Grid item>

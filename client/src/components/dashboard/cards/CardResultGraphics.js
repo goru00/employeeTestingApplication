@@ -41,7 +41,7 @@ const CardResultGraphics = (props) => {
         ]
     };
     const options = {
-        animation: false,
+        animation: true,
         cornerRadius: 20,
         layout: {
             padding: 0

@@ -5,23 +5,16 @@ import {
     Box, 
     Container, 
     Typography, 
-    Grid, Card, 
-    CardContent, 
-    Avatar, 
-    Divider, 
-    CardActions,
-    Button 
+    Grid
 } from '@mui/material';
 
 import eventBus from "../../common/EventBus";
-import userService from "../../services/user.service";
-import ProfileSettings from "../../components/profileSettings/profileSettings";
-import ProfileSettingsDetails from "../../components/profileSettings/profileSettingsDetails";
+import ProfileSettings from "../../components/profile/profileSettings";
+import ProfileSettingsDetails from "../../components/profile/profileSettingsDetails";
 
 function Profile(props) {
     const { user: currentUser } = props;
-    const [info, setInfo] = useState(null);
-
+    
     if (!currentUser) {
         return <Navigate to={"/signin"} />;
     }
