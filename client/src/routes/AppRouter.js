@@ -27,8 +27,8 @@ const AppRouter = (props) => {
                         <Route index element={<Home />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="tests" element={<Tests />} />
-                        <Route path="signin" element={<Login />} />
                     </Route>
+                    <Route path="/signin" element={<Login />} />
                 </Routes>
             </>
         </Router>
