@@ -20,6 +20,6 @@ router.post('/signup', [
     Auth.checkRolesExisted
 ], authController.signup);
 router.post('/signin', authController.signin);
-router.post('/refreshToken', authController.refreshToken);
+router.get('/activate/:link', authController.activate);
 
 module.exports = router;

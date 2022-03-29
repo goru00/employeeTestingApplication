@@ -17,6 +17,13 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        isActivated: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
+        },
+        activationLink: {
+            type: Sequelize.STRING
+        },
     });
     return User;
 };

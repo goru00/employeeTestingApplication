@@ -26,13 +26,13 @@ const db = {
 };
 
 db.user = require('../models/user.model')(sequelize, Sequelize);
-db.refreshToken = require('../models/refreshToken.model')(sequelize, Sequelize);
+db.token = require('./token.model')(sequelize, Sequelize);
 
-//hasOne refreshToken
-db.refreshToken.belongsTo(db.user, {
+//hasOne token
+db.token.belongsTo(db.user, {
     foreignKey: 'userId'
 });
-db.user.hasOne(db.refreshToken, {
+db.user.hasOne(db.token, {
     foreignKey: 'userId'
 });
 

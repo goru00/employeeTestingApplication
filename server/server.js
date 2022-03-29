@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const router = require('./routes/index');
+const ErrorMiddleware = require('./middlewares/error');
 
 const app = express();
 
@@ -20,7 +22,11 @@ app.use(express.urlencoded({
     extended: true
 }));
 
+app.use(cookieParser());
+
 app.use('/v1/api/', router);
+
+app.use(ErrorMiddleware);
 
 //models
 
