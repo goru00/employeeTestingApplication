@@ -51,7 +51,8 @@ class AuthService {
 
     async validateAccessToken(token) {
         try {
-
+            const userData = jwt.verify(token, AuthConfig.secretAccessToken);
+            return userData;
         } catch (e) {
             console.log(e)
         }
@@ -59,7 +60,7 @@ class AuthService {
 
     async validateRefreshToken(refreshToken) {
         try {
-            const userData = jwt.verify(token, AuthConfig.secret);
+            const userData = jwt.verify(refreshToken, AuthConfig.secretRefreshToken);
             return userData;
         } catch (e) {
             return null;
@@ -94,7 +95,20 @@ class AuthService {
     }
 
     async refresh(refreshToken) {
+        const userData = await TokenService.validateRefreshToken(refreshToken);
+        const token = await TokenService.fintToken(refreshToken);
+        if (!userData || !token) {
+            throw ApiError.UnAuthError();
+        }
 
+        const user = await User.findByPk(userData.username);
+        const userDto = new AuthDto(user);
+        const tokens = TokenService.createToken({...userDto});
+        await TokenService.saveToken(userDto.username, tokens.refreshToken);
+        return {
+            ...tokens,
+            user: userDto
+        }
     }
 }
 

@@ -2,6 +2,7 @@ const Auth = require('../middlewares/auth');
 const authController = require('../controllers/auth.controller');
 const Router = require('express');
 const router = new Router();
+const { body } = require('express-validator');
 
 router.use(function(req, res, next) {
     res.header(
@@ -11,11 +12,25 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/users/:id', [
+router.get('/users/:username', [
+    body('username').isEmpty(),
     Auth.verifyToken
 ], authController.getUsers);
 
 router.post('/signup', [
+    body('email').isEmail(),
+    body('password').isLength({
+        min: 8,
+        max: 16
+    }),
+    body('username').isLength({
+        min: 8,
+        max: 16
+    }),
+    body('roles').isArray({
+        min: 1,
+        max: 3
+    }),
     Auth.checkDuplicateUsernameOrEmail,
     Auth.checkRolesExisted
 ], authController.signup);

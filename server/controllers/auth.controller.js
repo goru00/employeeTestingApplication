@@ -13,8 +13,8 @@ const UserService = require('../services/auth.service');
 class AuthController {
 
     async getUsers(req, res) {
-        const { id } = req.params;
-        User.findByPk(id).then(user => {
+        const { username } = req.params;
+        User.findByPk(username).then(user => {
             if (!user) {
                 res.status(404).send({
                     message: 'Пользователь не был найден'

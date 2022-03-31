@@ -3,21 +3,19 @@ const ROLES = db.ROLES;
 const User = db.user;
 const Position = db.position;
 
-const jwt = require('jsonwebtoken');
-const config = require('../configs/auth.config');
+const ApiError = require('../exceptions/api.error');
+
+const AuthService = require('../services/auth.service');
 
 class Auth {
-    checkDuplicateUsernameOrEmail(req, res, next) {
+    async checkDuplicateUsernameOrEmail(req, res, next) {
         User.findOne({
             where: {
                 username: req.body.username
             }
         }).then(user => {
             if (user) {
-                res.status(400).send({
-                    message: "Ошибка! Имя пользователя уже занято"
-                });
-                return;
+                return next(ApiError.BadRequest(`Имя пользователя "${user.username}" занято`));
             }
             User.findOne({
                 where: {
@@ -25,69 +23,48 @@ class Auth {
                 }
             }).then(user => {
                 if (user) {
-                    res.status(400).send({
-                        message: "Ошибка! Почта уже занята"
-                    });
-                    return;
+                    return next(ApiError.BadRequest(`Ошибка! Почта ${user.email} уже занята`));
                 }
                 next();
             });
         });
     }
-    checkUsersExisted(req, res, next) {
+    async checkUsersExisted(req, res, next) {
         User.findOne({
             where: {
                 name: req.body.name
             }
         }).then(user => {
             if (!user) {
-                res.status(404).send({
-                    message: "Пользователь не найден"
-                });
-                return;
+                return next(ApiError.BadRequest("Пользователь не найден"));
             }
             next();
         });
     }
-    checkRolesExisted(req, res, next) {
+    async checkRolesExisted(req, res, next) {
         if (req.body.roles) {
             req.body.roles.forEach(role => {
                 if (!ROLES.includes(role)) {
-                    res.status(400).send({
-                        message: "Ошибка! Роль '" + role + "' не существует"
-                    });
-                    return;
+                    return next(ApiError.BadRequest(`Роли "${role}" не существует`));
                 }
-            })
+            });
         }
         next();
     }
 
-    catchError(err, res) {
-        if (err instanceof jwt.TokenExpiredError) {
-            return res.status(401).send({
-                message: "Не авторизован. Токен не был валидным"
-            });
+    async verifyToken(req, res, next) {
+        const headerToken = req.headers["x-access-token"];
+        if (!headerToken) {
+            return next(ApiError.UnAuthError());
         }
-        return res.sendStatus(401).send({
-            message: "Не авторизован"
-        });
-    }
-
-    verifyToken(req, res, next) {
-        let token = req.headers["x-access-token"];
+        const token = headerToken;
         if (!token) {
-            return res.status(403).send({
-                message: "Токен невалидный"
-            });
+            return next(ApiError.UnAuthError());
         }
-        jwt.verify(token, config.secret, (err, decoded) => {
-            if (err) {
-                return this.catchError(err, res);
-            }
-            req.userId = decoded.id;
-            next();
-        });
+        const userData = AuthService.validateAccessToken(token);
+
+        req.user = userData;
+        next();
     }
 
     async checkDuplicatePositionName(req, res, next) {
@@ -97,16 +74,13 @@ class Auth {
             }
         }).then(position => {
             if (position) {
-                res.status(400).send({
-                    message: "Ошибка! Должность уже существует"
-                });
-                return;
+                return next(ApiError.BadRequest(`Должность уже существует`));
             }
             next();
         });
     }
 
-    isAdmin(req, res, next) {
+    async isAdmin(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
@@ -115,14 +89,11 @@ class Auth {
                         return;
                     }
                 }
-                res.status(403).send({
-                    message: "Нет права доступа 'admin'"
-                });
-                return;
+                return next(ApiError.BadRequest("Нет права доступа 'admin'"));
             });
         });
     }
-    isModerator(req, res, next) {
+    async isModerator(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
@@ -131,14 +102,11 @@ class Auth {
                         return;
                     }
                 }
-                res.status(403).send({
-                    message: "Нет прав доступа 'moderator'"
-                });
-                return;
+                return next(ApiError.BadRequest("Нет права доступа 'moderator'"));
             });
         });
     }
-    isUser(req, res, next) {
+    async isUser(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
@@ -147,14 +115,11 @@ class Auth {
                         return;
                     }
                 }
-                res.status(403).send({
-                    message: "Нет прав доступа 'user'"
-                });
-                return;
+                return next(ApiError.BadRequest("Нет права доступа 'user'"));
             });
         });
     }
-    isModeratorOrAdmin(req, res, next) {
+    async isModeratorOrAdmin(req, res, next) {
         User.findByPk(req.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
@@ -167,10 +132,7 @@ class Auth {
                         return;
                     }
                 }
-                res.status(403).send({
-                    message: "Нет прав доступа 'admin' или 'moderator'"
-                });
-                return;
+                return next(ApiError.BadRequest("Нет права доступа 'admin' или 'moderator'"));
             });
         });
     }

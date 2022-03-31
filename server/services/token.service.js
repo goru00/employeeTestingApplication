@@ -6,11 +6,11 @@ const Token = db.token;
 class TokenService {
     async createToken(payload) {
         const token = jwt.sign(payload, 
-            config.secret, {
+            config.secretAccessToken, {
             expiresIn: config.jwtExpiration
         });
         const refreshToken = jwt.sign(payload, 
-            config.secret, {
+            config.secretRefreshToken, {
             expiresIn: config.jwtRefreshExpiration
         });
         return {
@@ -43,6 +43,15 @@ class TokenService {
             }
         });
         return tokenData;
+    }
+
+    async fintToken(refreshToken) {
+        const token = await Token.findOne({
+            where: {
+                refreshToken
+            }
+        });
+        return token;   
     }
 }
 
