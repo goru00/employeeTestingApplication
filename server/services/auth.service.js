@@ -1,5 +1,6 @@
 var bcrypt = require('bcryptjs');
 const uuid = require('uuid');
+const jwt = require('jsonwebtoken');
 
 const MailService = require('./mail.service');
 const TokenService = require('./token.service');
@@ -9,6 +10,7 @@ const db = require('../models');
 const User = db.user;
 const Role = db.role;
 const Op = db.Sequelize.Op;
+const AuthConfig = require('../configs/auth.config');
 
 const ApiError = require('../exceptions/api.error');
 
@@ -47,11 +49,28 @@ class AuthService {
         }
     }
 
+    async validateAccessToken(token) {
+        try {
+
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
+    async validateRefreshToken(refreshToken) {
+        try {
+            const userData = jwt.verify(token, AuthConfig.secret);
+            return userData;
+        } catch (e) {
+            return null;
+        }
+    }
+
     async signin(props) {
         const { username } = props;
         const user = await User.findByPk(username);
         const userDto = new AuthDto(user);
-        const tokens = TokenService.createToken({...userDto});
+        const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.username, tokens.refreshToken);
         return {
             ...tokens,
@@ -72,6 +91,10 @@ class AuthService {
         });
         user.isActivated = true;
         await user.save();
+    }
+
+    async refresh(refreshToken) {
+
     }
 }
 

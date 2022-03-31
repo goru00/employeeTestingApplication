@@ -42,8 +42,7 @@ class AuthController {
     }
     async signin(req, res) {
         try {
-            const { username } = req.body;
-            const userData = await UserService.signin(username);
+            const userData = await UserService.signin({...req.body});
             res.cookie('refreshToken', userData.refreshToken, {
                 maxAge: ConfigAuth.jwtRefreshExpiration,
                 httpOnly: true
@@ -61,7 +60,21 @@ class AuthController {
             res.clearCookie('refreshToken');
             return res.status(200).json(token);
         } catch (e) {
-            
+            console.log(e)
+        }
+    }
+
+    async refresh(req, res) {
+        try {
+            const { refreshToken } = req.cookies;
+            const tokenData = await UserService.refresh(refreshToken);
+            res.cookie('refreshToken', tokenData.refreshToken, {
+                maxAge: ConfigAuth.jwtRefreshExpiration,
+                httpOnly: true
+            });
+            return res.status(200).json(tokenData);
+        } catch (e) {
+            console.log(e);
         }
     }
 
