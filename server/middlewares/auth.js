@@ -5,7 +5,7 @@ const Position = db.position;
 
 const ApiError = require('../exceptions/api.error');
 
-const AuthService = require('../services/auth.service');
+const TokenService = require('../services/token.service');
 
 class Auth {
     async checkDuplicateUsernameOrEmail(req, res, next) {
@@ -57,14 +57,21 @@ class Auth {
         if (!headerToken) {
             return next(ApiError.UnAuthError());
         }
-        const token = headerToken;
-        if (!token) {
+        const userData = await TokenService.validateAccessToken(headerToken);
+        if (!userData) {
             return next(ApiError.UnAuthError());
         }
-        const userData = AuthService.validateAccessToken(token);
-
         req.user = userData;
         next();
+    }
+
+    async isActivatedAccount(req, res, next) {
+        User.findByPk(req.user.username).then(user => {
+            if (user.isActivated === false) {
+                return next(ApiError.BadRequest(`Аккаунт не активирован`));
+            }
+            next();
+        });
     }
 
     async checkDuplicatePositionName(req, res, next) {
@@ -81,7 +88,7 @@ class Auth {
     }
 
     async isAdmin(req, res, next) {
-        User.findByPk(req.userId).then(user => {
+        User.findByPk(req.user.username).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
                     if (roles[index].name === "admin") {
@@ -94,7 +101,7 @@ class Auth {
         });
     }
     async isModerator(req, res, next) {
-        User.findByPk(req.userId).then(user => {
+        User.findByPk(req.user.username).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
                     if (roles[index].name === "moderator") {
@@ -107,7 +114,7 @@ class Auth {
         });
     }
     async isUser(req, res, next) {
-        User.findByPk(req.userId).then(user => {
+        User.findByPk(req.user.username).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
                     if (roles[index].name === "user") {
@@ -120,7 +127,7 @@ class Auth {
         });
     }
     async isModeratorOrAdmin(req, res, next) {
-        User.findByPk(req.userId).then(user => {
+        User.findByPk(req.user.username).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
                     if (roles[index].name === "admin") {

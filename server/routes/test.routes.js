@@ -13,33 +13,25 @@ router.use(function(req, res, next) {
 });
 
 router.post('/sections', [
-    Auth.verifyToken,
     Auth.isModeratorOrAdmin
 ], TestController.createSection);
 
 router.get('/', [
-    Auth.verifyToken,
     Auth.isModeratorOrAdmin
 ], TestController.getTests);
 
 router.get('/:userId', [
-    Auth.verifyToken,
     Auth.isUser
 ], TestController.getTests);
 
 router.post('/', [
-    Auth.verifyToken,
     Auth.isModeratorOrAdmin
 ], TestController.createTest);
 router.post('/:testId/start', [
-    Auth.verifyToken,
     Auth.isUser
 ], TestController.startTest);
 router.post('/:testId/finish', [
-    Auth.verifyToken,
     Auth.isUser
 ], TestController.finishTest);
-router.get('/:testId/result', [
-    Auth.verifyToken
-], TestController.getResult);
+router.get('/:testId/result', TestController.getResult);
 module.exports = router;

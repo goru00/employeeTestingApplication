@@ -12,11 +12,7 @@ router.use(function(req, res, next) {
     next();
 });
 
-router.get('/users/:username', [
-    body('username').isEmpty(),
-    Auth.verifyToken
-], authController.getUsers);
-
+// переписать валидацию
 router.post('/signup', [
     body('email').isEmail(),
     body('password').isLength({

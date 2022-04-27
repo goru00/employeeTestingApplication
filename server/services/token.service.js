@@ -1,17 +1,17 @@
 const jwt = require('jsonwebtoken');
-const config = require('../configs/auth.config');
+const AuthConfig = require('../configs/auth.config');
 const db = require('../models');
 const Token = db.token;
 
 class TokenService {
     async createToken(payload) {
         const token = jwt.sign(payload, 
-            config.secretAccessToken, {
-            expiresIn: config.jwtExpiration
+            AuthConfig.secretAccessToken, {
+            expiresIn: AuthConfig.jwtExpiration
         });
         const refreshToken = jwt.sign(payload, 
-            config.secretRefreshToken, {
-            expiresIn: config.jwtRefreshExpiration
+            AuthConfig.secretRefreshToken, {
+            expiresIn: AuthConfig.jwtRefreshExpiration
         });
         return {
             token,
@@ -36,6 +36,24 @@ class TokenService {
         return token;
     }
 
+    async validateAccessToken(token) {
+        try {
+            const userData = jwt.verify(token, AuthConfig.secretAccessToken);
+            return userData;
+        } catch (e) {
+            console.error(e)
+        }
+    }
+
+    async validateRefreshToken(refreshToken) {
+        try {
+            const userData = jwt.verify(refreshToken, AuthConfig.secretRefreshToken);
+            return userData;
+        } catch (e) {
+            return null;
+        }
+    }
+
     async removeToken(refreshToken) {
         const tokenData = await Token.destroy({
             where: {
@@ -45,7 +63,7 @@ class TokenService {
         return tokenData;
     }
 
-    async fintToken(refreshToken) {
+    async findToken(refreshToken) {
         const token = await Token.findOne({
             where: {
                 refreshToken

@@ -10,7 +10,6 @@ const db = require('../models');
 const User = db.user;
 const Role = db.role;
 const Op = db.Sequelize.Op;
-const AuthConfig = require('../configs/auth.config');
 
 const ApiError = require('../exceptions/api.error');
 
@@ -46,24 +45,6 @@ class AuthService {
         return {
             ...tokens,
             user: userDto
-        }
-    }
-
-    async validateAccessToken(token) {
-        try {
-            const userData = jwt.verify(token, AuthConfig.secretAccessToken);
-            return userData;
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    async validateRefreshToken(refreshToken) {
-        try {
-            const userData = jwt.verify(refreshToken, AuthConfig.secretRefreshToken);
-            return userData;
-        } catch (e) {
-            return null;
         }
     }
 

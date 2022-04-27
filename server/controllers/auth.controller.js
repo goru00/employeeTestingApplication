@@ -7,30 +7,13 @@ const { user: User,
 } = db; 
 const Op = db.Sequelize.Op;
 
-const UserService = require('../services/auth.service');
-
+const AuthService = require('../services/auth.service');
 
 class AuthController {
 
-    async getUsers(req, res) {
-        const { username } = req.params;
-        User.findByPk(username).then(user => {
-            if (!user) {
-                res.status(404).send({
-                    message: 'Пользователь не был найден'
-                });
-            }
-            res.status(200).send({
-                username: user.username,
-                name: user.name,
-                email: user.email
-            });
-        })
-    }
-
     async signup(req, res) {
         try {
-            const userData = await UserService.signup({...req.body});
+            const userData = await AuthService.signup({...req.body});
             res.cookie('refreshToken', userData.refreshToken, {
                 maxAge: ConfigAuth.jwtRefreshExpiration,
                 httpOnly: true
@@ -42,7 +25,7 @@ class AuthController {
     }
     async signin(req, res) {
         try {
-            const userData = await UserService.signin({...req.body});
+            const userData = await AuthService.signin({...req.body});
             res.cookie('refreshToken', userData.refreshToken, {
                 maxAge: ConfigAuth.jwtRefreshExpiration,
                 httpOnly: true
@@ -56,7 +39,7 @@ class AuthController {
     async logout(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            const token = await UserService.logout(refreshToken);
+            const token = await AuthService.logout(refreshToken);
             res.clearCookie('refreshToken');
             return res.status(200).json(token);
         } catch (e) {
@@ -67,7 +50,7 @@ class AuthController {
     async refresh(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            const tokenData = await UserService.refresh(refreshToken);
+            const tokenData = await AuthService.refresh(refreshToken);
             res.cookie('refreshToken', tokenData.refreshToken, {
                 maxAge: ConfigAuth.jwtRefreshExpiration,
                 httpOnly: true
@@ -81,11 +64,11 @@ class AuthController {
     async activate(req, res) {
         try {
             const activationLink = req.params.link;
-            await UserService.activate(activationLink);
+            await AuthService.activate(activationLink);
             return res.redirect(ConfigClient.URL);
-        } catch (e) {
+        } catch (err) {
             return res.status(500).send({
-                message: err
+                message: err.message
             });
         }
     }
