@@ -1,5 +1,5 @@
 const Auth = require('../middlewares/auth');
-const authController = require('../controllers/auth.controller');
+const UserController = require('../controllers/auth.controller');
 const Router = require('express');
 const router = new Router();
 const { body } = require('express-validator');
@@ -29,10 +29,10 @@ router.post('/signup', [
     }),
     Auth.checkDuplicateUsernameOrEmail,
     Auth.checkRolesExisted
-], authController.signup);
-router.post('/signin', authController.signin);
-router.post('/logout', authController.logout);
-router.get('/refresh', authController.refresh);
-router.get('/activate/:link', authController.activate);
+], UserController.signup);
+router.post('/signin', UserController.signin);
+router.post('/logout', UserController.logout);
+router.get('/refresh', UserController.refresh);
+router.get('/activate/:link', UserController.activate);
 
 module.exports = router;

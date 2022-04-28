@@ -1,10 +1,9 @@
 var bcrypt = require('bcryptjs');
 const uuid = require('uuid');
-const jwt = require('jsonwebtoken');
 
 const MailService = require('./mail.service');
 const TokenService = require('./token.service');
-const AuthDto = require('../dtos/auth.dto');
+const UserDto = require('../dtos/user.dto');
 
 const db = require('../models');
 const User = db.user;
@@ -13,7 +12,7 @@ const Op = db.Sequelize.Op;
 
 const ApiError = require('../exceptions/api.error');
 
-class AuthService {
+class UserService {
     async signup(props) {
         const { username, email, name, password, roles } = props;
         const hashPassword = await bcrypt.hash(password, 8);
@@ -38,7 +37,7 @@ class AuthService {
         } else {
             user.setRoles([1]);
         }
-        const userDto = new AuthDto(user);
+        const userDto = new UserDto(user);
         await MailService.sendActivationMail(email, activationLink);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.username, tokens.refreshToken);
@@ -51,7 +50,7 @@ class AuthService {
     async signin(props) {
         const { username } = props;
         const user = await User.findByPk(username);
-        const userDto = new AuthDto(user);
+        const userDto = new UserDto(user);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.username, tokens.refreshToken);
         return {
@@ -83,7 +82,7 @@ class AuthService {
         }
 
         const user = await User.findByPk(userData.username);
-        const userDto = new AuthDto(user);
+        const userDto = new UserDto(user);
         const tokens = TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.username, tokens.refreshToken);
         return {
@@ -93,4 +92,4 @@ class AuthService {
     }
 }
 
-module.exports = new AuthService();
+module.exports = new UserService();
