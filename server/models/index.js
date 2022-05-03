@@ -25,8 +25,8 @@ const db = {
     sequelize
 };
 
-db.user = require('../models/user.model')(sequelize, Sequelize);
-db.token = require('./token.model')(sequelize, Sequelize);
+db.user = require('./user.models/user.model')(sequelize, Sequelize);
+db.token = require('./auth.models/token.model')(sequelize, Sequelize);
 
 //hasOne token
 db.token.belongsTo(db.user, {
@@ -36,7 +36,7 @@ db.user.hasOne(db.token, {
     foreignKey: 'userId'
 });
 
-db.role = require('../models/role.model')(sequelize, Sequelize);
+db.role = require('./user.models/role.model')(sequelize, Sequelize);
 
 //user_roles
 db.role.belongsToMany(db.user, {
@@ -50,15 +50,15 @@ db.user.belongsToMany(db.role, {
     otherKey: 'roleId'
 });
 
-db.cathedra = require('../models/cathedra.model')(sequelize, Sequelize);
-db.direction = require('../models/direction.model')(sequelize, Sequelize);
+db.cathedra = require('./university.models/cathedra.model')(sequelize, Sequelize);
+db.direction = require('./university.models/direction.model')(sequelize, Sequelize);
 
 //ref cathedraId directions table
 db.direction.belongsTo(db.cathedra, {
     foreignKey: 'cathedraId'
 });
 
-db.group = require('../models/group.model')(sequelize, Sequelize);
+db.group = require('./university.models/group.model')(sequelize, Sequelize);
 
 //ref group table -> direction table
 db.group.belongsTo(db.direction, {
@@ -68,7 +68,7 @@ db.direction.hasOne(db.group, {
     foreignKey: 'directionId'
 });
 
-db.student = require('../models/student.model')(sequelize, Sequelize);
+db.student = require('./university.models/student.model')(sequelize, Sequelize);
 
 //ref student table -> user table
 db.student.belongsTo(db.user, {
@@ -90,7 +90,7 @@ db.group.belongsToMany(db.student, {
     otherKey: 'studentId'
 });
 
-db.teacher = require('../models/teacher.model')(sequelize, Sequelize);
+db.teacher = require('./university.models/teacher.model')(sequelize, Sequelize);
 
 //ref teacher table -> user table
 db.teacher.belongsTo(db.user, {
@@ -100,7 +100,7 @@ db.user.hasOne(db.teacher, {
     foreignKey: 'userId'
 });
 
-db.discipline = require('../models/discipline.model')(sequelize, Sequelize);
+db.discipline = require('./university.models/discipline.model')(sequelize, Sequelize);
 
 //direction_disciplines
 db.direction.belongsToMany(db.discipline, {
@@ -114,7 +114,7 @@ db.discipline.belongsToMany(db.direction, {
     otherKey: 'directionId'
 });
 
-db.teacherEmployment = require('../models/teacherEmployment.model')(sequelize, Sequelize);
+db.teacherEmployment = require('./university.models/teacherEmployment.model')(sequelize, Sequelize);
 
 db.teacher.belongsToMany(db.cathedra, {
     through: 'teacher_cathedras',
@@ -163,8 +163,8 @@ db.discipline.belongsToMany(db.group, {
     otherKey: 'groupId'
 });
 
-db.section = require('../models/section.model')(sequelize, Sequelize);
-db.disciplineSections = require('../models/disciplineSection.model')(sequelize, Sequelize);
+db.section = require('./test.models/section.model')(sequelize, Sequelize);
+db.disciplineSections = require('./test.models/disciplineSection.model')(sequelize, Sequelize);
 
 //discipline_sections
 db.discipline.belongsToMany(db.section, {
@@ -178,7 +178,7 @@ db.section.belongsToMany(db.discipline, {
     otherKey: 'disciplineId'
 });
 
-db.test = require('../models/test.model')(sequelize, Sequelize);
+db.test = require('./test.models/test.model')(sequelize, Sequelize);
 
 //ref sectionId, disciplineId -> test table
 db.test.belongsTo(db.discipline, {
@@ -206,7 +206,7 @@ db.teacher.hasMany(db.test, {
     sourceKey: 'userId'
 });
 
-db.std = require('../models/sectionTestData.model')(sequelize, Sequelize);
+db.std = require('./test.models/sectionTestData.model')(sequelize, Sequelize);
 
 db.section.hasMany(db.std, {
     foreignKey: 'sectionId',
@@ -217,7 +217,7 @@ db.std.belongsTo(db.section, {
     targetKey: 'id'
 });
 
-db.studentAnswer = require('./studentAnswer.model')(sequelize, Sequelize);
+db.studentAnswer = require('./test.models/studentAnswer.model')(sequelize, Sequelize);
 
 db.studentAnswer.belongsTo(db.std, {
     foreignKey: 'questionId'
@@ -238,7 +238,7 @@ db.student.hasMany(db.studentAnswer, {
     foreignKey: 'studentId'
 });
 
-db.studentResult = require('./studentResult.model')(sequelize, Sequelize);
+db.studentResult = require('./test.models/studentResult.model')(sequelize, Sequelize);
 
 db.student.belongsToMany(db.test, {
     through: 'student_results',

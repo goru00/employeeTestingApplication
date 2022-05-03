@@ -1,12 +1,12 @@
 const Router = require('express');
 const router = new Router();
 
-const Auth = require('../middlewares/auth');
+const AuthMiddleware = require('../middlewares/auth.middlewares/auth.middleware');
 
-const authRouter = require('./auth.routes');
-const userRouter = require('./user.routes');
-const universityRouter = require('./university.router');
-const testRouter = require('./test.routes');
+const authRouter = require('./auth.routes/auth.router');
+const userRoutes = require('./user.routes/index');
+const universityRoutes = require('./university.routes/index');
+//const testRouter = require('./test.routes');
 
 router.use(function(req, res, next) {
     res.header(
@@ -17,11 +17,11 @@ router.use(function(req, res, next) {
 });
 
 router.use('/users', [
-    Auth.verifyToken,
-    Auth.isActivatedAccount
-], userRouter);
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.isActivatedAccount
+], userRoutes);
 router.use('/auth', authRouter);
-router.use('/university', universityRouter);
-router.use('/tests', testRouter);
+router.use('/university', universityRoutes);
+//router.use('/tests', testRouter);
 
 module.exports = router;
