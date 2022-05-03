@@ -4,7 +4,10 @@ class DirectionController {
     async createDirection(req, res, next) {
         try {
             const directionData = await DirectionService.createDirection({...req.body});
-            return res.status(201).json(directionData);
+            return res.status(201).json({
+                message: "Направление было успешно создано",
+                ...directionData
+            });
         } catch (err) {
             next(err);
         }
