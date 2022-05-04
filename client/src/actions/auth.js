@@ -17,8 +17,8 @@ export const refreshToken = (accessToken) => (dispatch) => {
   });
 }
 
-export const register = (username, password) => (dispatch) => {
-  return AuthService.register(username, password).then(
+export const register = (username, email, password) => (dispatch) => {
+  return AuthService.register(username, email, password).then(
     (response) => {
       dispatch({
         type: REGISTER_SUCCESS,

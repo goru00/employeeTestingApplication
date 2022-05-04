@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useRef } from "react";
 import { Navigate } from 'react-router-dom';
-import { connect } from 'react-redux';
 import { login } from '../../actions/auth';
+
+import { useDispatch, useSelector } from 'react-redux';
 
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
@@ -16,9 +17,11 @@ import * as Yup from 'yup';
 import Logo from '../../components/logo/logo';
 
 function Login(props) {
-    const { isLoggedIn } = props;
-
-    const { message } = props;
+    const form = useRef();
+    const [loading, setLoading] = useState(true);
+    const { isLoggedIn } = useSelector(state => state.auth);
+    const { message } = useSelector(state => state.message);
+    const dispatch = useDispatch();
     
     const validation = useFormik({
         initialValues: {
@@ -39,15 +42,14 @@ function Login(props) {
         }),
         onSubmit: (values) => {
             const { username, password } = values;
-            const { dispatch, history } = props;
+            const { history } = props;
             dispatch(login(username, password))
             .then(() => {
                 history.push("/");
                 window.location.reload();
             })
             .catch(() => {
-            })
-            .finally(() => {
+                setLoading(false);
             });
         }
     });  
@@ -89,6 +91,7 @@ function Login(props) {
             </Box>
             <form
                 onSubmit={validation.handleSubmit}
+                ref={form}
             >
             <TextField
                 error={Boolean(
@@ -142,14 +145,5 @@ function Login(props) {
     )
 }
 
-function mapStateToProps(state) {
-    const { isLoggedIn } = state.auth;
-    const { message } = state.message;
-    return {
-        isLoggedIn,
-        message
-    }
-}
-
-export default connect(mapStateToProps)(Login);
+export default Login;
 

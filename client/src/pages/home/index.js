@@ -1,6 +1,6 @@
 import { Box, Container, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Navigate } from "react-router-dom";
 import CardResultGraphics from "../../components/dashboard/cards/CardResultGraphics";
 
@@ -11,7 +11,7 @@ import UserService from "../../services/user.service";
 import eventBus from "../../common/EventBus";
 
 const Home = (props) => {
-    const { user: currentUser } = props;
+    const { user: currentUser } = useSelector((state) => state.auth);
     const [tests, setTests] = useState(null);
 
     useEffect(() => {
@@ -93,11 +93,4 @@ const Home = (props) => {
     )
 }
 
-function mapStateToProps(state) {
-    const { user } = state.auth;
-    return {
-      user,
-    };
-  }
-  
-  export default connect(mapStateToProps)(Home);
+export default Home;

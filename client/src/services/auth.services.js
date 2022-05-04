@@ -5,7 +5,7 @@ class AuthService {
     login(username, password) {
         return api
             .post('/auth/signin', {
-                username,
+                userId: username,
                 password
             }).then(res => {
                 if (res.data.accessToken) {
