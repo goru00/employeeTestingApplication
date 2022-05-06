@@ -40,13 +40,16 @@ db.sequelize.sync({
 
 function initial() {
     Role.create({
-        name: 'user'
+        name: 'Администратор'
     });
     Role.create({
-        name: 'moderator'
+        name: 'Методист'
     });
     Role.create({
-        name: 'admin'
+        name: 'Преподаватель'
+    });
+    Role.create({
+        name: 'Студент'
     });
 }
 

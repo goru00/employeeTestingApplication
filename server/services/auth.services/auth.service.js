@@ -3,6 +3,7 @@ const uuid = require('uuid');
 
 const MailService = require('./mail.service');
 const TokenService = require('./token.service');
+const UserService = require('../user.services/user.service');
 const UserDto = require('../../dtos/user.dtos/user.dto');
 
 const db = require('../../models');
@@ -12,7 +13,7 @@ const Op = db.Sequelize.Op;
 
 const ApiError = require('../../exceptions/api.error');
 
-class UserService {
+class AuthService {
     async signup(props) {
         const { userId, email, name, password, roles } = props;
         const hashPassword = await bcrypt.hash(password, 8);
@@ -93,4 +94,4 @@ class UserService {
     }
 }
 
-module.exports = new UserService();
+module.exports = new AuthService();

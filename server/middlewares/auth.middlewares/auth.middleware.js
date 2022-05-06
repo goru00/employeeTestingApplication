@@ -81,38 +81,51 @@ class AuthMiddleware {
         User.findByPk(req.user.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
-                    if (roles[index].name === "admin") {
+                    if (roles[index].name === "Администратор") {
                         next();
                         return;
                     }
                 }
-                return next(ApiError.BadRequest("Нет права доступа 'admin'"));
+                return next(ApiError.BadRequest("Нет права доступа 'Администратор'"));
             });
         });
     }
-    async isModerator(req, res, next) {
+    async isMethodist(req, res, next) {
         User.findByPk(req.user.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
-                    if (roles[index].name === "moderator") {
+                    if (roles[index].name === "Методист") {
                         next();
                         return;
                     }
                 }
-                return next(ApiError.BadRequest("Нет права доступа 'moderator'"));
+                return next(ApiError.BadRequest("Нет права доступа 'Методист'"));
             });
         });
     }
-    async isUser(req, res, next) {
+    async isTeacher(req, res, next) {
         User.findByPk(req.user.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
-                    if (roles[index].name === "user") {
+                    if (roles[index].name === "Преподаватель") {
                         next();
                         return;
                     }
                 }
-                return next(ApiError.BadRequest("Нет права доступа 'user'"));
+                return next(ApiError.BadRequest("Нет права доступа 'Преподаватель'"));
+            });
+        });
+    }
+    async isStudent(req, res, next) {
+        User.findByPk(req.user.userId).then(user => {
+            user.getRoles().then(roles => {
+                for (let index = 0; index < roles.length; index++) {
+                    if (roles[index].name === "Студент") {
+                        next();
+                        return;
+                    }
+                }
+                return next(ApiError.BadRequest("Нет права доступа 'Студент'"));
             });
         });
     }
