@@ -16,6 +16,7 @@ const user = {
 }
 
 const ProfileSettings = (props) => {
+    const { name, email } = props.props;
     return (
         <Card 
         {...props}
@@ -42,13 +43,13 @@ const ProfileSettings = (props) => {
                     variant="h5"
                     align="center"
                 >
-                    {user.name}
+                    {name}
                 </Typography>
                 <Typography 
                     color="textSecondary"
                     variant="body2"
                 >
-                    {user.email}
+                    {email}
                 </Typography>
             </Box>
         </CardContent>

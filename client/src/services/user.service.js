@@ -5,7 +5,7 @@ import TokenService from "./token.service";
 class UserService {
   getTests() {
     return api
-        .get('/tests/' + TokenService.getUser().username).then(res => {
+        .get('/tests/' + TokenService.getUser().userId).then(res => {
             return res.data;
         });
   }

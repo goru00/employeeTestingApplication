@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { AppBar, IconButton, Toolbar, Tooltip, Box, Avatar, Typography, Button, Grid } from "@mui/material";
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,6 +12,7 @@ const NavbarRoot = styled(AppBar)(({ theme }) => ({
 }));
 
 function Navbar(props) {
+  const { user: currentUser } = useSelector((state) => state.auth);
   const { onSidebarOpen, ...other} = props;
 
     return (
@@ -77,6 +78,7 @@ function Navbar(props) {
                     }}
                   >
                     <Grid 
+                      item={true}
                       container 
                       xs={8} 
                       md={8}
@@ -89,13 +91,13 @@ function Navbar(props) {
                         color="#000"
                         variant="body1"
                       >
-                        Третьяков Дмитрий Артемович
+                        {currentUser.user.name}
                       </Typography>
                       <Typography 
                         color="#a2a2a2"
                         variant="caption"
                       >
-                        студент группы ИВТ-41
+                        преподаватель кафедры ИТВУ
                       </Typography>
                     </Grid>
                     <Avatar

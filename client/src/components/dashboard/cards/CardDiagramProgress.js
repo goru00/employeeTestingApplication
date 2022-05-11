@@ -5,7 +5,6 @@ import { Box, Card, CardContent, CardHeader, Divider, Typography, useTheme } fro
 const CardDiagramProgress = (props) => {
     ChartJS.register(...registerables);
     const theme = useTheme();
-    console.log(props)
     const data = {
         datasets: [
             {

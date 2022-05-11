@@ -40,10 +40,7 @@ const Home = (props) => {
                 flexGrow: 1,
                 py: 8
             }}
-        >   
-        {
-            console.log(tests)
-        }
+        >
             <Container 
                 maxWidth={false}
             >
@@ -52,7 +49,7 @@ const Home = (props) => {
                     spacing={3}
                 >
                     <Grid 
-                        item
+                        item={true}
                         lg={8}
                         md={12}
                         xl={9}
@@ -61,7 +58,7 @@ const Home = (props) => {
                         <CardItemsList />
                     </Grid>
                     <Grid 
-                        item
+                        item={true}
                         lg={4}
                         sm={6}
                         xl={3}
@@ -70,7 +67,7 @@ const Home = (props) => {
                        <CardTaskProgress /> 
                     </Grid>
                     <Grid 
-                        item
+                        item={true}
                         lg={12}
                         md={6}
                         xl={3}
@@ -79,7 +76,7 @@ const Home = (props) => {
                         <CardDiagramProgress />
                     </Grid>
                     <Grid 
-                        item
+                        item={true}
                         lg={12}
                         md={12}
                         xl={9}

@@ -16,7 +16,7 @@ class AuthMiddleware {
             }
         }).then(user => {
             if (user) {
-                return next(ApiError.BadRequest(`Имя пользователя "${user.username}" занято`));
+                return next(ApiError.BadRequest(`Имя пользователя "${user.userId}" занято`));
             }
             User.findOne({
                 where: {

@@ -29,9 +29,9 @@ const setup = (store) => {
                         const rs = await AxiosInstance.post('/auth/refreshToken', {
                             refreshToken: TokenService.getLocalRefreshToken()
                         });
-                        const { accessToken } = rs.data;
-                        dispatch(refreshToken(accessToken));
-                        TokenService.updateLocalAccessToken(accessToken);
+                        const { token } = rs.data;
+                        dispatch(refreshToken(token));
+                        TokenService.updateLocalAccessToken(token);
                         return AxiosInstance(originalConfig);
                     } catch(err) {
                         return Promise.reject(err);

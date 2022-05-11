@@ -11,11 +11,10 @@ import {
 import { useState } from 'react';
 
 const ProfileSettingsDetails = (props) => {
+
+    const { name, email } = props.props;
+
     const [info, setInfo] = useState({
-        firstName: 'Третьяков',
-        secondName: 'Дмитрий',
-        lastName: 'Артемович',
-        email: 'goru00@vk.com',
         oldPassword: '',
         newPassword: ''
     });
@@ -55,7 +54,7 @@ const ProfileSettingsDetails = (props) => {
                                     label="Фамилия"
                                     name="firstName"
                                     onChange={handleChange}
-                                    value={info.firstName}
+                                    value={name.split(/\s/)[0]}
                                     variant="outlined"
                                 />
                             </Grid>
@@ -70,7 +69,7 @@ const ProfileSettingsDetails = (props) => {
                                     label="Имя"
                                     name="secondName"
                                     onChange={handleChange}
-                                    value={info.secondName}
+                                    value={name.split(/\s/)[1]}
                                     variant="outlined"
                                 />
                             </Grid>
@@ -85,7 +84,7 @@ const ProfileSettingsDetails = (props) => {
                                     label="Отчество"
                                     name="lastName"
                                     onChange={handleChange}
-                                    value={info.lastName}
+                                    value={name.split(/\s/)[2]}
                                     variant="outlined"
                                 />
                             </Grid>
@@ -100,7 +99,7 @@ const ProfileSettingsDetails = (props) => {
                                     label="Email"
                                     name="email"
                                     onChange={handleChange}
-                                    value={info.email}
+                                    value={email}
                                     variant="outlined"
                                 />
                             </Grid>

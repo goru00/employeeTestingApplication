@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Navigate } from "react-router-dom";
 import { 
     Box, 
@@ -7,13 +8,11 @@ import {
     Typography, 
     Grid
 } from '@mui/material';
-
-import eventBus from "../../common/EventBus";
 import ProfileSettings from "../../components/profile/profileSettings";
 import ProfileSettingsDetails from "../../components/profile/profileSettingsDetails";
 
-function Profile(props) {
-    const { user: currentUser } = props;
+function Profile() {
+    const { user: currentUser } = useSelector((state) => state.auth);
     
     if (!currentUser) {
         return <Navigate to={"/signin"} />;
@@ -47,7 +46,7 @@ function Profile(props) {
                         md={6}
                         xs={12}
                     >
-                        <ProfileSettings />
+                        <ProfileSettings props={currentUser.user} />
                     </Grid>
                     <Grid 
                         item
@@ -55,7 +54,7 @@ function Profile(props) {
                         md={6}
                         xs={12}
                     >
-                        <ProfileSettingsDetails />
+                        <ProfileSettingsDetails props={currentUser.user} />
                     </Grid>
                 </Grid>
             </Container>
@@ -63,11 +62,4 @@ function Profile(props) {
     )
 }
 
-function mapStateToProps(state) {
-  const { user } = state.auth;
-  return {
-    user,
-  };
-}
-
-export default connect(mapStateToProps)(Profile);
+export default Profile;

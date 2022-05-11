@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 
 
 import Sidebar from './sidebar/sidebar';
 import Navbar from "./navbar/navbar";
-
-import EventBus from "../../common/EventBus";
-import { logout } from '../../actions/auth';
 
 import { styled } from '@mui/material/styles';
 import { Box } from '@mui/system';
@@ -23,25 +20,8 @@ const NavigationBarRoot = styled('div')(({ theme }) => ({
 }));
 
 const NavigationBar = (props) => {
-    const [currentUser, setCurrentUser] = useState(null);
+    const { user: currentUser } = useSelector((state) => state.auth);
     const [isSidebarOpen, setSidebarOpen] = useState(false);
-
-    useEffect(() => {
-        const user = props.user;
-        if (user) {
-            setCurrentUser(user);
-        } else {
-            setCurrentUser(null);
-        }
-        EventBus.on("logout", () => {
-            logOut();
-        });
-    }, [props]);
-
-    function logOut() {
-        props.dispatch(logout());
-        setCurrentUser(undefined);
-    }
 
     return (
         <>
@@ -73,12 +53,5 @@ const NavigationBar = (props) => {
         </>
     )
 }
-
-function mapStateToProps(state) {
-    const { user } = state.auth;
-    return {
-      user
-    };
-}
   
-export default connect(mapStateToProps)(NavigationBar);
+export default NavigationBar;

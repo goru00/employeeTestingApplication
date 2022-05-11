@@ -17,7 +17,7 @@ const CardTaskProgress = (props) => {
                         justifyContent: "space-between"
                     }}
                 >
-                    <Grid item>
+                    <Grid item={true}>
                         <Typography 
                             color="textSecondary"
                             gutterBottom
@@ -32,7 +32,7 @@ const CardTaskProgress = (props) => {
                             33%
                         </Typography>
                     </Grid>
-                    <Grid item>
+                    <Grid item={true}>
                         <Avatar 
                             sx={{
                                 backgroundColor: "warning.main",

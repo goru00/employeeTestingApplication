@@ -8,7 +8,7 @@ class AuthService {
                 userId: username,
                 password
             }).then(res => {
-                if (res.data.accessToken) {
+                if (res.data.token) {
                     TokenService.setUser(res.data);
                 }
                 return res.data;
@@ -19,7 +19,7 @@ class AuthService {
     }
     register(username, password) {
         return api.post("/auth/signup", {
-            username,
+            userId: username,
             password
         });
     }
