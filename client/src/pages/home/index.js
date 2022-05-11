@@ -14,6 +14,8 @@ const Home = (props) => {
     const { user: currentUser } = useSelector((state) => state.auth);
     const [tests, setTests] = useState(null);
 
+    console.log(currentUser)
+
     useEffect(() => {
         UserService.getTests()
             .then(res => {

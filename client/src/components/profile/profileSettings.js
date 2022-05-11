@@ -15,11 +15,10 @@ const user = {
     email: "goru00@vk.com"
 }
 
-const ProfileSettings = (props) => {
-    const { name, email } = props.props;
+const ProfileSettings = ({currentUser}) => {
+    const { name, email } = currentUser;
     return (
-        <Card 
-        {...props}
+        <Card
     >
         <CardContent>
             <Box

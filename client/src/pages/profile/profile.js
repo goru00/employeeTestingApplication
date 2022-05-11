@@ -46,7 +46,7 @@ function Profile() {
                         md={6}
                         xs={12}
                     >
-                        <ProfileSettings props={currentUser.user} />
+                        <ProfileSettings currentUser={currentUser} />
                     </Grid>
                     <Grid 
                         item
@@ -54,7 +54,7 @@ function Profile() {
                         md={6}
                         xs={12}
                     >
-                        <ProfileSettingsDetails props={currentUser.user} />
+                        <ProfileSettingsDetails currentUser={currentUser} />
                     </Grid>
                 </Grid>
             </Container>

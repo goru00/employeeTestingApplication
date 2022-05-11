@@ -91,7 +91,7 @@ function Navbar(props) {
                         color="#000"
                         variant="body1"
                       >
-                        {currentUser.user.name}
+                        {currentUser.name}
                       </Typography>
                       <Typography 
                         color="#a2a2a2"

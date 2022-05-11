@@ -10,9 +10,9 @@ import {
 } from '@mui/material';
 import { useState } from 'react';
 
-const ProfileSettingsDetails = (props) => {
+const ProfileSettingsDetails = ({currentUser}) => {
 
-    const { name, email } = props.props;
+    const { name, email } = currentUser;
 
     const [info, setInfo] = useState({
         oldPassword: '',
@@ -30,7 +30,6 @@ const ProfileSettingsDetails = (props) => {
         <form 
             autoComplete='off'
             noValidate
-            {...props}
         >
             <Card>
                 <CardHeader 
