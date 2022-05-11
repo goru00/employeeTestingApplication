@@ -33,6 +33,7 @@ class AuthService {
                     }
                 }
             }).then(roles => {
+                console.log(roles);
                 user.setRoles(roles);
             });
         } else {
@@ -44,19 +45,24 @@ class AuthService {
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
         return {
             ...tokens,
-            user: userDto
+            ...userDto
         }
     }
 
     async signin(props) {
         const { userId } = props;
-        const user = await User.findByPk(userId);
+        const user = await User.findByPk(userId, { 
+            include: {
+                model: Role,
+                attributes: ['name']
+            }
+        });
         const userDto = new UserDto(user);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
         return {
             ...tokens,
-            user: userDto
+            ...userDto
         }
     }
 
@@ -89,7 +95,7 @@ class AuthService {
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
         return {
             ...tokens,
-            user: userDto
+            ...userDto
         }
     }
 }
