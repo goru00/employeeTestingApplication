@@ -33,7 +33,35 @@ class UserService {
             usersDto.push(new UserDto(users[index]));
         }
         return {
-            users: usersDto
+            ...userDto
+        }
+    }
+    async setUserRoles(user, roles) {
+        Role.findAll({
+            where: {
+                name: {
+                    [Op.or]: roles
+                }
+            }
+        }).then(roles => {
+            user.setRoles(roles);
+        });
+        const userDto = new UserDto(user);
+        userDto.roles = roles;
+        return {
+            ...userDto
+        }
+    }
+    async getUserRoles(userId) {
+        const userRoles = await User.findByPk(userId, {
+            include: Role,
+            as: 'roles',
+            attributes: ['name']
+        });
+        const userDto = new UserDto(userRoles);
+        userDto.roles = userRoles.roles;
+        return {
+            ...userDto
         }
     }
 }

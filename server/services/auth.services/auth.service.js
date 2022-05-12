@@ -25,27 +25,13 @@ class AuthService {
             password: hashPassword,
             activationLink: activationLink
         });
-        if (roles) {
-            Role.findAll({
-                where: {
-                    name: {
-                        [Op.or]: roles
-                    }
-                }
-            }).then(roles => {
-                console.log(roles);
-                user.setRoles(roles);
-            });
-        } else {
-            user.setRoles([1]);
-        }
-        const userDto = new UserDto(user);
-        await MailService.sendActivationMail(email, activationLink);
+        const userDto = await UserService.setUserRoles(user, roles);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
+        await MailService.sendActivationMail(email, activationLink);
         return {
-            ...tokens,
-            ...userDto
+            ...userDto,
+            ...tokens
         }
     }
 
@@ -57,12 +43,12 @@ class AuthService {
                 attributes: ['name']
             }
         });
-        const userDto = new UserDto(user);
+        const userDto = await UserService.getUserRoles(user.userId);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
         return {
-            ...tokens,
-            ...userDto
+            ...userDto,
+            ...tokens
         }
     }
 
@@ -94,8 +80,8 @@ class AuthService {
         const tokens = TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
         return {
-            ...tokens,
-            ...userDto
+            ...userDto,
+            ...tokens
         }
     }
 }
