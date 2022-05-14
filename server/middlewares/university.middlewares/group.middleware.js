@@ -7,7 +7,7 @@ class GroupMiddleware {
     async checkExistsName(req, res, next) {
         Group.findOne({
             where: {
-                name: req.body.groupName
+                id: req.body.groupId
             }
         }).then(group => {
             if (group) {

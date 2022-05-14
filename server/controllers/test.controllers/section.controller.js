@@ -5,7 +5,7 @@ class SectionController {
         try {
             const sectionData = await SectionService.createSection({...req.body});
             return res.status(201).json({
-                message: "Секция была успешно создана",
+                message: "Раздел был успешно создан",
                 ...sectionData
             });
         } catch (err) {

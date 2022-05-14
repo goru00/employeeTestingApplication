@@ -4,13 +4,14 @@ const Section = db.section;
 
 class SectionService {
     async createSection(props) {
-        const { sectionName } = props;
+        const { sectionName, description } = props;
         const section = await Section.create({
-            name: sectionName
+            name: sectionName,
+            description: description
         });
         const sectionDto = new SectionDto(section);
         return {
-            section: sectionDto
+            ...sectionDto
         }
     }
     async getSections(params) {

@@ -10,7 +10,7 @@ class UserService {
     async getUsers(params) {
         const { name, userId } = params;
         if (userId) {
-            const user = await User.findByPk(userId, { include: Role });
+            const user = await User.findByPk(userId);
             const userDto = new UserDto(user);
             return {
                 user: userDto
@@ -21,19 +21,19 @@ class UserService {
                 where: {
                     name: name
                 }
-            }, { include: Role });
+            });
             const userDto = new UserDto(user);
             return {
                 user: userDto
             }
         }
-        const users = await User.findAll({ include: Role });
+        const users = await User.findAll();
         let usersDto = [];
         for (let index = 0; index < users.length; index++) {
-            usersDto.push(new UserDto(users[index]));
+            usersDto.push(await this.getUserRoles(usersDto.userId));
         }
         return {
-            ...userDto
+            usersDto
         }
     }
     async setUserRoles(user, roles) {
@@ -54,12 +54,14 @@ class UserService {
     }
     async getUserRoles(userId) {
         const userRoles = await User.findByPk(userId, {
-            include: Role,
-            as: 'roles',
-            attributes: ['name']
+            include: {
+                model: Role,
+                attributes: ['name'],
+                as: 'roles'
+            }
         });
         const userDto = new UserDto(userRoles);
-        userDto.roles = userRoles.roles;
+        userDto.roles = userRoles.roles.map(role => role.name);
         return {
             ...userDto
         }

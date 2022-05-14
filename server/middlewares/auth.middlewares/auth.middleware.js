@@ -133,11 +133,15 @@ class AuthMiddleware {
         User.findByPk(req.user.userId).then(user => {
             user.getRoles().then(roles => {
                 for (let index = 0; index < roles.length; index++) {
-                    if (roles[index].name === "admin") {
+                    if (roles[index].name === "Администратора") {
                         next();
                         return;
                     }
-                    if (roles[index].name === "moderator") {
+                    if (roles[index].name === "Преподаватель") {
+                        next();
+                        return;
+                    }
+                    if (roles[index].name === "Методист") {
                         next();
                         return;
                     }

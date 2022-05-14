@@ -5,14 +5,14 @@ const Op = db.Sequelize.Op;
 
 class GroupService {
     async createGroup(props) {
-        const { groupName, directionId } = props;
+        const { groupId, directionId } = props;
         const group = await Group.create({
-            name: groupName,
+            id: groupId,
             directionId: directionId
         });
         const groupDto = new GroupDto(group);
         return {
-            group: groupDto
+            ...groupDto
         }
     }
     async getGroups(params) {

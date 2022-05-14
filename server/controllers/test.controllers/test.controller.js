@@ -1,16 +1,20 @@
-const db = require('../../models');
-const Test = db.test;
-const Section = db.section;
-const Group = db.group;
-const Student = db.student;
-const StudentResult = db.studentResult;
-const StudentAnswer = db.studentAnswer;
-const Discipline = db.discipline;
-const Std = db.std;
-const Op = db.Sequelize.Op;
+const TestService = require('../../services/test.services/test.service');
 
 class TestController {
-    async getSections(req, res) {
+
+    async createTest(req, res, next) {
+        try {
+            const testData = await TestService.createTest(req.user, {...req.body});
+            return res.status(201).json({
+                message: "Тест был успешно создан",
+                ...testData
+            });
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    /*async getSections(req, res) {
         Section.findAll().then(sections => {
             if (!sections) {
                 res.status(200).send({
@@ -278,7 +282,7 @@ class TestController {
                 message: err.message
             });
         });
-    }
+    }*/
 }
 
 module.exports = new TestController();

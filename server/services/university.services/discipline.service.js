@@ -5,7 +5,13 @@ const Discipline = db.discipline;
 class DisciplineService {
     async createDiscipline(props) {
         const { disciplineName } = props;
-        const discipline = await discipline
+        const discipline = await Discipline.create({
+            name: disciplineName
+        });
+        const disciplineDto = new DisciplineDto(discipline);
+        return {
+            ...disciplineDto
+        }
     }
     async getDisciplines(params) {
         const { disciplineName } = params;
