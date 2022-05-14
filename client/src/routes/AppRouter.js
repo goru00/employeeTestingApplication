@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { history } from '../helpers/history';
@@ -13,7 +14,8 @@ import Home from '../pages/home/index';
 import Login from '../pages/signin/login';
 import Profile from '../pages/profile/profile';
 import Tests from '../pages/tests/tests';
-import { useEffect } from 'react';
+import University from '../pages/university/university';
+import Users from '../pages/users/users';
 
 const AppRouter = (props) => {
     
@@ -31,8 +33,10 @@ const AppRouter = (props) => {
                 <Routes>
                     <Route path="/" element={<NavigationBar />}>
                         <Route index element={<Home />} />
+                        <Route path='users' element={<Users />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="tests" element={<Tests />} />
+                        <Route path="university" element={<University />} />
                     </Route>
                     <Route path="/signin" element={<Login />} />
                 </Routes>

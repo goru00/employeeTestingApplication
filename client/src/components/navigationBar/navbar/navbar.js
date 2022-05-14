@@ -80,9 +80,9 @@ function Navbar(props) {
                     <Grid 
                       item={true}
                       container 
-                      xs={8} 
-                      md={8}
-                      lg={8}
+                      xs={12} 
+                      md={12}
+                      lg={12}
                       justifyContent="flex-end" 
                       alignItems="flex-end"
                       columnSpacing={0}
@@ -93,12 +93,30 @@ function Navbar(props) {
                       >
                         {currentUser.name}
                       </Typography>
-                      <Typography 
-                        color="#a2a2a2"
-                        variant="caption"
+                      <Grid 
+                        item={true}
+                        container
+                        xs={8}
+                        md={8}
+                        lg={8}
+                        justifyContent="flex-end"
+                        alignItems="flex-end"
+                        columnSpacing={0}
                       >
-                        преподаватель кафедры ИТВУ
-                      </Typography>
+                        <Typography 
+                          color="#a2a2a2"
+                          variant="caption"
+                        >
+                          {currentUser.roles.map((role, index) => {
+                            if (index > 0) {
+                              return (
+                                ", " + role
+                              )
+                            } else return role
+                          })}
+                        </Typography>
+                      </Grid>
+
                     </Grid>
                     <Avatar
                       sx={{

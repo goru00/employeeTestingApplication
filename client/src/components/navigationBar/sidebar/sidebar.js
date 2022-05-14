@@ -6,6 +6,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import SettingsIcon from '@mui/icons-material/Settings';
 import SchoolIcon from '@mui/icons-material/School';
 import PersonIcon from '@mui/icons-material/Person';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 import { Link } from "react-router-dom";
 
@@ -22,6 +23,11 @@ const sidebarLinks = [
         href: "/profile",
         icon: (<PersonIcon fontSize="small" />),
         title: "Профиль"
+    },
+    {
+        href: "/users",
+        icon: (<PeopleAltIcon fontSize="small" />),
+        title: "Список пользователей"
     },
     {
         href: "/tests",
