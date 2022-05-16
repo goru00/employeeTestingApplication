@@ -9,6 +9,12 @@ class UserService {
             return res.data;
         });
   }
+  getUsers() {
+    return api
+        .get('/users/').then(res => {
+            return res.data;
+        });
+  }
 }
 
 export default new UserService();

@@ -21,7 +21,7 @@ const Home = (props) => {
                 });
                 setTests(data);
             }, err => {
-                if (err.response && err.response.status === 403) {
+                if (err.res && err.res.status === 403) {
                     eventBus.dispatch("logout");
                 }
             });
