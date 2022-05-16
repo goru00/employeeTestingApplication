@@ -30,11 +30,9 @@ class UserService {
         const users = await User.findAll();
         let usersDto = [];
         for (let index = 0; index < users.length; index++) {
-            usersDto.push(await this.getUserRoles(usersDto.userId));
+            usersDto.push(await this.getUserRoles(users[index].userId));
         }
-        return {
-            usersDto
-        }
+        return usersDto;
     }
     async setUserRoles(user, roles) {
         Role.findAll({
@@ -62,6 +60,7 @@ class UserService {
         });
         const userDto = new UserDto(userRoles);
         userDto.roles = userRoles.roles.map(role => role.name);
+        console.log(userDto)
         return {
             ...userDto
         }
