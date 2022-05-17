@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Box, 
     Button,
@@ -17,30 +17,27 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import SeverityPill from '../severityPill/severityPill';
 
-const ListItemTable = (props) => {
+function ListItemTable({props}) {
     const [limit, setLimit] = useState(5);
-    const [page, setPage] = useState(1);
-    
+    const [page, setPage] = useState(0);
+
+    const {
+        headers,
+        body,
+        title
+    } = props;
+
     const handlePageChange = (event, newPage) => {
         setPage(newPage);
     }
     const handleLimitChange = (event) => {
         setLimit(event.target.value);
     }
-    const {
-        title,
-        headers,
-        body
-    } = props;
-    console.log(props)
     return (
-        <Card 
-            {...props}
-        >
+        <Card>
             <CardHeader 
-                title={title}
+                title={props.title}
             />
-            <PerfectScrollbar />
             <Box 
                 sx={{
                     minWidth: 800
@@ -48,57 +45,64 @@ const ListItemTable = (props) => {
             >
                 <Table>
                     <TableHead>
+                        <TableRow>
                         {
-                            headers.map((item, index) => {
+                            props.headers.map((head, index) => {
                                 return (
                                     <TableCell key={index}>
-                                        {item}
+                                        {head}
                                     </TableCell>
                                 )
                             })
                         }
+                        </TableRow>
                     </TableHead>
                     <TableBody>
                         {
-                            body.map((item, index) => {
-                                <TableRow
-                                    hover
-                                    key={index}
-                                >
-                                    {
-                                        item.map((cell, jIndex) => {
-                                            console.log(cell);
-                                        })
-                                    }
-                                </TableRow>
+                            props.body && props.body.map((row, num) => {
+                                return (
+                                    <TableRow key={num}>
+                                        {
+                                            <>
+                                                <TableCell>
+                                                    {row.userId}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.name}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {row.email}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {typeof row.isActivated == "boolean" && (
+                                                        row.isActivated === true ? "Да" : "Нет"
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    {Array.isArray(row.roles) ? (
+                                                        row.roles.map((role, pos) => {
+                                                            return (pos >= 0 && pos !== row.roles.length - 1) ? `${role}, ` : `${role}`  
+                                                        })
+                                                    ) : row.roles}
+                                                </TableCell>
+                                            </>
+                                        }
+                                    </TableRow>
+                                )
                             })
                         }
                     </TableBody>
                 </Table>
             </Box>
-            <Box
-                sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    p: 2
-                }}
-            >
-                <Button
-                    color="primary"
-                    endIcon={<ArrowRightIcon fontSize="small" />}
-                >
-                    Посмотреть все
-                </Button>
-            </Box>
             <TablePagination 
-                    labelRowsPerPage='Всего страниц:'
-                    component="div"
-                    count={body.length}
-                    onPageChange={handlePageChange}
-                    onRowsPerPageChange={handleLimitChange}
-                    page={page}
-                    rowsPerPage={limit}
-                    rowsPerPageOptions={[5, 10, 25]}
+                labelRowsPerPage='Всего страниц:'
+                component="div"
+                count={limit}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleLimitChange}
+                page={page}
+                rowsPerPage={limit}
+                rowsPerPageOptions={[5, 10, 25]}
             />
         </Card>
     )

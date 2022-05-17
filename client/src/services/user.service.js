@@ -1,4 +1,5 @@
 import api from '../api/api';
+import authHeader from './auth.header';
 
 import TokenService from "./token.service";
 
@@ -11,7 +12,7 @@ class UserService {
   }
   getUsers() {
     return api
-        .get('/users/').then(res => {
+        .get('/users', { headers: authHeader() }).then(res => {
             return res.data;
         });
   }

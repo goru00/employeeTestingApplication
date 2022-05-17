@@ -26,7 +26,7 @@ const setup = (store) => {
                 if (err.response.status === 401 && !originalConfig._retry) {
                     originalConfig._retry = true;
                     try {
-                        const rs = await AxiosInstance.post('/auth/refreshToken', {
+                        const rs = await AxiosInstance.get('/auth/refreshToken', {
                             refreshToken: TokenService.getLocalRefreshToken()
                         });
                         const { token } = rs.data;

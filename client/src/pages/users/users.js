@@ -1,5 +1,4 @@
-import { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import {
     Box,
     Card,
@@ -15,34 +14,34 @@ import {
     Typography,
     TableContainer,
     TablePagination,
-} from '@mui/material';
-
-import ListItemTable from '../../components/cards/ListItemTable';
+    Skeleton
+  } from '@mui/material';
 import UserService from '../../services/user.service';
 import eventBus from '../../common/EventBus';
-
-const headers = [
-    "Логин",
-    "Имя, фамилия и отчество",
-    "E-Mail",
-    "Активация"
-];
+import CreateUser from '../../components/actions/createUser';
+import ApiMessage from '../../components/apiMessage/apiMessage';
+const ListItemTable = lazy(() => import('../../components/cards/ListItemTable'));
 
 const Users = () => {
-    const { user: currentUser } = useSelector((state) => state.auth);
+
     const [users, setUsers] = useState();
+
+    const headers = [
+        "Логин",
+        "Имя пользователя",
+        "E-Mail",
+        "Активация",
+        "Роли"
+    ];
 
     useEffect(() => {
         UserService.getUsers().then(res => {
-            let dataUsers = [];
-            res.forEach(user => {
-                dataUsers.push(user);
-            });
-            console.log(dataUsers);
-            setUsers(dataUsers);
+            setUsers(res);
         }, err => {
-            if (err.res && err.res.status === 403) {
+            if (err.response && err.response.status === 403) {
                 eventBus.dispatch('logout');
+            } else {
+                return (<ApiMessage message={err.response} />)
             }
         });
     }, []);
@@ -62,15 +61,16 @@ const Users = () => {
                     <Typography variant="h4" gutterBottom>
                         Пользователи
                     </Typography>
-                    <Button variant="contained" to="#">
-                        Добавить нового пользователя
-                    </Button>
+                    <CreateUser />
                 </Stack>
-                <ListItemTable props={{
-                    body: users,
-                    title: "Список пользователей",
-                    headers
-                }} />
+                    <Suspense fallback={<Skeleton variant="rectangular" width={210} height={118} />}>
+                        <ListItemTable props={{
+                            title: "Пользователи",
+                            body: users,
+                            headers: headers
+                        }
+                        } />
+                    </Suspense>
             </Container>
         </Box>
     )
