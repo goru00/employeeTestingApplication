@@ -60,9 +60,16 @@ class AuthController {
             await AuthService.activate(activationLink);
             return res.redirect(ConfigClient.URL);
         } catch (err) {
-            return res.status(500).send({
-                message: err.message
-            });
+            next(err);
+        }
+    }
+
+    async getRoles(req, res, next) {
+        try {
+            const rolesData = await AuthService.getRoles();
+            return res.status(200).json(rolesData);
+        } catch (err) {
+            next(err);
         }
     }
 }

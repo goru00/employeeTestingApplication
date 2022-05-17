@@ -12,6 +12,7 @@ const Role = db.role;
 const Op = db.Sequelize.Op;
 
 const ApiError = require('../../exceptions/api.error');
+const RoleDto = require('../../dtos/user.dtos/role.dto');
 
 class AuthService {
     async signup(props) {
@@ -82,6 +83,17 @@ class AuthService {
         return {
             ...userDto,
             ...tokens
+        }
+    }
+
+    async getRoles() {
+        const rolesData = await Role.findAll();
+        let rolesDto = [];
+        for (let index = 0; index < rolesData.length; index++) {
+            rolesDto.push(new RoleDto(rolesData[index]))
+        }
+        return {
+            rolesDto
         }
     }
 }

@@ -17,5 +17,10 @@ router.get('/refresh', [
     AuthMiddleware.isActivatedAccount
 ], AuthController.refresh);
 router.get('/activate/:link', AuthController.activate);
+router.get('/roles', [
+    AuthMiddleware.verifyToken,
+    AuthMiddleware.isActivatedAccount,
+    AuthMiddleware.isAdmin
+], AuthController.getRoles);
 
 module.exports = router;
