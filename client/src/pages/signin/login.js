@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import { Navigate } from 'react-router-dom';
 import { login } from '../../actions/auth';
+import { clearMessage } from "../../actions/message";
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -45,6 +46,7 @@ function Login(props) {
             const { history } = props;
             dispatch(login(username, password))
             .then(() => {
+                dispatch(clearMessage());
                 history.push("/");
                 window.location.reload();
             })
@@ -61,13 +63,13 @@ function Login(props) {
     return (
         <>
         <Box
-        component="main"
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexGrow: 1,
-          minHeight: '100%'
-        }}
+            component="main"
+            sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexGrow: 1,
+            minHeight: '100%'
+            }}
       >
         <Container maxWidth="sm">
             <Box sx={{ my: 3 }}>
@@ -146,4 +148,3 @@ function Login(props) {
 }
 
 export default Login;
-

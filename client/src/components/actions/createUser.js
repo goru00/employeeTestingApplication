@@ -1,61 +1,245 @@
 import React, { useEffect, useState, useRef } from 'react';
-import ReactDOM from 'react-dom';
-
 import {
-    Modal,
     Button,
     Box,
     Typography,
-    Dialog,
-    DialogActions,
-    DialogTitle,
-    DialogContent,
-    DialogContentText,
+    Grid,
     TextField,
     Select,
     InputLabel,
     MenuItem,
     FormControl,
-    Container
+    FormLabel,
+    FormGroup,
+    Container,
+    Alert,
+    FormControlLabel,
+    Checkbox,
 } from '@mui/material';
+
 import useModal from '../../hooks/useModal';
+import useLoading from '../../hooks/useLoading';
+import useMessage from '../../hooks/useMessage';
+
 import AuthService from '../../services/auth.services';
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { register } from '../../actions/auth';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4
-};
-
-function CreateUser() {
-    const [open, handleOpen, handleClose] = useModal();
-    const [roles, setRoles] = useState();
-    const [selectRole, setSelectRole] = useState('');
-
-    const dispatch = useDispatch();
+const ModalCreateUser = (props) => {
+    const { validation, roles, loading, LoadAnimation } = props;
+    const [message] = useMessage(); 
     const form = useRef();
 
+    return (
+        loading ? LoadAnimation : (
+            <Box
+        component="main"
+        sx={{
+          alignItems: 'center',
+          display: 'flex',
+          flexGrow: 1,
+          minHeight: '100%'
+        }}
+      >
+        <Container>
+            {message}
+            <Box sx={{ my: 3 }}>
+                <Typography variant="h5">
+                    Создание пользователя
+                </Typography>
+                <Typography>
+                    Для создания пользователя необходимо заполнить поля ниже
+                </Typography>
+            </Box>
+                <form
+                    onSubmit={validation.handleSubmit}
+                    ref={form}
+                >
+                    <Box
+                        sx={{ flexGrow: 1}}
+                    >
+                        <Grid container rowSpacing={{ xs: 2, md: 2, sm: 4}} direction="row" justifyContent="center" alignItems="center">
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.userId && 
+                                        validation.errors.userId)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.userId && 
+                                        validation.errors.userId}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="Логин"
+                                    margin="normal"
+                                    name="userId"
+                                    type="login"
+                                    value={validation.values.userId}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.password && 
+                                        validation.errors.password)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.password && 
+                                        validation.errors.password}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="Пароль"
+                                    margin="normal"
+                                    name="password"
+                                    type="password"
+                                    value={validation.values.password}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.email && 
+                                        validation.errors.email)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.email && 
+                                        validation.errors.email}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="E-Mail"
+                                    margin="normal"
+                                    name="email"
+                                    type="email"
+                                    value={validation.values.email}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.fio && 
+                                        validation.errors.fio)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.fio && 
+                                        validation.errors.fio}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="Фамилия"
+                                    margin="normal"
+                                    name="fio"
+                                    type="text"
+                                    value={validation.values.fio}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.fName && 
+                                        validation.errors.fName)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.fName && 
+                                        validation.errors.fName}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="Имя"
+                                    margin="normal"
+                                    name="fName"
+                                    type="text"
+                                    value={validation.values.fName}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <TextField
+                                    error={Boolean(
+                                        validation.touched.lName && 
+                                        validation.errors.lName)}
+                                    fullWidth
+                                    helperText={
+                                        validation.touched.lName && 
+                                        validation.errors.lName}
+                                    onBlur={validation.handleBlur}
+                                    onChange={validation.handleChange}
+                                    label="Отчество"
+                                    margin="normal"
+                                    name="lName"
+                                    type="text"
+                                    value={validation.values.lName}
+                                    variant="outlined"
+                                />
+                            </Grid>
+                            <Grid container item={true}>
+                                <FormControl
+                                    component="fieldset"
+                                    variant="standard"
+                                >
+                                    <FormLabel component="legend">
+                                        Роли
+                                    </FormLabel>
+                                    <FormGroup>
+                                        {
+                                            roles && roles.rolesDto.map((role) => (
+                                                <FormControlLabel 
+                                                    control={
+                                                        <Checkbox 
+                                                            checked={false} 
+                                                            onChange={validation.values.roles.rolesDto} 
+                                                            name={role.name}
+                                                        />
+                                                    }
+                                                    label={role.name}
+                                                    key={role.id}
+                                                />
+                                            ))
+                                        }
+                                    </FormGroup>
+                                </FormControl>
+                            </Grid>
+                            <Box sx={{ py: 2 }}>
+                    <Button
+                        color="primary"
+                        fullWidth
+                        size="large"
+                        type="submit"
+                        variant="contained"
+                    >
+                        Создать пользователя
+                    </Button>
+                </Box>
+                        </Grid>
+                    </Box>
+                </form>
+            </Container>
+      </Box>
+        )
+    )
+}
+
+function CreateUser({props}) {
+    const [roles, setRoles] = useState();
+    const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
+    const [message, clearMessage] = useMessage();
+
+    const dispatch = useDispatch();
 
     const validation = useFormik({
         initialValues: {
             userId: '',
             password: '',
             fio: '',
-            fname: '',
-            lname: '',
-            email: ''
+            fName: '',
+            lName: '',
+            email: '',
+            roles: []
         },
         validationSchema: Yup.object({
             userId: Yup
@@ -65,7 +249,7 @@ function CreateUser() {
                 .required('Логин обязателен для ввода'),
             fio: Yup
                 .string()
-                .min(6, 'Длина фамилии не может быть меньше 6 символов')
+                .min(2, 'Длина фамилии не может быть меньше 6 символов')
                 .max(32, 'Длина фамилии не может быть больше 32 символов')
                 .matches(/^[А-Яа-я]+$/, 'Фамилия может быть только из русских символов')
                 .required('Необходимо ввести фамилию'),
@@ -83,20 +267,30 @@ function CreateUser() {
                 .min(8, 'Длина пароля не может быть меньше 8 символов. Проверьте введенные данные')
                 .max(16)
                 .required('Пароль обязателен для ввода'),
-            passwordConfirm: Yup
-                .string(),
             email: Yup
                 .string()
-                .required('E-Mail обязателен для создания пользователя')
+                .required('E-Mail обязателен для создания пользователя'),
+            roles: Yup
+                .lazy(val => (Array.isArray(val) ? Yup.array().of(Yup.string()) : Yup.string()))
         }), 
         onSubmit: (values) => {
+            console.log('submit')
             const { userId, password, email, roles} = values;
             const name = `${values.fio} ${values.fName} ${values.lName}`;
-            dispatch(register(userId, email, name, password, roles)).then(() => {
-                window.location.reload();
+            clearMessage();
+            handleLoadingStart();
+            dispatch(register(userId, password, name, email, [roles])).then(() => {
+                console.log('successfully')
+            }).catch(err => {
+                console.log(err)
+            }).finally(() => {
+                handleLoadingStop();
+                handleClose();
             });
         }
     });
+
+    const {content, open, handleOpen, handleClose} = useModal(ModalCreateUser({validation, roles, loading, LoadAnimation}));
 
     useEffect(() => {
         if (open && !!!roles) {
@@ -105,10 +299,6 @@ function CreateUser() {
             });
         }
     }, [roles, open]);
-
-    const handleSelectRole = (event) => {
-        setSelectRole(event.target.value)
-    }
 
     return (
         <div>
@@ -119,158 +309,7 @@ function CreateUser() {
                     onClick={handleOpen}
                     variant="contained"
                 >Добавить пользователя</Button>
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                >
-                    <Container maxWidth="sm">
-                        <DialogTitle>
-                            Создание пользователя
-                        </DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Введите необходимые данные для создания пользователя
-                            </DialogContentText>
-                            <form
-                                onSubmit={validation.handleSubmit}
-                                ref={form}
-                            >
-                                <TextField
-                                    autoFocus
-                                    error={Boolean(
-                                        validation.touched.userId && 
-                                        validation.errors.userId)}
-                                    value={validation.values.userId}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="userId"
-                                    label="Логин"
-                                    type="username"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <TextField
-                                    autoFocus
-                                    error={Boolean(
-                                        validation.touched.fio && 
-                                        validation.errors.fio)}
-                                    value={validation.values.fio}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="fio"
-                                    label="Фамилия"
-                                    type="name"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <TextField
-                                    autoFocus
-                                    error={Boolean(
-                                        validation.touched.fname && 
-                                        validation.errors.fname)}
-                                    value={validation.values.fname}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="fname"
-                                    label="Имя"
-                                    type="name"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <TextField
-                                    autoFocus
-                                    error={Boolean(
-                                        validation.touched.lname && 
-                                        validation.errors.lname)}
-                                    value={validation.values.lname}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="lname"
-                                    label="Отчетство"
-                                    type="name"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <TextField
-                                    autoFocus
-                                    error={Boolean(
-                                        validation.touched.email && 
-                                        validation.errors.email)}
-                                    value={validation.values.email}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="email"
-                                    label="E-Mail"
-                                    type="email"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <TextField
-                                    error={Boolean(
-                                        validation.touched.password && 
-                                        validation.errors.password)}
-                                    value={validation.values.password}
-                                    onBlur={validation.handleBlur}
-                                    onChange={validation.handleChange}
-                                    margin="normal"
-                                    id="password"
-                                    label="Пароль"
-                                    type="password"
-                                    fullWidth
-                                    variant="standard"
-                                />
-                                <FormControl
-                                    sx={{
-                                        m: 1,
-                                        minWidth: 80
-                                    }}
-                                >
-                                    <InputLabel
-                                        id="roles-label"
-                                    >Роль</InputLabel>
-                                    <Select
-                                        labelId="roles-label"
-                                        id="roles-select"
-                                        value={selectRole}
-                                        onChange={handleSelectRole}
-                                        autoWidth
-                                        label="Age"
-                                    >
-                                        <MenuItem value="">
-                                            <em>Не выбрано</em>
-                                        </MenuItem>
-                                        {
-                                            roles && roles.rolesDto.map((role, index) => {
-                                                return (
-                                                    <MenuItem key={index} value={role.id}>
-                                                        {role.name}
-                                                    </MenuItem>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
-                            </form>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose}>Закрыть</Button>
-                            <Button
-                                color="primary"
-                                fullWidth
-                                size="large"
-                                type="submit"
-                                variant="contained"
-                            >
-                                Принять
-                            </Button>
-                        </DialogActions>
-                    </Container>
-                </Dialog>
+                    {content}
             </Box>
         </div>
     )

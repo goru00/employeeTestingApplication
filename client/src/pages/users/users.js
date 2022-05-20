@@ -20,9 +20,12 @@ import UserService from '../../services/user.service';
 import eventBus from '../../common/EventBus';
 import CreateUser from '../../components/actions/createUser';
 import ApiMessage from '../../components/apiMessage/apiMessage';
+
+import useMessage from '../../hooks/useMessage';
+
 const ListItemTable = lazy(() => import('../../components/cards/ListItemTable'));
 
-const Users = () => {
+const Users = (props) => {
 
     const [users, setUsers] = useState();
 
@@ -61,7 +64,7 @@ const Users = () => {
                     <Typography variant="h4" gutterBottom>
                         Пользователи
                     </Typography>
-                    <CreateUser />
+                    <CreateUser props={props} />
                 </Stack>
                     <Suspense fallback={<Skeleton variant="rectangular" width={210} height={118} />}>
                         <ListItemTable props={{

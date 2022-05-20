@@ -17,7 +17,7 @@ import Tests from '../pages/tests/tests';
 import University from '../pages/university/university';
 import Users from '../pages/users/users';
 
-const AppRouter = (props) => {
+const AppRouter = () => {
     
     const dispatch = useDispatch();
 
@@ -37,8 +37,8 @@ const AppRouter = (props) => {
                         <Route path="profile" element={<Profile />} />
                         <Route path="tests" element={<Tests />} />
                         <Route path="university" element={<University />} />
+                        <Route path="signin" element={<Login />} />
                     </Route>
-                    <Route path="/signin" element={<Login />} />
                 </Routes>
             </>
         </Router>

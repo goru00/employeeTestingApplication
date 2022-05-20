@@ -17,8 +17,8 @@ export const refreshToken = (accessToken) => (dispatch) => {
   });
 }
 
-export const register = (username, email, name, password) => (dispatch) => {
-  return AuthService.register(username, email, name, password).then(
+export const register = (username, email, name, password, roles) => (dispatch) => {
+  return AuthService.register(username, email, name, password, roles).then(
     (response) => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -26,7 +26,10 @@ export const register = (username, email, name, password) => (dispatch) => {
 
       dispatch({
         type: SET_MESSAGE,
-        payload: response.data.message,
+        payload: { 
+          message: response.data.message,
+          status: response.status
+        },
       });
 
       return Promise.resolve();
