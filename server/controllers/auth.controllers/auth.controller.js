@@ -11,7 +11,10 @@ class AuthController {
                 maxAge: ConfigAuth.jwtRefreshExpiration,
                 httpOnly: true
             });
-            return res.status(201).json(userData);
+            return res.status(201).json({
+                message: "Пользователь был успешно создан",
+                ...userData
+            });
         } catch (err) {
             next(err);
         }
