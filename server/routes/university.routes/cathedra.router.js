@@ -10,5 +10,6 @@ router.post('/', [
 ], CathedraController.createCathedra);
 
 router.get('/', CathedraController.getCathedras);
+router.get('/:id', CathedraController.getCathedras);
 
 module.exports = router;

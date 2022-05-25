@@ -17,19 +17,19 @@ class DirectionService {
         }
     }
     async getDirections(params) {
-        const { directionName, cathedraId } = params;
-        if (directionName || cathedraId) {
-            const direction = await Direction.findOne({
+        const { cathedraId } = params;
+        if (cathedraId) {
+            const directions = await Direction.findAll({
                 where: {
-                    [Op.or]: [
-                        directionName,
-                        cathedraId
-                    ]
+                    cathedraId: cathedraId
                 }
             });
-            const directionDto = new DirectionDto(direction);
+            let directionsDto = [];
+            for (let index = 0; index < directions.length; index++) {
+                directionsDto.push(new DirectionDto(directions[index]));
+            }
             return {
-                direction: directionDto
+                directions: directionsDto
             }
         }
         const directions = await Direction.findAll();

@@ -14,14 +14,12 @@ class CathedraService {
         }
     }
     async getCathedras(params) {
-        const { cathedraName } = params;
-        if (cathedraName) {
-            const cathedra = await Cathedra.findOne({
-                where: {
-                    name: cathedraName
-                }
-            });
+        const { id } = params;
+        console.log(id)
+        if (id) {
+            const cathedra = await Cathedra.findByPk(id);
             const cathedraDto = new CathedraDto(cathedra);
+            console.log(cathedra)
             return {
                 cathedra: cathedraDto
             }

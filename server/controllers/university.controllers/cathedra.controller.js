@@ -15,6 +15,7 @@ class CathedraController
     }
     async getCathedras(req, res, next) {
         try {
+            console.log(req.params)
             const cathedras = await CathedraService.getCathedras({...req.params});
             return res.status(200).json(cathedras);
         } catch (err) {
