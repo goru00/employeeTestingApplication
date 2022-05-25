@@ -190,8 +190,7 @@ const ModalCreateUser = (props) => {
                                             roles && roles.rolesDto.map((role) => (
                                                 <FormControlLabel 
                                                     control={
-                                                        <Checkbox 
-                                                            checked={false} 
+                                                        <Checkbox
                                                             onChange={validation.values.roles.rolesDto} 
                                                             name={role.name}
                                                         />
@@ -277,15 +276,15 @@ function CreateUser({props}) {
             console.log('submit')
             const { userId, password, email, roles} = values;
             const name = `${values.fio} ${values.fName} ${values.lName}`;
-            clearMessage();
             handleLoadingStart();
-            dispatch(register(userId, password, name, email, [roles])).then(() => {
+            dispatch(register(userId, password, name, email, roles)).then(() => {
                 console.log('successfully')
             }).catch(err => {
                 console.log(err)
             }).finally(() => {
                 handleLoadingStop();
                 handleClose();
+                window.location.reload();
             });
         }
     });
@@ -305,6 +304,7 @@ function CreateUser({props}) {
             <Box
                 component="main"
             >
+                {message}
                 <Button 
                     onClick={handleOpen}
                     variant="contained"

@@ -1,12 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { 
     Box, 
     Container, 
     Typography, 
-    Grid
+    Grid, 
+    Stack,
+    Skeleton
 } from '@mui/material';
+import { Outlet } from 'react-router-dom';
 
-const University = () => {
+const University = (props) => {
     return (
         <Box
             component="main"
@@ -18,7 +21,12 @@ const University = () => {
             <Container 
                 maxWidth="lg"
             >
-                
+                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                    <Typography variant="h4" gutterBottom>
+                        Подразделения университета
+                    </Typography>
+                </Stack>
+                <Outlet />
             </Container>
         </Box>
     )

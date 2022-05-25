@@ -8,13 +8,13 @@ const useLoading = () => {
     const handleLoadingStart = () => setLoading(true);
 
     const LoadAnimation = (
-        <Box 
-            sx={{
-                display: 'flex'
-            }}
-        >
+        <div style={{
+            position: 'absolute',
+            top: '50%',
+            left: '50%'
+        }}>
             <CircularProgress />
-        </Box>
+        </div>
     )
 
     return {

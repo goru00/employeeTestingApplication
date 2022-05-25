@@ -48,7 +48,7 @@ export const register = (username, email, name, password, roles) => (dispatch) =
 
       dispatch({
         type: SET_MESSAGE,
-        payload: message,
+        payload: message
       });
 
       return Promise.reject();

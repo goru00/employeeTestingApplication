@@ -16,6 +16,8 @@ import Profile from '../pages/profile/profile';
 import Tests from '../pages/tests/tests';
 import University from '../pages/university/university';
 import Users from '../pages/users/users';
+import Cathedras from '../pages/university/cathedras/cathedras';
+import CathedraProfile from '../pages/university/cathedras/profile.cathedras';
 
 const AppRouter = () => {
     
@@ -36,7 +38,10 @@ const AppRouter = () => {
                         <Route path='users' element={<Users />} />
                         <Route path="profile" element={<Profile />} />
                         <Route path="tests" element={<Tests />} />
-                        <Route path="university" element={<University />} />
+                        <Route path="university" element={<University />}>
+                            <Route path="cathedras" element={<Cathedras />} />
+                            <Route path='cathedras/:id' element={<CathedraProfile />} />
+                        </Route>
                         <Route path="signin" element={<Login />} />
                     </Route>
                 </Routes>
