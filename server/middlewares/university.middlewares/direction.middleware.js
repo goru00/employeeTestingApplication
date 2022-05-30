@@ -7,7 +7,7 @@ class DirectionMiddleware {
     async checkExistsName(req, res, next) {
         Direction.findOne({
             where: {
-                name: req.body.directionName
+                name: req.body.name
             }
         }).then(direction => {
             if (direction) {

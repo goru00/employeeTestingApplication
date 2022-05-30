@@ -8,7 +8,7 @@ const UserDto = require('../../dtos/user.dtos/user.dto');
 
 class UserService {
     async getUsers(params) {
-        const { name, userId } = params;
+        const { name, userId, role } = params;
         if (userId) {
             const user = await User.findByPk(userId);
             const userDto = new UserDto(user);
@@ -26,6 +26,21 @@ class UserService {
             return {
                 user: userDto
             }
+        }
+        if (role) {
+            const users = await User.findAll({
+                include: [{
+                    model: Role,
+                    where: {
+                        name: role
+                    }
+                }]
+            });
+            let usersDto = [];
+            for (let index = 0; index < users.length; index++) {
+                usersDto.push(users[index]);
+            }
+            return usersDto;
         }
         const users = await User.findAll();
         let usersDto = [];

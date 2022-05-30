@@ -5,10 +5,10 @@ const Direction = db.direction;
 
 class DirectionService {
     async createDirection(props) {
-        const { id, directionName, cathedraId } = props;
+        const { id, name, cathedraId } = props;
         const direction = await Direction.create({
             id: id,
-            name: directionName,
+            name: name,
             cathedraId: cathedraId
         });
         const directionDto = new DirectionDto(direction);

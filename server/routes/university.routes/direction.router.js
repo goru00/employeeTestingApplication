@@ -9,6 +9,6 @@ router.post('/', [
     DirectionMiddleware.checkExistsName
 ], DirectionController.createDirection);
 
-router.get('/:cathedraId', DirectionController.getDirections);
+router.get('/', DirectionController.getDirections);
 
 module.exports = router;
