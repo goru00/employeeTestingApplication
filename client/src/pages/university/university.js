@@ -1,11 +1,8 @@
-import { useState, useEffect, Suspense } from 'react';
 import { 
     Box, 
     Container, 
-    Typography, 
-    Grid, 
+    Typography,
     Stack,
-    Skeleton
 } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 

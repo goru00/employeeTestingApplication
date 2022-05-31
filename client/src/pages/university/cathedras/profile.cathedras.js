@@ -1,47 +1,34 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 
 import {
     Card,
     CardHeader,
     CardContent,
     Grid,
-    Container,
     Stack,
-    Typography,
     Box,
-    Divider,
-    ListItem,
-    ListItemButton,
-    ListItemText
+    Divider
 } from '@mui/material';
-import cathedraServices from '../../../services/university.services/cathedra.services';
-import directionServices from '../../../services/university.services/direction.services';
 
+import cathedraServices from '../../../services/university.services/cathedra.services';
+
+import CreateDirection from '../../../components/actions/universityActions/createDirection';
+import CreateTeacher from '../../../components/actions/universityActions/createTeacher';
+
+import GetDirections from '../../../components/actions/universityActions/getDirections';
+import GetTeachers from '../../../components/actions/universityActions/getTeachers';
 
 function CathedraProfile() {
     let params = useParams();
+
     const [cathedra, setCathedra] = useState();
-    const [directions, setDirections] = useState();
 
     useEffect(() => {
         cathedraServices.getCathedras(params.id).then(res => {
             setCathedra(res.data.cathedra);
         });
-        if (cathedra) {
-            directionServices.getDirections(cathedra.id).then(res => {
-                setDirections(res.data); 
-                console.log(directions)       
-            })
-        }
     }, [params.id]);
-
-    useEffect(() => {
-        directionServices.getDirections(params.id).then(res => {
-            setDirections(res.data.directions);
-            console.log(directions)
-        });
-    }, []);
 
     return (
         <Card>
@@ -54,54 +41,64 @@ function CathedraProfile() {
                     />
                     <Divider />
                     <CardContent>
-                        <Grid
-                            container
-                            spacing={3}
-                        >
-                            <Grid
-                                item={true}
-                                lg={8}
-                                md={8}
-                                xl={9}
-                                xs={12}
+                            <Box
+                                sx={{
+                                    flexGrow: 1
+                                }}
                             >
-                                <Card>
-                                    <CardHeader 
-                                        subheader="Список направлений"
-                                        title="Направления"
-                                    />
-                                    <Divider />
-                                    <CardContent>
-                                        <Box
-                                            sx={{
-                                                width: "100%",
-                                                maxWidth: 360,
-                                                bgColor: 'background.paper'
-                                            }}
-                                        >
-                                            {
-                                                !directions ? (
-                                                    <ListItem
-                                                        component="div"
-                                                        disablePadding
-                                                    >
-                                                        <ListItemButton>
-                                                            <ListItemText>
-
-                                                            </ListItemText>
-                                                        </ListItemButton>
-                                                    </ListItem>
-                                                    ) : (
-                                                        <Typography variant="h6" gutterBottom>
-                                                            По данной кафедре не было назначено ни одного направления
-                                                        </Typography>
-                                                    )
-                                            }
-                                        </Box>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
-                        </Grid>
+                                <Grid
+                                    container
+                                    spacing={2}
+                                >
+                                    <Grid
+                                        item={true}
+                                        lg={6}
+                                        md={6}
+                                        xl={6}
+                                        xs={12}
+                                    >
+                                        <Card>
+                                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                            <CardHeader 
+                                                subheader="Список направлений кафедры"
+                                                title="Направления"
+                                            />
+                                            <CreateDirection props={{
+                                                cathedraId: params.id
+                                            }} />
+                                        </Stack>
+                                            <Divider />
+                                            <CardContent>
+                                                <GetDirections />
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                    <Grid
+                                        item={true}
+                                        lg={6}
+                                        md={6}
+                                        xl={6}
+                                        xs={12}
+                                    >
+                                        <Card>
+                                            <Stack direction="row" alignItems="center" justifyContent="space-between">
+                                                <CardHeader 
+                                                    subheader="Список преподавателей кафедры"
+                                                    title="Преподаватели"
+                                                />
+                                                <CreateTeacher props={{
+                                                    cathedraId: params.id
+                                                }}
+                                                />
+                                            </Stack>
+                                            <Divider />
+                                            <CardContent>
+                                                <GetTeachers />
+                                            </CardContent>
+                                        </Card>
+                                    </Grid>
+                                </Grid>
+                            </Box>
                     </CardContent>
                 </>
             )

@@ -10,7 +10,7 @@ const SeverityPillRoot = styled('span')(({theme, ownerState}) => {
         borderRadius: 12,
         color,
         cursor: "default",
-        display: "inline-flex",
+        display: "flex",
         flexGrow: 0,
         flexShrink: 0,
         fontFamily: theme.typography.fontFamily,

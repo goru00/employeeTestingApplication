@@ -1,5 +1,5 @@
 import {
-    Card, CardContent, Typography, Container, Item 
+    Card, CardContent, Container
 } from '@mui/material';
 
 function ListCards({props}) {

@@ -1,27 +1,32 @@
 import { useState } from 'react';
 import {
     Box, 
-    Card,
-    CardHeader,
     Table,
     TableBody,
     TableHead,
     TableRow,
     TableCell,
-    TablePagination
+    TablePagination,
+    Checkbox,
+    Avatar,
+    Link
 } from '@mui/material';
+
+
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import SeverityPill from '../severityPill/severityPill';
+import { useNavigate } from 'react-router-dom';
 
 function ListItemTable({props}) {
     const [limit, setLimit] = useState(5);
     const [page, setPage] = useState(0);
 
+    let navigate = useNavigate();
+
     const {
         headers,
         body,
-        title
+        links
     } = props;
 
     const handlePageChange = (event, newPage) => {
@@ -30,78 +35,119 @@ function ListItemTable({props}) {
     const handleLimitChange = (event) => {
         setLimit(event.target.value);
     }
+
+    const handleSelectRow = (value) => {
+        console.log(value.target)
+    }
+
     return (
-        <Card>
-            <CardHeader 
-                title={props.title}
-            />
-            <Box 
+        <PerfectScrollbar>
+        <Box
+            sx={{
+                maxWidth: '400'
+            }}
+        >
+             <Table
                 sx={{
-                    minWidth: 800
+                    width: '100%',
+                    maxWidth: '400'
                 }}
-            >
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                        {
-                            props.headers.map((head, index) => {
-                                return (
-                                    <TableCell key={index}>
-                                        {head}
-                                    </TableCell>
-                                )
-                            })
-                        }
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {
-                            props.body && props.body.map((row, num) => {
-                                return (
-                                    <TableRow key={num}>
-                                        {
-                                            <>
-                                                <TableCell>
-                                                    {row.userId}
+             >
+                 <TableHead>
+                     <TableRow>
+                     <TableCell padding="checkbox">
+                        <Checkbox
+                            color="primary"
+                            
+                        />
+                    </TableCell>
+                         {
+                             headers && headers.map((head, index) => {
+                                 return (
+                                     <TableCell key={index}>
+                                         {head}
+                                     </TableCell>
+                                 )
+                             })
+                         }
+                     </TableRow>
+                 </TableHead>
+                 <TableBody>
+                     {
+                         links && body && body.map((row, num) => {
+                             const labelId = `checkbox-list-secondary-label-${row}`;
+                             return (
+                                    <TableRow
+                                        key={num}
+                                        hover
+                                        tabIndex={-1}
+                                        sx={{
+                                            cursor: "pointer"
+                                        }}
+                                        onClick={() => navigate(`${links[num]}`)}
+                                    >
+                                     <TableCell
+                                        padding="checkbox"
+                                     >
+                                         <Checkbox 
+                                            color="primary"
+                                            inputProps={{
+                                                'aria-labelledby': labelId
+                                            }}
+                                         />
+                                     </TableCell>
+                                     {
+                                         Object.keys(row).map((k, index) => {
+                                            return k === "avatar" && (
+                                                <Avatar 
+                                                    alt={`Avatar n${index + 1}`}
+                                                />
+                                            )
+                                         })
+                                     }
+                                     {
+                                         Object.values(row).map((value, key) => {
+                                            return (
+                                                <TableCell
+                                                    key={key}
+                                                >
+                                                    {
+                                                        typeof value === "boolean" ? (
+                                                            <SeverityPill
+                                                                color={value === true ? "success" : "error"}
+                                                            >
+                                                                {value === true ? "Да" : "Нет"}
+                                                            </SeverityPill>
+                                                        ) : Array.isArray(value) ? (
+                                                                value.map((c, pos) => {
+                                                                    return (pos >= 0 && value.length - 1) ? `${c}, ` :`${c}`
+                                                                })
+                                                        ) : value
+                                                    }
                                                 </TableCell>
-                                                <TableCell>
-                                                    {row.name}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {row.email}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {typeof row.isActivated == "boolean" && (
-                                                        row.isActivated === true ? "Да" : "Нет"
-                                                    )}
-                                                </TableCell>
-                                                <TableCell>
-                                                    {Array.isArray(row.roles) ? (
-                                                        row.roles.map((role, pos) => {
-                                                            return (pos >= 0 && pos !== row.roles.length - 1) ? `${role}, ` : `${role}`  
-                                                        })
-                                                    ) : row.roles}
-                                                </TableCell>
-                                            </>
-                                        }
-                                    </TableRow>
-                                )
-                            })
-                        }
-                    </TableBody>
-                </Table>
-            </Box>
-            <TablePagination 
-                labelRowsPerPage='Всего страниц:'
-                component="div"
-                count={limit}
-                onPageChange={handlePageChange}
-                onRowsPerPageChange={handleLimitChange}
-                page={page}
-                rowsPerPage={limit}
-                rowsPerPageOptions={[5, 10, 25]}
-            />
-        </Card>
+                                             ) 
+                                         })
+                                     }
+                                     
+                                 </TableRow>
+                                 
+                             )
+                         })
+                     }
+                 </TableBody>
+             </Table>  
+        </Box>
+        <TablePagination 
+            labelRowsPerPage='Всего страниц:'
+            component="div"
+            count={limit}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleLimitChange}
+            page={page}
+            rowsPerPage={limit}
+            rowsPerPageOptions={[5, 10, 25]}
+        />
+        </PerfectScrollbar>
     )
 }
 

@@ -5,8 +5,11 @@ import {
     Container,
     Typography,
     Grid,
-    TextField
+    TextField,
+    Tooltip
 } from '@mui/material';
+
+import AddIcon from '@mui/icons-material/Add';
 
 import useMessage from '../../../hooks/useMessage';
 import useLoading from '../../../hooks/useLoading';
@@ -17,9 +20,9 @@ import * as Yup from 'yup';
 
 import { useDispatch } from 'react-redux';
 
-import { create } from '../../../actions/university/cathedra';
+import { create } from '../../../actions/university/direction';
 
-const ModalCreateCathedra = (props) => {
+const ModalCreateDirection = (props) => {
     const { validation, loading, LoadAnimation } = props;
     const [message] = useMessage();
     const form = useRef();
@@ -40,10 +43,10 @@ const ModalCreateCathedra = (props) => {
                         sx={{ my: 3 }}
                     >
                         <Typography variant="h5">
-                            Создание кафедры
+                            Создание направления кафедры
                         </Typography>
                         <Typography>
-                            Для создания кафедры необходимо заполнить поля ниже
+                            Для создания навправления необходимо заполнить поля ниже
                         </Typography>
                     </Box>
                     <form
@@ -57,6 +60,25 @@ const ModalCreateCathedra = (props) => {
                                 <Grid container item={true}>
                                     <TextField
                                         error={Boolean(
+                                            validation.touched.id && 
+                                            validation.errors.id)}
+                                        fullWidth
+                                        helperText={
+                                            validation.touched.id && 
+                                            validation.errors.id}
+                                        onBlur={validation.handleBlur}
+                                        onChange={validation.handleChange}
+                                        label="Код направления"
+                                        margin="normal"
+                                        name="id"
+                                        type="text"
+                                        value={validation.values.id}
+                                        variant="outlined"
+                                    />
+                                </Grid>
+                                <Grid container item={true}>
+                                    <TextField
+                                        error={Boolean(
                                             validation.touched.name && 
                                             validation.errors.name)}
                                         fullWidth
@@ -65,7 +87,7 @@ const ModalCreateCathedra = (props) => {
                                             validation.errors.name}
                                         onBlur={validation.handleBlur}
                                         onChange={validation.handleChange}
-                                        label="Полное наименование кафедры"
+                                        label="Полное наименование направления"
                                         margin="normal"
                                         name="name"
                                         type="text"
@@ -81,7 +103,7 @@ const ModalCreateCathedra = (props) => {
                                         type="submit"
                                         variant="contained"
                                     >
-                                        Создать кафедру
+                                        Создать направление
                                     </Button>
                                 </Box>
                             </Grid>
@@ -93,25 +115,31 @@ const ModalCreateCathedra = (props) => {
     )
 }
 
-function CreateCathedras() {
-    const [message] = useMessage();
+function CreateDirection({props}) {
+    const { cathedraId } = props;
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
     const dispatch = useDispatch();
 
     const validation = useFormik({
         initialValues: {
+            id: '',
             name: ''
         },
         validationSchema: Yup.object({
+            id: Yup
+                .string()
+                .min(6)
+                .matches(/[0-9]{2}.[0-9]{2}.[0-9]{2}$/, 'Код направления должен быть формата 00.00.00')
+                .required('Код обязателен для создания направления'),
             name: Yup
                 .string()
                 .min(6)
-                .required('Имя обязательно для создания кафедры')
+                .required('Наименование обязательно для создания направления')
         }),
         onSubmit: (values) => {
-            const { name } = values;
+            const { id, name } = values;
             handleLoadingStart();
-            dispatch(create(name)).then(() => {
+            dispatch(create(id, name, cathedraId)).then(() => {
                 console.log('successfully');
             }).catch(err => {
                 console.log(err);
@@ -121,23 +149,23 @@ function CreateCathedras() {
                 window.location.reload();
             })
         }
-    })
+    });
 
-    const {content, handleOpen, handleClose} = useModal(ModalCreateCathedra({validation, loading, LoadAnimation}));
+    const {content, handleOpen, handleClose} = useModal(ModalCreateDirection({validation, loading, LoadAnimation}));
+
     return (
-        <div>
-            <Box
-                component="main"
-            >
-                {message}
-                <Button 
+        <div className='createDirection'>
+            <Tooltip title="Добавить направление">
+                <Button
+                    aria-label="reduce"
                     onClick={handleOpen}
-                    variant="contained"
-                >Добавить кафедру</Button>
-                    {content}
-            </Box>
+                >
+                    <AddIcon fontSize="small" />
+                </Button>
+            </Tooltip>
+            {content}
         </div>
     )
 }
 
-export default CreateCathedras;
+export default CreateDirection;
