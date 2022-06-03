@@ -5,7 +5,7 @@ const AuthMiddleware = require('../middlewares/auth.middlewares/auth.middleware'
 
 const authRouter = require('./auth.routes/auth.router');
 const userRoutes = require('./user.routes/index');
-const universityRoutes = require('./university.routes/index');
+const universityRoutes = require('./university.routes/university.router');
 const testRoutes = require('./test.routes/index');
 
 router.use(function(req, res, next) {

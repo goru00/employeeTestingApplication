@@ -16,22 +16,12 @@ class GroupService {
         }
     }
     async getGroups(params) {
-        const { groupName, directionId } = params;
-        if (groupName || directionId) {
-            const group = Group.findOne({
-                where: {
-                    [Op.or]: [
-                        groupName,
-                        directionId
-                    ]
-                }
-            });
-            const groupDto = new GroupDto(group);
-            return {
-                group: groupDto
+        const { directionId } = params;
+        const groups = await Group.findAll({
+            where: {
+                directionId: directionId
             }
-        }
-        const groups = await Group.findAll();
+        });
         let groupsDto = [];
         for (let index = 0; index < groups.length; index++) {
             groupsDto.push(new GroupDto(groups[index]));
