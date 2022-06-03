@@ -22,7 +22,7 @@ function GetDirections(props) {
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
     useEffect(() => {
         handleLoadingStart();
-        directionServices.getDirections(params.id).then(res => {
+        directionServices.getDirectionsByCathedra(params.id).then(res => {
             let newDirections = [...directions];
             let newLinkDirections = [...linkDirections];
             if (res.data.directions) {
@@ -43,7 +43,7 @@ function GetDirections(props) {
         <div className="show_cathedras">
             {
                 !loading ? (
-                    linkDirections && directions !== [] ? (
+                    directions.length ? (
                         <ListItemTable 
                             props={{
                                 body: directions,

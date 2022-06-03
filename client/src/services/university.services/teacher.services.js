@@ -9,13 +9,13 @@ class TeacherService {
     }
     createTeacherOfTheCathedra(userId, cathedraId) {
         return api
-            .post(`/university/teachers/${cathedraId}`, {
+            .post(`/university/cathedras/${cathedraId}/teachers`, {
                userId 
             });
     }
     getTeachersOfTheCathedra(cathedraId) {
         return api
-            .get(`/university/teachers/${cathedraId}`);
+            .get(`/university/cathedras/${cathedraId}/teachers`);
     }
 }
 

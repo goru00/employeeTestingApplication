@@ -5,15 +5,19 @@ import authHeader from '../auth.header';
 class DirectionService {
     createDirection(id, name, cathedraId) {
         return api
-            .post(`/university/directions/`, {
+            .post(`/university/cathedras/${cathedraId}/directions`, {
                 id,
                 name,
                 cathedraId
             });
     }
-    getDirections(cathedraId) {
+    getDirectionsByCathedra(cathedraId) {
         return api
-            .get(`/university/${cathedraId}/directions/`);
+            .get(`/university/cathedras/${cathedraId}/directions/`);
+    }
+    getDirection(cathedraId, directionId) {
+        return api
+            .get(`/university/cathedras/${cathedraId}/directions/${directionId}`);
     }
 }
 

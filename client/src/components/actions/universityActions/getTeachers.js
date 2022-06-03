@@ -36,7 +36,7 @@ function GetTeachers(props) {
         <div className="show_cathedras">
             {
                 !loading ? (
-                    teachers !== [] ? (
+                    teachers.length ? (
                         <ListItemTable 
                             props={{
                                 body: teachers,
