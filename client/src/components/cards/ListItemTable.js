@@ -26,7 +26,8 @@ function ListItemTable({props}) {
     const {
         headers,
         body,
-        links
+        links,
+        select
     } = props;
 
     const handlePageChange = (event, newPage) => {
@@ -74,7 +75,7 @@ function ListItemTable({props}) {
                  </TableHead>
                  <TableBody>
                      {
-                         links && body && body.map((row, num) => {
+                         body && body.map((row, num) => {
                              const labelId = `checkbox-list-secondary-label-${row}`;
                              return (
                                     <TableRow
@@ -84,7 +85,9 @@ function ListItemTable({props}) {
                                         sx={{
                                             cursor: "pointer"
                                         }}
-                                        onClick={() => navigate(`${links[num]}`)}
+                                        onClick={(e) => {
+                                            (links && navigate(`${links[num]}`)) || select(e)
+                                        }}
                                     >
                                      <TableCell
                                         padding="checkbox"

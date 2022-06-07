@@ -15,9 +15,9 @@ class DirectionService {
         return api
             .get(`/university/cathedras/${cathedraId}/directions/`);
     }
-    getDirection(cathedraId, directionId) {
+    getDirection(directionId) {
         return api
-            .get(`/university/cathedras/${cathedraId}/directions/${directionId}`);
+            .get(`/university/directions/${directionId}`);
     }
 }
 

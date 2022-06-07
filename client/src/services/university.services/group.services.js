@@ -3,16 +3,15 @@ import api from '../../api/api';
 import authHeader from '../auth.header';
 
 class GroupService {
-    createGroup(id, directionId, cathedraId) {
+    createGroup(id, directionId) {
         return api
-            .post(`/university/cathedras/${cathedraId}/directions/${directionId}/groups`, {
-                id,
-                directionId
+            .post(`/university/directions/${directionId}/groups`, {
+                id
             });
     }
-    getGroupsOfTheDirection(cathedraId, directionId) {
+    getGroupsOfTheDirection(directionId) {
         return api
-            .get(`/university/cathedras/${cathedraId}/directions/${directionId}/groups`);
+            .get(`/university/directions/${directionId}/groups`);
     }
 }
 

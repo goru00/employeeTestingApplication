@@ -7,7 +7,7 @@ import {
 import useLoading from "../../../hooks/useLoading";
 import ListItemTable from "../../cards/ListItemTable";
 
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 const headers = [
     "Фамилия, имя и отчество"

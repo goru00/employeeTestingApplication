@@ -9,18 +9,17 @@ import {
 } from '@mui/material';
 
 const headers = [
-    "Код группы"
+    "Код"
 ];
 
-function GetGroups(props) {
+function GetGroups({props}) {
     let params = useParams();
     const [groups, setGroups] = useState([]);
-    const location = useLocation();
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
 
     useEffect(() => {
         handleLoadingStart();
-        groupServices.getGroupsOfTheDirection(params.cathedraId, params.directionId).then(res => {
+        groupServices.getGroupsOfTheDirection(params.directionId).then(res => {
             let newGroups = [...groups];
             if (res.data.groups) {
                 res.data.groups.forEach((group) => {
@@ -28,9 +27,8 @@ function GetGroups(props) {
                         id: group.id
                     })
                 })
-                console.log(res.data)
+                setGroups(newGroups);
             }
-            setGroups(newGroups);
             handleLoadingStop();
         })
     }, []);
@@ -43,7 +41,8 @@ function GetGroups(props) {
                         <ListItemTable 
                             props={{
                                 body: groups,
-                                headers: headers
+                                headers: headers,
+                                select: props
                             }}
                         />
                     ) : (
