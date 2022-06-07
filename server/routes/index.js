@@ -17,8 +17,7 @@ router.use(function(req, res, next) {
 });
 
 router.use('/users', [
-    AuthMiddleware.verifyToken,
-    AuthMiddleware.isActivatedAccount
+    AuthMiddleware.verifyToken
 ], userRoutes);
 router.use('/auth', authRouter);
 router.use('/university', universityRoutes);

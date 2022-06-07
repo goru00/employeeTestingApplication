@@ -12,9 +12,29 @@ class DisciplineController {
             next(err);
         }
     }
+
+    async createDisciplineOfTheDirection(req, res, next) {
+        try {
+            const disciplineData = await DisciplineService.getDisciplinesOfTheDirection({...req.params});
+            return res.status(200).json(disciplineData);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
+
     async getDisciplines(req, res, next) {
         try {
             const disciplines = await DisciplineService.getDisciplines({...req.params});
+            return res.status(200).json(disciplines);
+        } catch (err) {
+            next(err);
+        }
+    }
+
+    async getDisciplinesOfTheGroup(req, res, next) {
+        try {
+            const disciplines = await DisciplineService.getDisciplinesOfTheGroup({...req.params});
             return res.status(200).json(disciplines);
         } catch (err) {
             next(err);

@@ -16,6 +16,7 @@ class AuthController {
                 ...userData
             });
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -28,6 +29,7 @@ class AuthController {
             });
             return res.status(201).json(userData);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -39,6 +41,7 @@ class AuthController {
             res.clearCookie('refreshToken');
             return res.status(200).json(token);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -53,6 +56,7 @@ class AuthController {
             });
             return res.status(200).json(tokenData);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -63,6 +67,7 @@ class AuthController {
             await AuthService.activate(activationLink);
             return res.redirect(ConfigClient.URL);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -72,6 +77,7 @@ class AuthController {
             const rolesData = await AuthService.getRoles();
             return res.status(200).json(rolesData);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }

@@ -29,7 +29,7 @@ class AuthService {
         const userDto = await UserService.setUserRoles(user, roles);
         const tokens = await TokenService.createToken({...userDto});
         await TokenService.saveToken(userDto.userId, tokens.refreshToken);
-        await MailService.sendActivationMail(email, activationLink);
+        //await MailService.sendActivationMail(email, activationLink);
         return {
             ...userDto,
             ...tokens

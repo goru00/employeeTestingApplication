@@ -3,7 +3,6 @@ const AuthController = require('../../controllers/auth.controllers/auth.controll
 const Router = require('express');
 const router = new Router();
 
-// переписать валидацию
 router.post('/signup', [
     AuthMiddleware.checkDuplicateUsernameOrEmail,
     AuthMiddleware.checkRolesExisted,
@@ -14,12 +13,10 @@ router.post('/signin', [
 router.post('/logout', AuthController.logout);
 router.get('/refresh', [
     AuthMiddleware.verifyToken,
-    AuthMiddleware.isActivatedAccount
 ], AuthController.refresh);
 router.get('/activate/:link', AuthController.activate);
 router.get('/roles', [
     AuthMiddleware.verifyToken,
-    AuthMiddleware.isActivatedAccount,
     AuthMiddleware.isAdmin
 ], AuthController.getRoles);
 

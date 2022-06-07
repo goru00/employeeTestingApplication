@@ -5,9 +5,9 @@ const Op = db.Sequelize.Op;
 
 class GroupService {
     async createGroup(props) {
-        const { groupId, directionId } = props;
+        const { id, directionId } = props;
         const group = await Group.create({
-            id: groupId,
+            id: id,
             directionId: directionId
         });
         const groupDto = new GroupDto(group);
@@ -15,7 +15,19 @@ class GroupService {
             ...groupDto
         }
     }
-    async getGroups(params) {
+
+    async getGroups() {
+        const groups = await Group.findAll();
+        let groupsDto = [];
+        for (let index = 0; index < groups.length; index++) {
+            groupsDto.push(new GroupDto(groups[index]));
+        }
+        return {
+            groups: groupsDto
+        }
+    }
+
+    async getGroupsOfTheDirection(params) {
         const { directionId } = params;
         const groups = await Group.findAll({
             where: {

@@ -6,6 +6,7 @@ class TeacherController {
             const teacherData = await TeacherService.getTeachers({...req.body});
             return res.status(200).json(teacherData);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -14,6 +15,7 @@ class TeacherController {
             const teacherData = await TeacherService.getTeachersOfTheCathedra({...req.params});
             return res.status(200).json(teacherData);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }

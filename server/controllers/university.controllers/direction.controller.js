@@ -9,9 +9,11 @@ class DirectionController {
                 ...directionData
             });
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
+
     async getDirectionsByCathedra(req, res, next) {
         try {
             const directions = await DirectionService.getDirectionsByCathedra({...req.params});
@@ -21,6 +23,17 @@ class DirectionController {
             next(err);
         }
     }
+
+    async getDirections(req, res, next) {
+        try {
+            const directions = await DirectionService.getDirections();
+            return res.status(200).json(directions);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
+
     async getDirection(req, res, next) {
         try {
             const directions = await DirectionService.getDirection({...req.params});
@@ -29,6 +42,7 @@ class DirectionController {
             next(err);
         }
     }
+
 }
 
 module.exports = new DirectionController();

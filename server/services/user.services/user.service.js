@@ -75,7 +75,6 @@ class UserService {
         });
         const userDto = new UserDto(userRoles);
         userDto.roles = userRoles.roles.map(role => role.name);
-        console.log(userDto)
         return {
             ...userDto
         }
