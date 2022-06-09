@@ -14,7 +14,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false
         },
         disciplineId: {
-            type: Sequelize.INTEGER,
+            type: Sequelize.STRING,
             allowNull: false
         },
         name: {

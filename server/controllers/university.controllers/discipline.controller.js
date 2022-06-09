@@ -9,6 +9,7 @@ class DisciplineController {
                 ...disciplineData
             });            
         } catch (err) {
+            console.log(err)
             next(err);
         }
     }
@@ -19,6 +20,15 @@ class DisciplineController {
             return res.status(200).json(disciplineData);
         } catch (err) {
             console.log(err);
+            next(err);
+        }
+    }
+
+    async getDiscipline(req, res, next) {
+        try {
+            const discipline = await DisciplineService.getDiscipline({...req.params});
+            return res.status(200).json(discipline);
+        } catch (err) {
             next(err);
         }
     }

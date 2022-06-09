@@ -6,9 +6,10 @@ const Direction = db.direction;
 
 class DisciplineService {
     async createDiscipline(params) {
-        const { disciplineName } = params;
+        const { id, name } = params;
         const discipline = await Discipline.create({
-            name: disciplineName
+            id: id,
+            name: name
         });
         const disciplineDto = new DisciplineDto(discipline);
         return {
@@ -27,23 +28,20 @@ class DisciplineService {
         }
     }
 
-    async getDisciplines(params) {
-        const { disciplineName } = params;
-        if (disciplineName) {
-            const discipline = await Discipline.findOne({
-                where: {
-                    name: disciplineName
-                }
-            });
-            const disciplineDto = new DisciplineDto(discipline);
-            return {
-                discipline: disciplineDto
-            } 
+    async getDiscipline(params) {
+        const { id } = params;
+        const discipline = await Discipline.findByPk(id);
+        const disciplineDto = new DisciplineDto(discipline);
+        return {
+            ...disciplineDto
         }
+    }
+
+    async getDisciplines(params) {
         const disciplines = await Discipline.findAll();
         let disciplinesDto = [];
         for (let index = 0; index < disciplines.length; index++) {
-            disciplinesDto.push(new DisciplineDto(disciplines[index]));
+            disciplinesDto.push(disciplines[index]);
         }
         return {
             disciplines: disciplinesDto

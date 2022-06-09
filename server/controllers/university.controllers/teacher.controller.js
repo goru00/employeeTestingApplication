@@ -10,6 +10,15 @@ class TeacherController {
             next(err);
         }
     }
+    async getTeachersOfTheDiscipline(req, res, next) {
+        try {
+            const teacherData = await TeacherService.getTeachersOfTheDiscipline({...req.params});
+            return res.status(200).json(teacherData);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
     async getTeachersOfTheCathedra(req, res, next) {
         try {
             const teacherData = await TeacherService.getTeachersOfTheCathedra({...req.params});

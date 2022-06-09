@@ -82,18 +82,6 @@ db.group.belongsToMany(db.user, {
 
 db.discipline = require('./university.models/discipline.model')(sequelize, Sequelize);
 
-//direction_disciplines
-db.direction.belongsToMany(db.discipline, {
-    through: 'direction_disciplines',
-    foreignKey: 'directionId',
-    otherKey: 'disciplineId'
-});
-db.discipline.belongsToMany(db.direction, {
-    through: 'direction_disciplines',
-    foreignKey: 'disciplineId',
-    otherKey: 'directionId'
-});
-
 db.teacherEmployment = require('./university.models/teacherEmployment.model')(sequelize, Sequelize);
 
 db.user.belongsToMany(db.cathedra, {
@@ -114,14 +102,6 @@ db.teacherEmployment.belongsTo(db.user, {
 db.user.hasMany(db.teacherEmployment, {
     foreignKey: 'teacherId',
     sourceKey: 'userId'
-});
-db.teacherEmployment.belongsTo(db.direction, {
-    foreignKey: 'directionId',
-    targetKey: 'id'
-});
-db.direction.hasMany(db.teacherEmployment, {
-    foreignKey: 'directionId',
-    sourceKey: 'id'
 });
 db.teacherEmployment.belongsTo(db.discipline, {
     foreignKey: 'disciplineId',

@@ -1,7 +1,7 @@
 const db = require('../../models');
 const User = db.user; 
 const Cathedra = db.cathedra;
-
+const TeacherEmployment = db.teacherEmployment;
 const TeacherDto = require('../../dtos/university.dtos/teacher.dto');
 
 const Op = db.Sequelize.Op;
@@ -19,6 +19,24 @@ class TeacherService {
         });
         return teachers;
     }
+
+    async getTeachersOfTheDiscipline(params) {
+        const teachers = await TeacherEmployment.findAll({
+            where: {
+                disciplineId: params.disciplineId
+            }
+        });
+        let teachersDto = [];
+        for (let index = 0; index < teachers.length; index++) {
+            const teacher = await User.findByPk(teachers[index].teacherId);
+            teachersDto.push(new TeacherDto(teacher));
+            teachersDto[index].disciplines = [params.disciplineId];
+        }
+        return {
+            teachers: teachersDto
+        }
+    }
+
     async createTeacherOfTheCathedra(userId, cathedraId) {
         const user = await User.findByPk(userId);
         const cathedra = await Cathedra.findByPk(cathedraId);
