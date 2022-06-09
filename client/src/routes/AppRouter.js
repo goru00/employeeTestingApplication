@@ -16,10 +16,9 @@ import Profile from '../pages/profile/profile';
 import Tests from '../pages/tests/tests';
 import University from '../pages/university/university';
 import Users from '../pages/users/users';
-import Cathedras from '../pages/university/cathedras/cathedras';
 import CathedraProfile from '../pages/university/cathedras/profile.cathedras';
-import Directions from '../pages/university/directions/profile.direction';
 import DirectionProfile from '../pages/university/directions/profile.direction';
+import DisciplineProfile from '../pages/university/disciplines/profile.disciplines';
 
 const AppRouter = () => {
     
@@ -41,9 +40,9 @@ const AppRouter = () => {
                         <Route path="profile" element={<Profile />} />
                         <Route path="tests" element={<Tests />} />
                         <Route path="university" element={<University />}>
-                            <Route path="cathedras" element={<Cathedras />} />
                             <Route path='cathedras/:id' element={<CathedraProfile />} />
                             <Route path='cathedras/:cathedraId/directions/:directionId' element={<DirectionProfile />} />
+                            <Route path="disciplines/:id" element={<DisciplineProfile />} />
                         </Route>
                         <Route path="signin" element={<Login />} />
                     </Route>

@@ -55,7 +55,7 @@ function GetStudent({props}) {
                             gutterBottom
                             color="text.secondary"
                         >
-                            По данной не было определено ни одного студента
+                            По данной группе не было определено ни одного студента
                         </Typography>
                     ) 
                 ) : LoadAnimation

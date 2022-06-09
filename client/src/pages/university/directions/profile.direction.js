@@ -18,7 +18,8 @@ import GetGroups from '../../../components/actions/universityActions/getGroups';
 import CreateGroup from '../../../components/actions/universityActions/createGroup';
 import CreateStudent from '../../../components/actions/universityActions/createStudent';
 import GetStudent from '../../../components/actions/universityActions/getStudent';
-import GetDisciplines from '../../../components/actions/universityActions/getDisciplines';
+import GetDisciplinesOfTheGroup from '../../../components/actions/universityActions/getDisciplinesOfTheGroup';
+import CreateDisciplineOfTheGroup from '../../../components/actions/universityActions/createDisciplineOfTheGroup';
 
 function DirectionProfile() {
     let params = useParams();
@@ -149,12 +150,21 @@ function DirectionProfile() {
                                                     subheader="Дисциплины выбранной группы"
                                                     title="Дисциплины"
                                                 />
+                                                {
+                                                    targetGroup && (
+                                                        <CreateDisciplineOfTheGroup 
+                                                            props={{
+                                                                targetGroup
+                                                            }}
+                                                        />
+                                                    ) 
+                                                }
                                             </Stack>
                                             <Divider />
                                             <CardContent>
                                                 {
                                                     targetGroup ? (
-                                                        <GetDisciplines props={{
+                                                        <GetDisciplinesOfTheGroup props={{
                                                             targetGroup
                                                         }}/>
                                                     ) : (

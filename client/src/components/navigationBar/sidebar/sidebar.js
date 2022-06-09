@@ -40,7 +40,7 @@ const sidebarLinks = [
         title: "Рейтинг"
     },
     {
-        href: "/university/cathedras",
+        href: "/university",
         icon: (<SchoolIcon fontSize="small" />),
         title: "Университет"
     },

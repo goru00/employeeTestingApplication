@@ -18,14 +18,14 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 
 function GetCathedras(props) {
-    const [cathedras, setCathedras] = useState(null);
+    const [cathedras, setCathedras] = useState([]);
     const location = useLocation();
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
     useEffect(() => {
         handleLoadingStart();
         cathedraServices.getCathedras().then(res => {
             if (res.data) {
-                let data = [];
+                let data = [...cathedras];
                 res.data.cathedras.forEach(cathedra => {
                     data.push({
                         id: (
@@ -47,7 +47,7 @@ function GetCathedras(props) {
                             </Typography>
                         ),
                         link: (
-                            <Link to={`${cathedra.id}`}>
+                            <Link to={`cathedras/${cathedra.id}`}>
                                 <Tooltip title="Перейти">
                                     <IconButton>
                                         <ArrowForwardIosIcon />
@@ -66,7 +66,7 @@ function GetCathedras(props) {
         <div className="show_cathedras">
             {
                 !loading ? (
-                    cathedras != null ? (
+                    cathedras.length ? (
                         <ListCards props={cathedras} />
                     ) : (
                         <Typography

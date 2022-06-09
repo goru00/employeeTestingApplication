@@ -11,10 +11,9 @@ const headers = [
     "Наименование"
 ]
 
-function GetDisciplines({props}) {
+function GetDisciplinesOfTheGroup({props}) {
     const { targetGroup } = props;
     let params = useParams();
-    const { cathedraId, directionId } = params; 
     const [disciplines, setDisciplines] = useState([]);
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
 
@@ -31,7 +30,7 @@ function GetDisciplines({props}) {
                 setDisciplines(newDisciplines);
             }
             handleLoadingStop();
-        })
+        });
     }, []);
 
     return (
@@ -52,7 +51,7 @@ function GetDisciplines({props}) {
                             textAlign="center"
                             color="text.secondary"
                         >
-
+                            По данной группе не было определено ни одной дисциплины
                         </Typography>
                     )
                 ) : LoadAnimation
@@ -61,4 +60,4 @@ function GetDisciplines({props}) {
     )
 }
 
-export default GetDisciplines;
+export default GetDisciplinesOfTheGroup;

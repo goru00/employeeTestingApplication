@@ -8,9 +8,22 @@ class DisciplineService {
             });
     }
 
+    createDiscipline(id, name) {
+        return api
+            .post(`/university/disciplines/`, {
+                id,
+                name
+            });
+    }
+
+    getDiscipline(id) {
+        return api
+            .get(`/university/disciplines/${id}`);
+    }
+
     getDisciplines() {
         return api
-            .get(`/disciplines`);
+            .get(`/university/disciplines`);
     }
 
     getDisciplinesOfTheGroup(groupId) {

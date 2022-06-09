@@ -13,6 +13,10 @@ class TeacherService {
                userId 
             });
     }
+    getTeachersOfTheDiscipline(disciplineId) {
+        return api
+            .get(`/university/disciplines/${disciplineId}/teachers`);
+    }
     getTeachersOfTheCathedra(cathedraId) {
         return api
             .get(`/university/cathedras/${cathedraId}/teachers`);

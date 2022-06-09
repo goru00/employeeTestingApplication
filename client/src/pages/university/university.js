@@ -3,10 +3,17 @@ import {
     Container, 
     Typography,
     Stack,
+    Divider
 } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+
+import CreateDiscipline from '../../components/actions/universityActions/createDiscipline';
+import CreateCathedras from '../../components/actions/universityActions/createCathedras';
+import GetCathedras from '../../components/actions/universityActions/getCathedras';
+import GetDisciplines from '../../components/actions/universityActions/getDiscipline';
 
 const University = (props) => {
+    const location = useLocation();
     return (
         <Box
             component="main"
@@ -23,7 +30,37 @@ const University = (props) => {
                         Подразделения университета
                     </Typography>
                 </Stack>
-                <Outlet />
+                <Divider />
+                {
+                    location.pathname === "/university" ? (
+                        <>
+                            <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                                <Typography variant="h5" gutterBottom>
+                                    Кафедры
+                                </Typography>
+                                <CreateCathedras props={props} />
+                            </Stack>
+                            <Container>
+                                <GetCathedras />
+                            </Container>
+                            <Divider />
+                            <Stack
+                                direction="row"
+                                alignItems="center" 
+                                justifyContent="space-between" 
+                                mb={5}
+                            >
+                                <Typography variant="h5" gutterBottom>
+                                    Список дисциплин
+                                </Typography>
+                                <CreateDiscipline props={props} />
+                            </Stack>
+                            <Container>
+                                <GetDisciplines props={props} />
+                            </Container>
+                        </>
+                    ) : <Outlet />
+                }
             </Container>
         </Box>
     )
