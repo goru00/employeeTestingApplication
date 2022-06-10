@@ -1,6 +1,7 @@
 const db = require('../../models');
 const User = db.user; 
 const Cathedra = db.cathedra;
+const Discipline = db.discipline;
 const TeacherEmployment = db.teacherEmployment;
 const TeacherDto = require('../../dtos/university.dtos/teacher.dto');
 
@@ -45,6 +46,15 @@ class TeacherService {
         teacherDto.cathedras = [cathedraId];
         return {
             teacher: teacherDto
+        }
+    }
+    async createTeacherOfTheDiscipline(userId, disciplineId) {
+        const teacherEmployment = await TeacherEmployment.create({
+            teacherId: userId,
+            disciplineId: disciplineId
+        });
+        return {
+            ...teacherEmployment
         }
     }
     async getTeachersOfTheCathedra(params) {

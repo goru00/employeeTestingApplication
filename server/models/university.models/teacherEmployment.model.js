@@ -4,10 +4,6 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             primaryKey: true
         },
-        directionId: {
-            type: Sequelize.STRING,
-            primaryKey: true
-        },
         disciplineId: {
             type: Sequelize.STRING,
             primaryKey: true

@@ -40,6 +40,18 @@ class TeacherController {
             next(err);
         }
     }
+    async createTeacherOfTheDiscipline(req, res, next) {
+        try {
+            const teacherData = await TeacherService.createTeacherOfTheDiscipline(req.body.userId, req.params.disciplineId);
+            return res.status(201).json({
+                message: "Преподаватель был успешно прикреплен к данной дисциплине",
+                ...teacherData
+            });
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
 }
 
 module.exports = new TeacherController();

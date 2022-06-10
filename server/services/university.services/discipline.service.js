@@ -2,7 +2,6 @@ const DisciplineDto = require('../../dtos/university.dtos/discipline.dto');
 const db = require('../../models');
 const Group = db.group;
 const Discipline = db.discipline;
-const Direction = db.direction;
 
 class DisciplineService {
     async createDiscipline(params) {
@@ -17,14 +16,24 @@ class DisciplineService {
         }
     }
 
-    async createDisciplineOfTheDirection(params) {
-        const { directionId, disciplineId } = params;
-        const direction = await Direction.findByPk(directionId);
+    async createDisciplineOfTheGroup(params) {
+        const { disciplineId, groupId } = params;
         const discipline = await Discipline.findByPk(disciplineId);
-        direction.setDisciplines(discipline);
+        discipline.setGroups(groupId);
         const disciplineDto = new DisciplineDto(discipline);
         return {
             ...disciplineDto
+        }
+    }
+
+    async getDisciplines() {
+        const disciplines = await Discipline.findAll();
+        let disciplinesDto = [];
+        for (let index = 0; index < disciplines.length; index++) {
+            disciplinesDto.push(new DisciplineDto(disciplines[index]));
+        }
+        return {
+            disciplines: disciplinesDto
         }
     }
 
@@ -37,21 +46,10 @@ class DisciplineService {
         }
     }
 
-    async getDisciplines(params) {
-        const disciplines = await Discipline.findAll();
-        let disciplinesDto = [];
-        for (let index = 0; index < disciplines.length; index++) {
-            disciplinesDto.push(disciplines[index]);
-        }
-        return {
-            disciplines: disciplinesDto
-        }
-    }
-
     async getDisciplinesOfTheGroup(params) {
         const { groupId } = params;
         const group = await Group.findByPk(groupId);
-        const disciplines = group.getDisciplines();
+        const disciplines = await group.getDisciplines();
         let disciplinesDto = [];
         for (let index = 0; index < disciplines.length; index++) {
             disciplinesDto.push(new DisciplineDto(disciplines[index]));

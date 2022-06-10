@@ -14,10 +14,13 @@ class DisciplineController {
         }
     }
 
-    async createDisciplineOfTheDirection(req, res, next) {
+    async createDisciplineOfTheGroup(req, res, next) {
         try {
-            const disciplineData = await DisciplineService.getDisciplinesOfTheDirection({...req.params});
-            return res.status(200).json(disciplineData);
+            const disciplineData = await DisciplineService.createDisciplineOfTheGroup({...req.body, ...req.params});
+            return res.status(201).json({
+                message: "Дисциплина была успешно добавлена в группу",
+                ...disciplineData
+            });
         } catch (err) {
             console.log(err);
             next(err);
@@ -29,6 +32,7 @@ class DisciplineController {
             const discipline = await DisciplineService.getDiscipline({...req.params});
             return res.status(200).json(discipline);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -38,6 +42,7 @@ class DisciplineController {
             const disciplines = await DisciplineService.getDisciplines({...req.params});
             return res.status(200).json(disciplines);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }
@@ -47,6 +52,7 @@ class DisciplineController {
             const disciplines = await DisciplineService.getDisciplinesOfTheGroup({...req.params});
             return res.status(200).json(disciplines);
         } catch (err) {
+            console.log(err);
             next(err);
         }
     }

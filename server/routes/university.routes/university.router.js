@@ -32,6 +32,8 @@ router.get('/directions', directionController.getDirections);
 
 router.post('/cathedras/:cathedraId/teachers', teacherController.createTeacherOfTheCathedra);
 
+router.post('/disciplines/:disciplineId/teachers', teacherController.createTeacherOfTheDiscipline);
+
 router.get('/teachers', teacherController.getTeachers);
 
 router.get('/disciplines/:disciplineId/teachers', teacherController.getTeachersOfTheDiscipline);
@@ -57,6 +59,8 @@ router.get('/students', studentController.getStudents);
 // discipline routes
 
 router.post('/disciplines', disciplineController.createDiscipline);
+
+router.post('/groups/:groupId/disciplines', disciplineController.createDisciplineOfTheGroup);
 
 router.get('/disciplines', disciplineController.getDisciplines);
 
