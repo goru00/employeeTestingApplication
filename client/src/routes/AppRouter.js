@@ -19,6 +19,7 @@ import Users from '../pages/users/users';
 import CathedraProfile from '../pages/university/cathedras/profile.cathedras';
 import DirectionProfile from '../pages/university/directions/profile.direction';
 import DisciplineProfile from '../pages/university/disciplines/profile.disciplines';
+import CreateTest from '../components/actions/testActions/createTest';
 
 const AppRouter = () => {
     
@@ -38,7 +39,9 @@ const AppRouter = () => {
                         <Route index element={<Home />} />
                         <Route path='users' element={<Users />} />
                         <Route path="profile" element={<Profile />} />
-                        <Route path="tests" element={<Tests />} />
+                        <Route path="tests" element={<Tests />}>
+                            <Route path='create' element={<CreateTest />} />
+                        </Route>
                         <Route path="university" element={<University />}>
                             <Route path='cathedras/:id' element={<CathedraProfile />} />
                             <Route path='cathedras/:cathedraId/directions/:directionId' element={<DirectionProfile />} />

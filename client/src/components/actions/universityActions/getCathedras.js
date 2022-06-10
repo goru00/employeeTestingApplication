@@ -70,8 +70,7 @@ function GetCathedras(props) {
                         <ListCards props={cathedras} />
                     ) : (
                         <Typography
-                            variant="h5"
-                            textAlign="center"
+                            variant="h6" gutterBottom
                         >
                             В данный момент в университете не утверждена структура
                         </Typography>

@@ -15,6 +15,7 @@ import {
 import disciplineServices from '../../../services/university.services/discipline.services';
 import teacherServices from '../../../services/university.services/teacher.services';
 import ListItemTable from '../../../components/cards/ListItemTable';
+import CreateTeacherOfTheDiscipline from '../../../components/actions/universityActions/createTeacherOfTheDiscipline';
 
 const headers = [
     "Имя, фамилия и отчество преподавателя"
@@ -43,7 +44,7 @@ function DisciplineProfile() {
                 });
                 setTeachers(newTeachers);
             }
-        })
+        });
     }, []);
 
     return (
@@ -82,6 +83,15 @@ function DisciplineProfile() {
                                                 md={6}
                                                 xs={12}
                                             >
+                                                <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        justifyContent="space-between"
+                                                    >
+                                                        <CardHeader 
+                                                            title="Краткая информация по дисциплине"
+                                                        />
+                                                </Stack>
                                                 <Card>
                                                     <CardContent>
                                                         <Box
@@ -91,14 +101,6 @@ function DisciplineProfile() {
                                                                 flexDirection: "column"
                                                             }}
                                                         >
-                                                            <Typography
-                                                                sx={{
-                                                                    mb: 2
-                                                                }}
-                                                                variant="subtitle1"
-                                                            >
-                                                                Краткая информация по дисциплине
-                                                            </Typography>
                                                             <Typography
                                                                 variant="subtitle2"
                                                                 color="text.secondary"
@@ -133,22 +135,43 @@ function DisciplineProfile() {
                                                 md={6}
                                                 xs={12}
                                             >
+                                                <Stack
+                                                        direction="row"
+                                                        alignItems="center"
+                                                        justifyContent="space-between"
+                                                    >
+                                                        <CardHeader 
+                                                            title="Преподавательский состав и методисты"
+                                                        />
+                                                        {
+                                                            discipline && (
+                                                                <CreateTeacherOfTheDiscipline 
+                                                                    props={{
+                                                                        disciplineId: discipline.id
+                                                                    }}
+                                                                />
+                                                            )
+                                                        }
+                                                </Stack>
                                                 <Card>
                                                     <CardContent>
-                                                        <Typography
-                                                            sx={{
-                                                                mb: 2
-                                                            }}
-                                                            variant="subtitle1"
-                                                        >
-                                                        Преподавательский состав и методисты
-                                                        </Typography>
-                                                        <ListItemTable 
-                                                            props={{
-                                                                body: teachers,
-                                                                headers: headers
-                                                            }}                    
-                                                        />
+                                                        {
+                                                            teachers.length ? (
+                                                            <ListItemTable 
+                                                                props={{
+                                                                    body: teachers,
+                                                                    headers: headers
+                                                                }}                    
+                                                            />
+                                                            ) : (
+                                                                <Typography
+                                                                    gutterBottom
+                                                                    variant="h6"
+                                                                >
+                                                                    Не было назначено ни одного преподавателя по данной дисциплине
+                                                                </Typography>
+                                                            )
+                                                        }
                                                     </CardContent>
                                                 </Card>
                                             </Grid>

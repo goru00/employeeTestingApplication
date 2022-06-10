@@ -20,7 +20,7 @@ import useMessage from '../../../hooks/useMessage';
 import useLoading from '../../../hooks/useLoading';
 import { useFormik } from 'formik';
 
-import studentServices from '../../../services/university.services/student.services';
+import disciplineServices from '../../../services/university.services/discipline.services';
 
 import * as Yup from 'yup';
 
@@ -28,14 +28,14 @@ import { useDispatch } from 'react-redux';
 
 import { useParams } from 'react-router-dom';
 
-import { create } from '../../../actions/university/student';
+import { createDisciplineOfTheGroup } from '../../../actions/university/discipline';
 import { Box } from '@mui/system';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
 const ModalCreateDisciplineOfTheGroup = (props) => {
-    const { students, validation, loading, LoadAnimation } = props;
+    const { disciplines, validation, loading, LoadAnimation } = props;
     const [message] = useMessage();
     const form = useRef();
 
@@ -86,17 +86,17 @@ const ModalCreateDisciplineOfTheGroup = (props) => {
                                         }}
                                     >
                                         <InputLabel
-                                            id="multiple-students-name"
+                                            id="multiple-disciplines-name"
                                         >
-                                            Выбрать студента
+                                            Выбрать дисциплину
                                         </InputLabel>
                                         <Select
-                                            labelId="multiple-student-name"
-                                            id="multiple-student"
-                                            value={validation.values.name}
-                                            name="name"
+                                            labelId="multiple-discipline-name"
+                                            id="multiple-discipline"
+                                            value={validation.values.id}
+                                            name="id"
                                             onChange={validation.handleChange}
-                                            input={<OutlinedInput label="userId" />}
+                                            input={<OutlinedInput label="id" />}
                                             MenuProps={{
                                                 PaperProps: {
                                                     style: {
@@ -106,25 +106,22 @@ const ModalCreateDisciplineOfTheGroup = (props) => {
                                             }}
                                         >
                                             {
-                                                students && students.map((student, index) => {
+                                                disciplines && disciplines.map((discipline, index) => {
                                                     return (
                                                         <MenuItem
                                                             key={index}
-                                                            value={student.userId}
+                                                            value={discipline.id}
                                                         >
                                                             <ListItem
-                                                                key={student.userId}
+                                                                key={discipline.id}
                                                                 component="div"
                                                                 disablePadding
                                                             >
-                                                                <Avatar 
-                                                                    alt="/"
-                                                                />
                                                                 <ListItemText
                                                                     sx={{
                                                                         marginLeft: 2
                                                                     }}
-                                                                >{student.name}</ListItemText>
+                                                                >{discipline.name}</ListItemText>
                                                             </ListItem>
                                                         </MenuItem>
                                                     )
@@ -145,7 +142,7 @@ const ModalCreateDisciplineOfTheGroup = (props) => {
                                         type="submit"
                                         variant="contained"
                                     >
-                                        Добавить студента в группу
+                                        Добавить дисциплину
                                     </Button>
                                 </Box>
                             </Grid>
@@ -159,31 +156,25 @@ const ModalCreateDisciplineOfTheGroup = (props) => {
 }
 
 function CreateDisciplineOfTheGroup({props}) {
-    const [students, setStudents] = useState([]);
+    const [disciplines, setDisciplines] = useState([]);
     const { targetGroup } = props;
     const { loading, handleLoadingStop, handleLoadingStart, LoadAnimation } = useLoading();
     const dispatch = useDispatch();
 
     const params = useParams();
-    const { directionId, cathedraId } = params;
-
-    console.log(targetGroup)
 
     const validation = useFormik({
         initialValues: {
-            userId: '',
-            name: ''
+            id: ''
         },
         validationSchema: Yup.object({
-            userId: Yup
+            id: Yup
                 .string()
         }),
         onSubmit: (values) => {
-            const { name } = values;
-            const userId = name;
+            const { id } = values;
             handleLoadingStart();
-            dispatch(create(userId, directionId, cathedraId, targetGroup)).then(() => {
-                console.log(targetGroup)
+            dispatch(createDisciplineOfTheGroup(id, targetGroup)).then(() => {
                 console.log('successfully');
             }).catch(err => {
                 console.log(err);
@@ -196,20 +187,19 @@ function CreateDisciplineOfTheGroup({props}) {
     })
 
     useEffect(() => {
-        studentServices.getStudents().then(res => {
-            let newStudents = [];
-            res.data.forEach(student => {
-                newStudents.push({
-                    avatar: '/',
-                    userId: student.userId,
-                    name: student.name
+        disciplineServices.getDisciplines().then(res => {
+            let newDisciplines = [];
+            res.data.disciplines.forEach(discipline => {
+                newDisciplines.push({
+                    id: discipline.id,
+                    name: discipline.name
                 });
             })
-            setStudents(newStudents);
+            setDisciplines(newDisciplines);
         })
     }, []);
 
-    const { content, handleOpen, handleClose } = useModal(ModalCreateDisciplineOfTheGroup({students, validation, loading, LoadAnimation}));
+    const { content, handleOpen, handleClose } = useModal(ModalCreateDisciplineOfTheGroup({disciplines, validation, loading, LoadAnimation}));
 
     return (
         <div className="createStudentOfTheGroup">

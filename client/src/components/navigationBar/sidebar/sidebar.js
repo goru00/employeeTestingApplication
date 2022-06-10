@@ -1,4 +1,4 @@
-import { Box, Divider, Drawer, useMediaQuery } from "@mui/material";
+import { Box, Divider, Drawer, Typography, useMediaQuery } from "@mui/material";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
@@ -45,11 +45,6 @@ const sidebarLinks = [
         title: "Университет"
     },
     {
-        href: "/settings",
-        icon: (<SettingsIcon fontSize="small" />),
-        title: "Настройки"
-    },
-    {
         href: "/logout",
         icon: (<LogoutIcon fontSize="small" />),
         title: "Выход"
@@ -76,12 +71,13 @@ const Sidebar = (props) => {
                         sx={{ p: 3}}
                     >
                         <Link to="/">
-                            <img 
-                                src={Logo} 
-                                width={42}
-                                height={42}
-                                alt="Филиал Котельники Университета Дубна Логотип"
-                            />
+                            <Typography 
+                                variant="subtitle1"
+                                gutterBottom
+                                color="white"
+                            >
+                                Система тестирования студентов Университета "Дубна" Филиала "Котельники"
+                            </Typography>
                         </Link>
                     </Box>
                 </div>

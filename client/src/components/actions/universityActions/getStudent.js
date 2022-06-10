@@ -15,7 +15,6 @@ const headers = [
 
 function GetStudent({props}) {
     const { targetGroup } = props;
-    let params = useParams();
     const [students, setStudents] = useState([]);
     const [linkDirections, setLinkDirections] = useState([]);
     const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();

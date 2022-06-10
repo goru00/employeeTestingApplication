@@ -1,10 +1,10 @@
 import api from '../../api/api';
 
 class DisciplineService {
-    createDisciplineOfTheGroup(id, groupId) {
+    createDisciplineOfTheGroup(disciplineId, groupId) {
         return api
             .post(`/university/groups/${groupId}/disciplines`, {
-                id
+                disciplineId
             });
     }
 

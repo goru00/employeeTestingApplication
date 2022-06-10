@@ -13,6 +13,12 @@ class TeacherService {
                userId 
             });
     }
+    createTeacherOfTheDiscipline(userId, disciplineId) {
+        return api
+            .post(`/university/disciplines/${disciplineId}/teachers`, {
+                userId
+            });
+    }
     getTeachersOfTheDiscipline(disciplineId) {
         return api
             .get(`/university/disciplines/${disciplineId}/teachers`);

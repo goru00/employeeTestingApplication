@@ -22,7 +22,7 @@ function ListCards({props}) {
                                 {
                                     Object.values(item).map((value, index) => {
                                         return (
-                                            <div className='cathedra_item' key={index}>
+                                            <div className='card_list_item' key={index}>
                                                 {value}
                                             </div>
                                         )

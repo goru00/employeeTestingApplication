@@ -9,7 +9,11 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+
 const CardTestsToolbar = (props) => {
+    const location = useLocation();
+    let navigate = useNavigate();
     return (
         <Box 
             {...props}
@@ -31,44 +35,21 @@ const CardTestsToolbar = (props) => {
                 >
                     Тесты
                 </Typography>
-                <Box sx={{
-                    m: 1
-                }} >
-                    <Button 
-                        color="primary"
-                        variant="contained"
-                    >
-                        Добавить тест
-                    </Button>
-                </Box>
-            </Box>
-            <Box 
-                sx={{
-                    mt: 3
-                }}
-            >
-                <Card>
-                    <CardContent>
-                        <Box sx={{
-                            maxWidth: 500
-                        }}>
-                            <TextField 
-                                fullWidth
-                                helperText='Поиск по названию'
-                                label="Введите название теста"
-                                InputProps={{
-                                    startAdornment: (
-                                        <InputAdornment position='start'>
-                                            <SearchIcon />
-                                        </InputAdornment>
-                                    )
-                                }}
-                            >
-
-                            </TextField>
-                        </Box>
-                    </CardContent>
-                </Card>
+                        {
+                            location.pathname === "/tests" && (
+                                <Box sx={{
+                                    m: 1
+                                }} >
+                                    <Button 
+                                        color="primary"
+                                        variant="contained"
+                                        onClick={() => navigate('create') }
+                                    >
+                                        Добавить тест
+                                    </Button>
+                                </Box>
+                            )
+                        }
             </Box>
         </Box>
     )

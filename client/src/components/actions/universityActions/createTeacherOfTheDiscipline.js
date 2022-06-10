@@ -1,41 +1,40 @@
-import { useEffect, useState, useRef } from 'react';
-import { Button, 
-    Container, 
-    Tooltip, 
-    Typography, 
-    Grid, 
-    FormControl, 
-    InputLabel, 
-    Select, 
-    OutlinedInput,
-    MenuItem,
-    ListItem, 
+import { useRef, useEffect, useState } from 'react';
+import {
+    Box, 
+    Button,
+    Container,
+    Typography,
+    Grid,
+    Tooltip,
+    FormControl,
+    InputLabel,
+    Select,
+    ListItem,
     Avatar,
-    ListItemText
-} from "@mui/material";
+    ListItemText,
+    OutlinedInput,
+    MenuItem
+} from '@mui/material';
+
 import AddIcon from '@mui/icons-material/Add';
 
-import useModal from '../../../hooks/useModal';
 import useMessage from '../../../hooks/useMessage';
 import useLoading from '../../../hooks/useLoading';
 import { useFormik } from 'formik';
-
-import studentServices from '../../../services/university.services/student.services';
+import useModal from '../../../hooks/useModal';
 
 import * as Yup from 'yup';
 
 import { useDispatch } from 'react-redux';
 
-import { useParams } from 'react-router-dom';
-
-import { create } from '../../../actions/university/student';
-import { Box } from '@mui/system';
+import { createOfTheDiscipline } from '../../../actions/university/teacher';
+import teacherServices from '../../../services/university.services/teacher.services';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 
-const ModalCreateStudent = (props) => {
-    const { students, validation, loading, LoadAnimation } = props;
+const ModalCreateTeacherOfTheDiscipline = (props) => {
+    const { teachers, validation, loading, LoadAnimation } = props;
     const [message] = useMessage();
     const form = useRef();
 
@@ -44,7 +43,7 @@ const ModalCreateStudent = (props) => {
             <Box
                 component="main"
                 sx={{
-                    alignItemS: 'center',
+                    alignItems: 'center',
                     display: 'flex',
                     flexGrow: 1
                 }}
@@ -55,10 +54,10 @@ const ModalCreateStudent = (props) => {
                         sx={{ my: 3 }}
                     >
                         <Typography variant="h5">
-                            Добавление студента ВУЗа в учебную группу
+                            Создание направления кафедры
                         </Typography>
                         <Typography>
-                            Для добавления студента в группу необходимо правильно заполнить поля ниже
+                            Для создания навправления необходимо заполнить поля ниже
                         </Typography>
                     </Box>
                     <form
@@ -67,32 +66,23 @@ const ModalCreateStudent = (props) => {
                     >
                         <Box
                             sx={{ flexGrow: 1 }}
-                        >
-                            <Grid
-                                container
-                                rowSpacing={{ xs: 2, md: 4 }}
-                                direction="row"
-                                justifyContent="center"
-                                alignItems="center"
-                            >
-                                <Grid
-                                    container
-                                    item={true}
-                                >
-                                    <FormControl
+                        >   
+                            <Grid container rowSpacing={{ xs: 2, md: 2, sm: 4}} direction="row" justifyContent="center" alignItems="center">
+                                <Grid container item={true}>
+                                    <FormControl 
                                         sx={{
                                             m: 1,
                                             width: '100%'
                                         }}
                                     >
                                         <InputLabel
-                                            id="multiple-students-name"
+                                            id="multiple-teachers-name"
                                         >
-                                            Выбрать студента
+                                            Выбрать преподавателя
                                         </InputLabel>
-                                        <Select
-                                            labelId="multiple-student-name"
-                                            id="multiple-student"
+                                        <Select 
+                                            labelId="multiple-teacher-name-label"
+                                            id='multiple-teacher'
                                             value={validation.values.name}
                                             name="name"
                                             onChange={validation.handleChange}
@@ -100,20 +90,21 @@ const ModalCreateStudent = (props) => {
                                             MenuProps={{
                                                 PaperProps: {
                                                     style: {
-                                                        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+                                                        maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+                                                        width: 250
                                                     }
                                                 }
                                             }}
                                         >
                                             {
-                                                students && students.map((student, index) => {
+                                                teachers && teachers.map((teacher, index) => {
                                                     return (
                                                         <MenuItem
                                                             key={index}
-                                                            value={student.userId}
+                                                            value={teacher.userId}
                                                         >
                                                             <ListItem
-                                                                key={student.userId}
+                                                                key={teacher.userId}
                                                                 component="div"
                                                                 disablePadding
                                                             >
@@ -124,7 +115,7 @@ const ModalCreateStudent = (props) => {
                                                                     sx={{
                                                                         marginLeft: 2
                                                                     }}
-                                                                >{student.name}</ListItemText>
+                                                                >{teacher.name}</ListItemText>
                                                             </ListItem>
                                                         </MenuItem>
                                                     )
@@ -133,11 +124,7 @@ const ModalCreateStudent = (props) => {
                                         </Select>
                                     </FormControl>
                                 </Grid>
-                                <Box
-                                    sx={{
-                                        py: 2
-                                    }}
-                                >
+                                <Box sx={{ py: 2 }}>
                                     <Button
                                         color="primary"
                                         fullWidth
@@ -145,7 +132,7 @@ const ModalCreateStudent = (props) => {
                                         type="submit"
                                         variant="contained"
                                     >
-                                        Добавить студента в группу
+                                        Добавить преподавателя кафедры
                                     </Button>
                                 </Box>
                             </Grid>
@@ -155,15 +142,12 @@ const ModalCreateStudent = (props) => {
             </Box>
         )
     )
-
 }
 
-function CreateStudent({props}) {
-
-    const [students, setStudents] = useState([]);
-    const { targetGroup } = props;
-    const [group, setGroup] = useState('');
-    const { loading, handleLoadingStop, handleLoadingStart, LoadAnimation } = useLoading();
+function CreateTeacherOfTheDiscipline({props}) {
+    const [teachers, setTeachers] = useState([]);
+    const { disciplineId } = props;
+    const {loading, handleLoadingStop, handleLoadingStart, LoadAnimation} = useLoading();
     const dispatch = useDispatch();
 
     const validation = useFormik({
@@ -179,7 +163,7 @@ function CreateStudent({props}) {
             const { name } = values;
             const userId = name;
             handleLoadingStart();
-            dispatch(create(userId, targetGroup)).then(() => {
+            dispatch(createOfTheDiscipline(userId, disciplineId)).then(() => {
                 console.log('successfully');
             }).catch(err => {
                 console.log(err);
@@ -189,28 +173,27 @@ function CreateStudent({props}) {
                 window.location.reload();
             })
         }
-    })
+    });
 
     useEffect(() => {
-        setGroup(targetGroup);
-        studentServices.getStudents().then(res => {
-            let newStudents = [];
-            res.data.forEach(student => {
-                newStudents.push({
+        teacherServices.getTeachers().then(res => {
+            let newTeachers = [];
+            res.data.forEach(teacher => {
+                newTeachers.push({
                     avatar: '/',
-                    userId: student.userId,
-                    name: student.name
+                    userId: teacher.userId,
+                    name: teacher.name
                 });
-            })
-            setStudents(newStudents);
+            });
+            setTeachers(newTeachers);
         })
     }, []);
 
-    const { content, handleOpen, handleClose } = useModal(ModalCreateStudent({students, validation, loading, LoadAnimation}));
+    const {content, handleOpen, handleClose} = useModal(ModalCreateTeacherOfTheDiscipline({teachers, validation, loading, LoadAnimation}));
 
     return (
-        <div className="createStudentOfTheGroup">
-            <Tooltip title="Добавить студента в группу">
+        <div className='createDirection'>
+            <Tooltip title="Добавить преподавателя">
                 <Button
                     aria-label="reduce"
                     onClick={handleOpen}
@@ -223,4 +206,4 @@ function CreateStudent({props}) {
     )
 }
 
-export default CreateStudent;
+export default CreateTeacherOfTheDiscipline;

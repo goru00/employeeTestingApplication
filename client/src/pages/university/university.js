@@ -25,12 +25,22 @@ const University = (props) => {
             <Container 
                 maxWidth="lg"
             >
+                <Stack
+                    direction="row"
+                    alignItems="center"
+                    justifyContent="space-between"
+                >
+                    <Typography
+                        variant="subtitle1"
+                        gutterBottom
+                    >
+                    </Typography>
+                </Stack>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
                         Подразделения университета
                     </Typography>
                 </Stack>
-                <Divider />
                 {
                     location.pathname === "/university" ? (
                         <>
@@ -43,7 +53,6 @@ const University = (props) => {
                             <Container>
                                 <GetCathedras />
                             </Container>
-                            <Divider />
                             <Stack
                                 direction="row"
                                 alignItems="center" 

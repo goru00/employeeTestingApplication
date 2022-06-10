@@ -40,3 +40,38 @@ export const create = (userId, cathedraId) => (dispatch) => {
         return Promise.reject();
     });
 }
+
+export const createOfTheDiscipline = (userId, disciplineId) => (dispatch) => {
+    return teacherServices.createTeacherOfTheDiscipline(userId, disciplineId).then((response) => {
+        dispatch({
+            type: CREATE_TEACHER_SUCCESS
+        });
+
+        dispatch({
+            type: SET_MESSAGE,
+            payload: {
+                message: response.data.message,
+                status: response.status
+            }
+        });
+
+        return Promise.resolve();
+    }, error => {
+        const message = (
+            error.response && 
+            error.response.data &&
+            error.response.data.messsage) ||
+            error.message ||
+            error.toString();
+
+        dispatch({
+            type: CREATE_TEACHER_FAILED
+        });
+
+        dispatch({
+            type: SET_MESSAGE,
+            payload: message
+        });
+        return Promise.reject();
+    });
+}

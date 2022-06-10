@@ -24,7 +24,8 @@ function GetDisciplinesOfTheGroup({props}) {
             if (res.data.disciplines) {
                 res.data.disciplines.forEach((discipline) => {
                     newDisciplines.push({
-                        id: discipline.id
+                        id: discipline.id,
+                        name: discipline.name
                     });
                 });
                 setDisciplines(newDisciplines);
@@ -41,7 +42,7 @@ function GetDisciplinesOfTheGroup({props}) {
                         <ListItemTable 
                             props={{
                                 body: disciplines, 
-                                headers
+                                headers: headers
                             }}
                         />
                     ) : (
