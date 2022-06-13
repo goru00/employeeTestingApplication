@@ -56,6 +56,16 @@ class DisciplineController {
             next(err);
         }
     }
+
+    async getDisciplinesOfTheTeacher(req, res, next) {
+        try {
+            const disciplines = await DisciplineService.getDisciplinesOfTheTeacher({...req.params});
+            return res.status(200).json(disciplines);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
 }
 
 module.exports = new DisciplineController();

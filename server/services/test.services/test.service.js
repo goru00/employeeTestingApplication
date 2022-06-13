@@ -3,35 +3,26 @@ const db = require('../../models');
 const Test = db.test;
 
 class TestService {
-    async createTest(user, params) {
-        const { 
-            nameTest,  
-            disciplineId, 
-            sectionId, 
-            description,
-            time,
-            date 
-        } = params;
-        const {
-            userId
-        } = user;
-        const test = await Test.create({
-            name: nameTest,
-            teacherId: userId,
-            disciplineId: disciplineId,
-            sectionId: sectionId,
-            description: description,
-            time: time,
-            date: date
-        });
-        const testDto = new TestDto(test);
-        return {
-            ...testDto
-        }
-    }
-    async getUserTests() {
+    async createTest(params) {
 
     }
+
+    async getTestsOfTheSection(disciplineId, sectionId) {
+        const tests = await Test.findAll({
+            where: {
+                disciplineId: disciplineId,
+                sectionId: sectionId
+            }
+        });
+        let testsDto = [];
+        for (let index = 0; index < tests.length; index++) {
+            testsDto.push(new TestDto(tests[index]));
+        }
+        return {
+            tests: testsDto
+        }
+    }
+
 }
 
 module.exports = new TestService();

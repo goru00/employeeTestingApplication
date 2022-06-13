@@ -13,6 +13,10 @@ class GroupService {
         return api
             .get(`/university/directions/${directionId}/groups`);
     }
+    getGroupsOfTheDiscipline(disciplineId) {
+        return api
+            .get(`/university/disciplines/${disciplineId}/groups`);
+    }
 }
 
 export default new GroupService();

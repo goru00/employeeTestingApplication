@@ -24,6 +24,16 @@ class GroupController {
         }
     }
 
+    async getGroupsOfTheDiscipline(req, res, next) {
+        try {
+            const groups = await GroupService.getGroupsOfTheDiscipline(req.params.id);
+            return res.status(200).json(groups);
+        } catch (err) {
+            console.log(err);
+            next(err);
+        }
+    }
+
     async getGroups(req, res, next) {
         try {
             const groups = await GroupService.getGroups();

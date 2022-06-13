@@ -1,6 +1,7 @@
 const GroupDto = require('../../dtos/university.dtos/group.dto');
 const db = require('../../models');
 const Group = db.group;
+const Discipline = db.discipline;
 const Op = db.Sequelize.Op;
 
 class GroupService {
@@ -34,6 +35,18 @@ class GroupService {
                 directionId: directionId
             }
         });
+        let groupsDto = [];
+        for (let index = 0; index < groups.length; index++) {
+            groupsDto.push(new GroupDto(groups[index]));
+        }
+        return {
+            groups: groupsDto
+        }
+    }
+
+    async getGroupsOfTheDiscipline(id) {
+        const discipline = await Discipline.findByPk(id);
+        const groups = await discipline.getGroups();
         let groupsDto = [];
         for (let index = 0; index < groups.length; index++) {
             groupsDto.push(new GroupDto(groups[index]));

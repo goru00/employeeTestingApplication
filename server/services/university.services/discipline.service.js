@@ -1,7 +1,10 @@
 const DisciplineDto = require('../../dtos/university.dtos/discipline.dto');
 const db = require('../../models');
 const Group = db.group;
+const User = db.user;
 const Discipline = db.discipline;
+
+const Op = db.Sequelize.Op;
 
 class DisciplineService {
     async createDiscipline(params) {
@@ -50,6 +53,19 @@ class DisciplineService {
         const { groupId } = params;
         const group = await Group.findByPk(groupId);
         const disciplines = await group.getDisciplines();
+        let disciplinesDto = [];
+        for (let index = 0; index < disciplines.length; index++) {
+            disciplinesDto.push(new DisciplineDto(disciplines[index]));
+        }
+        return {
+            disciplines: disciplinesDto
+        }
+    }
+
+    async getDisciplinesOfTheTeacher(params) {
+        const { userId } = params;
+        const user = await User.findByPk(userId);
+        const disciplines = await user.getDisciplines();
         let disciplinesDto = [];
         for (let index = 0; index < disciplines.length; index++) {
             disciplinesDto.push(new DisciplineDto(disciplines[index]));

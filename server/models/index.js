@@ -82,8 +82,6 @@ db.group.belongsToMany(db.user, {
 
 db.discipline = require('./university.models/discipline.model')(sequelize, Sequelize);
 
-db.teacherEmployment = require('./university.models/teacherEmployment.model')(sequelize, Sequelize);
-
 db.user.belongsToMany(db.cathedra, {
     through: 'teacher_cathedras',
     foreignKey: 'teacherId',
@@ -95,22 +93,21 @@ db.cathedra.belongsToMany(db.user, {
     otherKey: 'teacherId'
 });
 
-db.teacherEmployment.belongsTo(db.user, {
+//teacher_disciplines
+
+db.user.belongsToMany(db.discipline, {
+    through: 'teacher_disciplines',
     foreignKey: 'teacherId',
-    targetKey: 'userId'
+    otherKey: 'disciplineId'
 });
-db.user.hasMany(db.teacherEmployment, {
-    foreignKey: 'teacherId',
-    sourceKey: 'userId'
-});
-db.teacherEmployment.belongsTo(db.discipline, {
+
+db.discipline.belongsToMany(db.user, {
+    through: 'teacher_disciplines',
     foreignKey: 'disciplineId',
-    targetKey: 'id'
+    otherKey: 'teacherId'
 });
-db.discipline.hasMany(db.teacherEmployment, {
-    foreignKey: 'disciplineId',
-    sourceKey: 'id'
-});
+
+//group_disciplines
 
 db.group.belongsToMany(db.discipline, {
     through: 'group_disciplines',
@@ -124,16 +121,15 @@ db.discipline.belongsToMany(db.group, {
 });
 
 db.section = require('./test.models/section.model')(sequelize, Sequelize);
-db.disciplineSections = require('./test.models/disciplineSection.model')(sequelize, Sequelize);
 
 //discipline_sections
 db.discipline.belongsToMany(db.section, {
-    through: db.disciplineSections,
+    through: 'discipline_sections',
     foreignKey: 'disciplineId',
     otherKey: 'sectionId'
 });
 db.section.belongsToMany(db.discipline, {
-    through: db.disciplineSections,
+    through: 'discipline_sections',
     foreignKey: 'sectionId',
     otherKey: 'disciplineId'
 });

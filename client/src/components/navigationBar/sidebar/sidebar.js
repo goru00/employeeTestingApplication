@@ -3,14 +3,14 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import SafetyDividerIcon from '@mui/icons-material/SafetyDivider';
 import LogoutIcon from '@mui/icons-material/Logout';
-import SettingsIcon from '@mui/icons-material/Settings';
 import SchoolIcon from '@mui/icons-material/School';
 import PersonIcon from '@mui/icons-material/Person';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 
 import { Link } from "react-router-dom";
 
-import Logo from '../../../assets/images/logoText.png';
+import { useSelector } from "react-redux";
+
 import SidebarLink from "./sidebarLink";
 
 const sidebarLinks = [
@@ -52,6 +52,7 @@ const sidebarLinks = [
 ]
 
 const Sidebar = (props) => {
+
     const { open, onClose } = props;
     const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
         defaultMatches: true,
@@ -92,6 +93,7 @@ const Sidebar = (props) => {
                 }}
                 >
                     {sidebarLinks.map((sidebarLink) => (
+                        
                         <SidebarLink 
                             key={sidebarLink.title}
                             icon={sidebarLink.icon}

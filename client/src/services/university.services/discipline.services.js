@@ -16,6 +16,16 @@ class DisciplineService {
             });
     }
 
+    getDisciplinesOfTheTeacher(userId) {
+        return api
+            .get(`/university/teachers/${userId}/disciplines`);
+    }
+
+    getDisciplinesOfTheStudent(userId) {
+        return api
+            .get(`/university/students/${userId}/disciplines`);
+    }
+
     getDiscipline(id) {
         return api
             .get(`/university/disciplines/${id}`);

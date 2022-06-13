@@ -2,7 +2,7 @@ const db = require('../../models');
 const User = db.user; 
 const Cathedra = db.cathedra;
 const Discipline = db.discipline;
-const TeacherEmployment = db.teacherEmployment;
+const Teacher = db.teacher;
 const TeacherDto = require('../../dtos/university.dtos/teacher.dto');
 
 const Op = db.Sequelize.Op;
@@ -14,7 +14,7 @@ class TeacherService {
         const usersDto = await userService.getUsers({...params});
         let teachers = [];
         usersDto.forEach(user => {
-            if (user.roles.includes('Преподаватель') || user.roles.include('Методист')) {
+            if (user.roles.includes('Преподаватель') || user.roles.includes('Методист')) {
                 teachers.push(user);
             }
         });
@@ -22,14 +22,11 @@ class TeacherService {
     }
 
     async getTeachersOfTheDiscipline(params) {
-        const teachers = await TeacherEmployment.findAll({
-            where: {
-                disciplineId: params.disciplineId
-            }
-        });
+        const discipline = await Discipline.findByPk(params.disciplineId);
+        const teachers = await discipline.getUsers();
         let teachersDto = [];
         for (let index = 0; index < teachers.length; index++) {
-            const teacher = await User.findByPk(teachers[index].teacherId);
+            const teacher = await User.findByPk(teachers[index].userId);
             teachersDto.push(new TeacherDto(teacher));
             teachersDto[index].disciplines = [params.disciplineId];
         }
@@ -49,12 +46,13 @@ class TeacherService {
         }
     }
     async createTeacherOfTheDiscipline(userId, disciplineId) {
-        const teacherEmployment = await TeacherEmployment.create({
-            teacherId: userId,
-            disciplineId: disciplineId
-        });
+        const user = await User.findByPk(userId);
+        const discipline = await Discipline.findByPk(disciplineId);
+        discipline.setUsers(user);
+        const teacherDto = new TeacherDto(user);
+        teacherDto.disciplines = [disciplineId];
         return {
-            ...teacherEmployment
+            ...teacherDto
         }
     }
     async getTeachersOfTheCathedra(params) {

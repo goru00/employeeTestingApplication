@@ -9,6 +9,7 @@ const teacherController = require('../../controllers/university.controllers/teac
 const groupController = require('../../controllers/university.controllers/group.controller');
 const studentController = require('../../controllers/university.controllers/student.controller');
 const disciplineController = require('../../controllers/university.controllers/discipline.controller');
+const sectionController = require('../../controllers/university.controllers/section.controller');
 
 // cathedra routes
 
@@ -48,6 +49,8 @@ router.get('/groups', groupController.getGroups);
 
 router.get('/directions/:directionId/groups', groupController.getGroupsOfTheDirection);
 
+router.get('/disciplines/:id/groups', groupController.getGroupsOfTheDiscipline);
+
 // student routes 
 
 router.post('/groups/:groupId/students', studentController.createStudent);
@@ -64,8 +67,16 @@ router.post('/groups/:groupId/disciplines', disciplineController.createDisciplin
 
 router.get('/disciplines', disciplineController.getDisciplines);
 
+router.get('/teachers/:userId/disciplines', disciplineController.getDisciplinesOfTheTeacher);
+
 router.get('/disciplines/:id', disciplineController.getDiscipline);
 
 router.get('/groups/:groupId/disciplines', disciplineController.getDisciplinesOfTheGroup);
+
+// section routes
+
+router.post('/disciplines/:disciplineId/sections', sectionController.createSection);
+
+router.get('/disciplines/:disciplineId/sections', sectionController.getSectionsOfTheDiscipline);
 
 module.exports = router;
